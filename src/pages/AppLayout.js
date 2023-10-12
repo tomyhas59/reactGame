@@ -5,16 +5,13 @@ import styled from "styled-components";
 const AppLayout = ({ children }) => {
   return (
     <LayoutWrapper>
-      <Link
-        to="/"
-        style={{ margin: "0 auto", color: "green", fontSize: "50px" }}
-      >
-        Y의 즐거운 게임 세상
+      <Link to="/">
+        <div className="main">Y의 즐거운 게임 세상</div>
       </Link>
       <br />
       <ul>
         <Link to="baseball">
-          <li>야구 게임</li>
+          <li>숫자 야구게임</li>
         </Link>
         <Link to="calculator">
           <li>계산기</li>
