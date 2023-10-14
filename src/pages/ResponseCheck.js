@@ -41,7 +41,7 @@ const ResponseCheck = () => {
         setRecords([...records, responseTime]);
       }
     }
-  }, [endTime, startTime]);
+  }, [endTime, startTime, records]);
 
   useEffect(() => {
     const averageValue =
