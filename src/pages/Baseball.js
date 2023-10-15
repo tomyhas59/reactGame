@@ -97,11 +97,7 @@ const Baseball = () => {
       inputRef.current.focus();
       setTries([...tries, input]);
     },
-<<<<<<< HEAD
     [logs, checkInput, input, answer, tries, setInput, outCount]
-=======
-    [logs, outCount, answer, input, tries]
->>>>>>> 2f470d6ec9c0cc0510e2bb2404ad9a27c9606d19
   );
 
   const restartGame = useCallback(() => {
