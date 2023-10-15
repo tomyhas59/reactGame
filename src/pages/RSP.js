@@ -30,7 +30,11 @@ const RSP = () => {
     return () => {
       clearInterval(intervalId.current);
     };
+<<<<<<< HEAD
   }, [computerChoice, changeComputerHand, intervalId]);
+=======
+  }, [computerChoice, changeComputerHand]);
+>>>>>>> 2f470d6ec9c0cc0510e2bb2404ad9a27c9606d19
 
   const onClickRsp = useCallback(
     (props) => {
@@ -64,7 +68,11 @@ const RSP = () => {
         setClickable(true);
       }, 1000);
     },
+<<<<<<< HEAD
     [clickable, intervalId, computerChoice, changeComputerHand]
+=======
+    [computerChoice, clickable, changeComputerHand]
+>>>>>>> 2f470d6ec9c0cc0510e2bb2404ad9a27c9606d19
   );
 
   return (
@@ -76,7 +84,10 @@ const RSP = () => {
             transform: `translateX(${rspX[computerChoice]})`,
             height: "200px",
           }}
+<<<<<<< HEAD
           alt="SRP"
+=======
+>>>>>>> 2f470d6ec9c0cc0510e2bb2404ad9a27c9606d19
         />
       </ImgContainer>
       <div>
