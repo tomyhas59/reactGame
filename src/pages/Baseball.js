@@ -1,15 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import useInput from "../hooks/useInput";
 
 const Baseball = () => {
   const [input, onChangeInput, setInput] = useInput();
   const [logs, setLogs] = useState([]);
   const [tries, setTries] = useState([]);
-  const [outNumber, setOutNumber] = useState([]);
-  const [outCount, setOutCount] = useState(0); // 아웃 횟수를 세는 변수 추가
+  const [outCount, setOutCount] = useState(1); // 아웃 횟수를 세는 변수
   const inputRef = useRef(null);
+  const [answer, setAnswer] = useState(getNumber());
 
-  const getNumber = () => {
+  function getNumber() {
+    //function은 호이스팅이 가능(어느 위치에서든 호출 가능)
     const numbers = [];
     for (let n = 0; n < 9; n += 1) {
       numbers.push(n + 1);
@@ -21,89 +22,90 @@ const Baseball = () => {
       numbers.splice(index, 1);
     }
     return array;
-  };
+  }
 
-  let answer = getNumber();
-
-  const checkInput = (input) => {
-    if (input.length !== 4) {
-      alert("4자리 숫자를 입력해 주세요");
-      setInput("");
-      inputRef.current.focus();
-      return;
-    }
-    if (new Set(input).size !== 4) {
-      alert("숫자가 중복되었습니다");
-      setInput("");
-      inputRef.current.focus();
-      return;
-    }
-    if (tries.includes(input)) {
-      alert("이미 시도한 값입니다");
-      setInput("");
-      inputRef.current.focus();
-      return;
-    }
-    return true;
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (logs.length > 0) {
-      const lastLog = logs[logs.length - 1];
-      if (lastLog.includes("홈") || lastLog.includes("패")) {
-        return;
+  const checkInput = useCallback(
+    (input) => {
+      if (input.length !== 4) {
+        alert("4자리 숫자를 입력해 주세요");
+        setInput("");
+        inputRef.current.focus();
+        return false;
       }
-    }
-    if (!checkInput(input)) {
-      return;
-    }
+      if (new Set(input).size !== 4) {
+        alert("숫자가 중복되었습니다");
+        setInput("");
+        inputRef.current.focus();
+        return false;
+      }
+      if (tries.includes(input)) {
+        alert("이미 시도한 값입니다");
+        setInput("");
+        inputRef.current.focus();
+        return false;
+      }
+      return true;
+    },
+    [setInput, tries]
+  );
 
-    let strike = 0;
-    let ball = 0;
-
-    for (let i = 0; i < answer.length; i++) {
-      const index = input.indexOf(answer[i]);
-      if (index > -1) {
-        if (index === i) {
-          strike += 1;
-        } else {
-          ball += 1;
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (logs.length > 0) {
+        const lastLog = logs[logs.length - 1];
+        if (lastLog.includes("홈") || lastLog.includes("패")) {
+          return;
         }
       }
-    }
+      if (!checkInput(input)) {
+        return;
+      }
 
-    if (strike === 0 && ball === 0) {
-      setOutNumber([...outNumber, input]);
-      setOutCount(outCount + 1);
-    }
+      let strike = 0;
+      let ball = 0;
 
-    if (strike === 0 && ball === 0) {
-      setLogs([...logs, `${outCount}아웃`]);
-    } else if (input === answer.join("")) {
-      setLogs([...logs, "홈런!"]);
-    } else if (tries.length >= 9) {
-      setLogs([...logs, `패배! 정답은 ${answer.join("")}`]);
-    } else if (outNumber.length >= 2) {
-      setLogs([
-        ...logs,
-        `${outCount + 1}아웃, 패배! 정답은 ${answer.join("")}`,
-      ]);
-    } else {
-      setLogs([...logs, `${input}: ${strike}스트라이크 ${ball}볼`]);
-    }
-    setInput("");
-    inputRef.current.focus();
-    setTries([...tries, input]);
-  };
+      for (let i = 0; i < answer.length; i++) {
+        const index = input.indexOf(answer[i]);
+        if (index > -1) {
+          if (index === i) {
+            strike += 1;
+          } else {
+            ball += 1;
+          }
+        }
+      }
 
-  const restartGame = () => {
+      if (strike === 0 && ball === 0) {
+        const newOutCount = outCount + 1;
+        setOutCount(newOutCount);
+        if (newOutCount >= 3) {
+          setLogs([
+            ...logs,
+            `${newOutCount}아웃, 패배! 정답은 ${answer.join("")}`,
+          ]);
+        }
+        setLogs([...logs, `${input}: ${newOutCount}아웃`]);
+      } else if (input === answer.join("")) {
+        setLogs([...logs, "홈런!"]);
+      } else if (tries.length >= 9) {
+        setLogs([...logs, `패배! 정답은 ${answer.join("")}`]);
+      } else {
+        setLogs([...logs, `${input}: ${strike}스트라이크 ${ball}볼`]);
+      }
+      setInput("");
+      inputRef.current.focus();
+      setTries([...tries, input]);
+    },
+    [logs, checkInput, input, answer, tries, setInput, outCount]
+  );
+
+  const restartGame = useCallback(() => {
     setLogs([]);
     setTries([]);
-    setOutNumber([]);
-    setOutCount(0);
-    answer = getNumber();
-  };
+    setOutCount(1);
+    setAnswer(getNumber());
+  }, []);
 
   return (
     <div>
