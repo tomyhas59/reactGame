@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import SRP from "../rsp.png";
 import styled from "styled-components";
+import useCustomRef from "../hooks/useCustomRef";
 
 const RSP = () => {
   const [computerChoice, setComputerChoice] = useState("scissors");
@@ -12,12 +13,7 @@ const RSP = () => {
   const [score, setScore] = useState(0);
   const [clickable, setClickable] = useState(true);
   const [message, setMessage] = useState("");
-  const intervalId = useRef(null);
-
-  const Img = styled.img`
-    transform: translateX(${rspX[computerChoice]});
-    height: 200px;
-  `;
+  const [intervalId] = useCustomRef();
 
   const changeComputerHand = useCallback(() => {
     if (computerChoice === "scissors") {
@@ -74,7 +70,13 @@ const RSP = () => {
   return (
     <div>
       <ImgContainer>
-        <Img src={SRP} />
+        <img
+          src={SRP}
+          style={{
+            transform: `translateX(${rspX[computerChoice]})`,
+            height: "200px",
+          }}
+        />
       </ImgContainer>
       <div>
         <button
