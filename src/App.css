@@ -96,3 +96,36 @@ a {
   text-align: center;
   margin-right: 20px;
 }
+
+.card {
+  width: 200px;
+  height: 300px;
+  perspective: 1000px; /* 원근 거리 설정 */
+}
+
+.front,
+.back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden; /* 뒷면 숨기기 */
+}
+
+.front {
+  background-color: blue;
+  transform: rotateY(0deg);
+}
+
+.back {
+  background-color: red;
+  transform: rotateY(180deg); /* 뒷면으로 회전 */
+  display: none;
+}
+
+.card.flipped .front {
+  display: none;
+}
+
+.card.flipped .back {
+  display: block;
+}
