@@ -38,16 +38,21 @@ const ResponseCheck = () => {
       const responseTime = endTime - startTime;
       if (responseTime > 0) {
         setCurrent(responseTime);
-        setRecords([...records, responseTime]);
+        setRecords((prevRecords) => [...prevRecords, responseTime]);
       }
     }
-  }, [endTime, startTime, records]);
+  }, [endTime, startTime]);
 
   useEffect(() => {
     const averageValue =
-      records.length > 0 ? records.reduce((a, c) => a + c) / records.length : 0;
+      records.length > 0
+        ? records.reduce((a, c) => a + c) / records.length
+        : null;
     setAverage(averageValue);
-    const sortedRecords = [...records].sort((a, b) => a - b).slice(0, 5);
+    const sortedRecords = records
+      .slice()
+      .sort((a, b) => a - b)
+      .slice(0, 5);
     setFastRecord(sortedRecords);
   }, [records]);
 
