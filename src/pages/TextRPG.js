@@ -27,6 +27,7 @@ const TextRPG = () => {
   }
 
   function createHero(name) {
+    if (!name) return;
     setText(name);
     setStart(true);
     setMain(false);
@@ -35,12 +36,6 @@ const TextRPG = () => {
 
     hero.attack = function (target) {
       target.hp -= hero.att;
-      console.log("영웅이 공격");
-    };
-
-    hero.heal = function (monster) {
-      hero.hp += 20;
-      hero.hp -= monster.att;
     };
 
     hero.getXp = function (xp) {
@@ -100,11 +95,33 @@ const TextRPG = () => {
     setMonster({ ...monster }); // 몬스터 상태 업데이트
   };
 
+  const heal = (hero, monster) => {
+    if (hero.hp === hero.maxHp) {
+      setMessage("체력이 가득 차 있습니다");
+      return;
+    }
+    hero.hp = Math.min(hero.maxHp, hero.hp + 20);
+    hero.hp -= monster.att;
+    setMessage(`HP 20 회복하고 ${monster.att}의 대미지를 입었습니다`);
+    if (hero.hp <= 0) {
+      quit();
+      setMessage(`${hero.lev}레벨에서 전사, 새 주인공을 생성하세요`);
+      return;
+    }
+    setHero({ ...hero });
+  };
+
   const escape = () => {
     setStart(true);
     setAdventure(false);
     setMonster(null);
     setMessage("부리나케 도망쳤다");
+  };
+
+  const rest = (hero) => {
+    hero.hp = hero.maxHp;
+    setHero({ ...hero });
+    setMessage("충분한 휴식을 취했다.");
   };
 
   function quit() {
@@ -129,7 +146,7 @@ const TextRPG = () => {
         </div>
         <div>ATT: {hero.att}</div>
         <button onClick={startAdventure}>모험</button>
-        <button>휴식</button>
+        <button onClick={() => rest(hero)}>휴식</button>
         <button onClick={quit}>종료</button>
         <div>{message}</div>
       </>
@@ -146,7 +163,7 @@ const TextRPG = () => {
         </div>
         <div>ATT: {hero.att}</div>
         <button onClick={() => attack(hero, monster)}>공격</button>
-        <button>회복</button>
+        <button onClick={() => heal(hero, monster)}>회복</button>
         <button onClick={escape}> 도망</button>
         <div>{message}</div>
         <div>
