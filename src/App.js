@@ -15,6 +15,7 @@ import CatchMole from "./pages/CatchMole";
 import Calculator from "./pages/Calculator";
 import Baseball from "./pages/Baseball";
 import Main from "./pages/Main";
+import Gugudan from "./pages/Gugudan";
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/catchMole" element={<CatchMole />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/baseball" element={<Baseball />} />
+          <Route path="/gugudan" element={<Gugudan />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

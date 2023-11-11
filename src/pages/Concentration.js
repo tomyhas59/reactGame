@@ -53,6 +53,7 @@ function Concentration() {
 
   const [colors, setColors] = useState(colorArr);
   const total = 10;
+  
   const initialCards = useCallback(() => {
     const colors = [...colorArr]; //리셋 시 color 초기화
     let randomColors = [];

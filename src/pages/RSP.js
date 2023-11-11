@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import SRP from "../rsp.png";
 import styled from "styled-components";
-import useCustomRef from "../hooks/useCustomRef";
 
 const RSP = () => {
   const [computerChoice, setComputerChoice] = useState("scissors");
@@ -13,7 +12,7 @@ const RSP = () => {
   const [score, setScore] = useState(0);
   const [clickable, setClickable] = useState(true);
   const [message, setMessage] = useState("");
-  const [intervalId] = useCustomRef();
+  const intervalId = useRef(null);
 
   const changeComputerHand = useCallback(() => {
     if (computerChoice === "scissors") {

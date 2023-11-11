@@ -26,12 +26,15 @@ const TextRPG = () => {
     };
   }
 
-  function createHero(name) {
-    if (!name) return;
-    setText(name);
+  function createHero(e) {
+    e.preventDefault();
+    if (!text) return alert("주인공 이름을 입력하세요");
+
+    setText(text);
     setStart(true);
     setMain(false);
-    const hero = createUnit(name, 100, 10, 0);
+    setMessage("");
+    const hero = createUnit(text, 100, 10, 0);
     hero.lev = 1;
 
     hero.attack = function (target) {
@@ -131,6 +134,7 @@ const TextRPG = () => {
     setStart(false);
     setMain(true);
     setMessage("");
+    setText("");
   }
 
   if (start) {
@@ -173,7 +177,7 @@ const TextRPG = () => {
     );
   } else if (main) {
     return (
-      <form onSubmit={() => createHero(text)}>
+      <form onSubmit={createHero}>
         <input
           placeholder="주인공 이름을 입력하세요"
           value={text}

@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import useInput from "../hooks/useInput";
-import useCustomRef from "../hooks/useCustomRef";
 
 const WordGame = () => {
   const [wordInput, onChangeWordInput, setWordInput] = useInput();
@@ -9,14 +8,14 @@ const WordGame = () => {
   const [start, setStart] = useState(false);
   const [number, setNumber] = useState("");
   const [order, setOrder] = useState(1);
-  const [wordRef, wordFous] = useCustomRef();
-  const [numberRef, numberFous] = useCustomRef();
+  const wordRef = useRef(null);
+  const numberRef = useRef(null);
 
   function onNumberBtn() {
     if (!numberInput || isNaN(numberInput)) {
       alert("숫자를 입력해 주세요");
       setNumberInput("");
-      numberFous();
+      numberRef.current.focus();
     } else if (!isNaN(numberInput)) {
       setNumber(numberInput);
       setStart(true);
@@ -25,6 +24,11 @@ const WordGame = () => {
 
   function onWordBtn() {
     if (number) {
+      if (!isNaN(wordInput)) {
+        alert("문자를 입력해주세요");
+        setWordInput("");
+        return;
+      }
       if (
         (!word && wordInput.length === 3) ||
         (word[word.length - 1] === wordInput[0] && wordInput.length === 3)
@@ -39,7 +43,7 @@ const WordGame = () => {
         alert("세 글자만 됩니다");
       }
       setWordInput("");
-      wordFous();
+      wordRef.current.focus();
     }
   }
 
@@ -73,6 +77,7 @@ const WordGame = () => {
     return (
       <div>
         <input
+          type="number"
           ref={numberRef}
           placeholder="참가자 몇 명?"
           value={numberInput}

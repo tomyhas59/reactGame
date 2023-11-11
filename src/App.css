@@ -129,3 +129,61 @@ a {
 .card.flipped .back {
   display: block;
 }
+
+#table {
+  border-collapse: collapse;
+  user-select: none;
+}
+#table td {
+  border: 10px solid #bbada0;
+  width: 116px;
+  height: 128px;
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.color-2 {
+  background-color: red;
+  color: #000;
+}
+.color-4 {
+  background-color: orange;
+  color: #000;
+}
+.color-8 {
+  background-color: yellow;
+  color: #000;
+}
+.color-16 {
+  background-color: green;
+  color: #000;
+}
+.color-32 {
+  background-color: blue;
+  color: #000;
+}
+.color-64 {
+  background-color: indigo;
+  color: #000;
+}
+.color-128 {
+  background-color: purple;
+  color: #000;
+}
+.color-256 {
+  background-color: aqua;
+  color: #000;
+}
+.color-512 {
+  background-color: brown;
+  color: #000;
+}
+.color-1024 {
+  background-color: yellowgreen;
+  color: #000;
+}
+.color-2048 {
+  background-color: salmon;
+  color: #000;
+}

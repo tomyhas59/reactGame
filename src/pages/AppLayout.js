@@ -46,6 +46,9 @@ const AppLayout = ({ children }) => {
         <Link to="wordGame">
           <li>쿵쿵따</li>
         </Link>
+        <Link to="gugudan">
+          <li>구구단</li>
+        </Link>
       </ul>
       <ContentWrapper>{children}</ContentWrapper>
     </LayoutWrapper>
