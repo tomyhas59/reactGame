@@ -53,7 +53,7 @@ function Concentration() {
 
   const [colors, setColors] = useState(colorArr);
   const total = 10;
-  
+
   const initialCards = useCallback(() => {
     const colors = [...colorArr]; //리셋 시 color 초기화
     let randomColors = [];
@@ -160,10 +160,8 @@ function Concentration() {
       <div style={{ display: "flex", flexWrap: "wrap" }}>
         {cards.map((isFlipped, index) => (
           <CardContainer key={index} onClick={() => handleClick(index)}>
-            <Front isFlipped={isFlipped}>Front</Front>
-            <Back isFlipped={isFlipped} color={colors[index]}>
-              Back
-            </Back>
+            <Front isFlipped={isFlipped}></Front>
+            <Back isFlipped={isFlipped} color={colors[index]}></Back>
           </CardContainer>
         ))}
       </div>

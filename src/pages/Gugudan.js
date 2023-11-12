@@ -3,8 +3,8 @@ import useInput from "../hooks/useInput";
 
 const Gugudan = () => {
   const [value, onChangeValue, setValue] = useInput("");
-  const [num1, setNum1] = useState(Math.floor(Math.random() * 9 + 1));
-  const [num2, setNum2] = useState(Math.floor(Math.random() * 9 + 1));
+  const [num1, setNum1] = useState(Math.ceil(Math.random() * 9));
+  const [num2, setNum2] = useState(Math.ceil(Math.random() * 9));
   const [message, setMessage] = useState("");
   const inputRef = useRef(null);
 

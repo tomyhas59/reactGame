@@ -16,7 +16,7 @@ const WordGame = () => {
       alert("숫자를 입력해 주세요");
       setNumberInput("");
       numberRef.current.focus();
-    } else if (!isNaN(numberInput)) {
+    } else if (!isNaN(numberInput) && numberInput > 0) {
       setNumber(numberInput);
       setStart(true);
     }
