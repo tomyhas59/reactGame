@@ -5,8 +5,9 @@ const FindMine = () => {
   const [row, onChangeRow, setRow] = useInput();
   const [cell, onChangeCell, setCell] = useInput();
   const [mine, onChangeMine, setMine] = useInput();
-  const [openCount, setOpenCount] = useState(0);
+
   const [data, setData] = useState([]);
+  const [halted, setHalted] = useState(false);
 
   const CODE = {
     NORMAL: -1,
@@ -14,7 +15,8 @@ const FindMine = () => {
     FLAG: -3,
     QUESTION_MINE: -4,
     FLAG_MINE: -5,
-    MINE: -6,
+    MINE: -7,
+    CLICKED_MINE: -6,
     OPENED: 0,
   };
 
@@ -34,7 +36,7 @@ const FindMine = () => {
 
     const gameData = [];
     for (let i = 0; i < row; i++) {
-      const rowData = [];
+      const rowData = []; // 여기서 초기화
       gameData.push(rowData);
       for (let j = 0; j < cell; j++) {
         rowData.push(CODE.NORMAL);
@@ -64,29 +66,36 @@ const FindMine = () => {
   };
 
   const open = (rowIndex, cellIndex) => {
+    if (halted) return;
     const newData = [...data];
-
-    if (newData[rowIndex]?.[cellIndex] >= CODE.OPENED) return;
-
     const count = countMine(rowIndex, cellIndex);
-    newData[rowIndex][cellIndex] = count;
-    setData(newData);
-    setOpenCount(openCount + 1);
 
-    if (openCount === row * cell - mine) {
-      alert("성공");
+    switch (newData[rowIndex][cellIndex]) {
+      case CODE.OPENED:
+      case CODE.FLAG_MINE:
+      case CODE.FLAG:
+      case CODE.QUESTION_MINE:
+      case CODE.QUESTION:
+        return;
+      case CODE.NORMAL:
+        newData[rowIndex][cellIndex] = count;
+        break;
+      case CODE.MINE:
+        newData[rowIndex][cellIndex] = CODE.CLICKED_MINE;
+        setHalted(true);
+        break;
+      default:
+        return;
     }
-    return count;
-  };
-
-  const drawTable = () => {
-    const gameData = plantMine();
-    setData(gameData);
+    setData(newData);
   };
 
   const onSubmit = (e) => {
+    setData([]);
+    setHalted(false);
     e.preventDefault();
-    drawTable();
+    const gameData = plantMine();
+    setData(gameData);
   };
 
   const getStyle = (cellData) => {
@@ -96,7 +105,7 @@ const FindMine = () => {
         return { background: "#444" };
       case CODE.OPENED:
         return {
-          background: "blue",
+          background: "white",
         };
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
@@ -123,16 +132,17 @@ const FindMine = () => {
       case CODE.FLAG_MINE:
       case CODE.FLAG:
         return "!";
-
+      case CODE.CLICKED_MINE:
+        return "펑";
       default:
-        return "";
+        return cellData || ""; // 0이면 빈 문자
     }
   };
 
   const onRightClick = (rowIndex, cellIndex) => (e) => {
     e.preventDefault();
-    const newData = [...data];
-    const cellData = data[rowIndex][cellIndex];
+    const newData = [...data].map((row) => [...row]);
+    const cellData = newData[rowIndex][cellIndex];
 
     if (cellData === CODE.MINE) {
       newData[rowIndex][cellIndex] = CODE.QUESTION_MINE;
@@ -159,6 +169,7 @@ const FindMine = () => {
         <button type="submit">생성</button>
       </form>
       <div id="timer"></div>
+
       <table>
         <tbody>
           {data &&
