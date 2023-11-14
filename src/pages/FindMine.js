@@ -7,7 +7,6 @@ const FindMine = () => {
   const [mine, onChangeMine, setMine] = useInput();
   const [openCount, setOpenCount] = useState(0);
   const [data, setData] = useState([]);
-  const [cellClasses, setCellClasses] = useState([]);
 
   const CODE = {
     NORMAL: -1,
@@ -46,34 +45,34 @@ const FindMine = () => {
       const hor = shuffle[k] % cell;
       gameData[ver][hor] = CODE.MINE;
     }
-
     return gameData;
   };
 
   const countMine = (rowIndex, cellIndex) => {
+    const newData = [...data];
     const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
     let i = 0;
-    mines.includes(data[rowIndex - 1]?.[cellIndex - 1]) && i++;
-    mines.includes(data[rowIndex - 1]?.[cellIndex]) && i++;
-    mines.includes(data[rowIndex - 1]?.[cellIndex + 1]) && i++;
-    mines.includes(data[rowIndex][cellIndex - 1]) && i++;
-    mines.includes(data[rowIndex][cellIndex + 1]) && i++;
-    mines.includes(data[rowIndex + 1]?.[cellIndex - 1]) && i++;
-    mines.includes(data[rowIndex + 1]?.[cellIndex]) && i++;
-    mines.includes(data[rowIndex + 1]?.[cellIndex + 1]) && i++;
+    mines.includes(newData[rowIndex - 1]?.[cellIndex - 1]) && i++;
+    mines.includes(newData[rowIndex - 1]?.[cellIndex]) && i++;
+    mines.includes(newData[rowIndex - 1]?.[cellIndex + 1]) && i++;
+    mines.includes(newData[rowIndex][cellIndex - 1]) && i++;
+    mines.includes(newData[rowIndex][cellIndex + 1]) && i++;
+    mines.includes(newData[rowIndex + 1]?.[cellIndex - 1]) && i++;
+    mines.includes(newData[rowIndex + 1]?.[cellIndex]) && i++;
+    mines.includes(newData[rowIndex + 1]?.[cellIndex + 1]) && i++;
     return i;
   };
 
   const open = (rowIndex, cellIndex) => {
-    if (data[rowIndex]?.[cellIndex] >= CODE.OPENED) return;
+    const newData = [...data];
+
+    if (newData[rowIndex]?.[cellIndex] >= CODE.OPENED) return;
 
     const count = countMine(rowIndex, cellIndex);
-    const newData = [...data];
     newData[rowIndex][cellIndex] = count;
     setData(newData);
-    setOpenCount((v) => v + 1);
+    setOpenCount(openCount + 1);
 
-    console.log(openCount);
     if (openCount === row * cell - mine) {
       alert("성공");
     }
@@ -88,6 +87,67 @@ const FindMine = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     drawTable();
+  };
+
+  const getStyle = (cellData) => {
+    switch (cellData) {
+      case CODE.NORMAL:
+      case CODE.MINE:
+        return { background: "#444" };
+      case CODE.OPENED:
+        return {
+          background: "blue",
+        };
+      case CODE.QUESTION_MINE:
+      case CODE.QUESTION:
+        return { background: "yellow" };
+      case CODE.FLAG_MINE:
+      case CODE.FLAG:
+        return { background: "red" };
+      default:
+        return {
+          background: "white",
+        };
+    }
+  };
+
+  const getText = (cellData) => {
+    switch (cellData) {
+      case CODE.NORMAL:
+        return "";
+      case CODE.MINE:
+        return "X";
+      case CODE.QUESTION_MINE:
+      case CODE.QUESTION:
+        return "?";
+      case CODE.FLAG_MINE:
+      case CODE.FLAG:
+        return "!";
+
+      default:
+        return "";
+    }
+  };
+
+  const onRightClick = (rowIndex, cellIndex) => (e) => {
+    e.preventDefault();
+    const newData = [...data];
+    const cellData = data[rowIndex][cellIndex];
+
+    if (cellData === CODE.MINE) {
+      newData[rowIndex][cellIndex] = CODE.QUESTION_MINE;
+    } else if (cellData === CODE.QUESTION_MINE) {
+      newData[rowIndex][cellIndex] = CODE.FLAG_MINE;
+    } else if (cellData === CODE.FLAG_MINE) {
+      newData[rowIndex][cellIndex] = CODE.MINE;
+    } else if (cellData === CODE.NORMAL) {
+      newData[rowIndex][cellIndex] = CODE.QUESTION;
+    } else if (cellData === CODE.QUESTION) {
+      newData[rowIndex][cellIndex] = CODE.FLAG;
+    } else if (cellData === CODE.FLAG) {
+      newData[rowIndex][cellIndex] = CODE.NORMAL;
+    }
+    setData(newData);
   };
 
   return (
@@ -105,8 +165,13 @@ const FindMine = () => {
             data.map((rowData, rowIndex) => (
               <tr key={rowIndex}>
                 {rowData.map((cellData, cellIndex) => (
-                  <td onClick={() => open(rowIndex, cellIndex)} key={cellIndex}>
-                    {cellData !== CODE.NORMAL ? cellData : null}
+                  <td
+                    onClick={() => open(rowIndex, cellIndex)}
+                    onContextMenu={(e) => onRightClick(rowIndex, cellIndex)(e)}
+                    key={cellIndex}
+                    style={getStyle(cellData)}
+                  >
+                    {getText(cellData)}
                   </td>
                 ))}
               </tr>
