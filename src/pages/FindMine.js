@@ -70,6 +70,37 @@ const FindMine = () => {
     const newData = [...data];
     const count = countMine(rowIndex, cellIndex);
 
+    const checkSurroundingCells = (r, c) => {
+      if (r < 0 || r >= row || c < 0 || c >= cell) {
+        return;
+      }
+
+      if (
+        newData[r][c] === CODE.OPENED ||
+        newData[r][c] === CODE.FLAG_MINE ||
+        newData[r][c] === CODE.FLAG ||
+        newData[r][c] === CODE.QUESTION_MINE ||
+        newData[r][c] === CODE.QUESTION
+      ) {
+        return;
+      }
+
+      const mineCount = countMine(r, c);
+      newData[r][c] = mineCount;
+
+      if (mineCount === 0) {
+        // Recursively check surrounding cells if the count is 0
+        checkSurroundingCells(r - 1, c - 1);
+        checkSurroundingCells(r - 1, c);
+        checkSurroundingCells(r - 1, c + 1);
+        checkSurroundingCells(r, c - 1);
+        checkSurroundingCells(r, c + 1);
+        checkSurroundingCells(r + 1, c - 1);
+        checkSurroundingCells(r + 1, c);
+        checkSurroundingCells(r + 1, c + 1);
+      }
+    };
+
     switch (newData[rowIndex][cellIndex]) {
       case CODE.OPENED:
       case CODE.FLAG_MINE:
@@ -79,6 +110,16 @@ const FindMine = () => {
         return;
       case CODE.NORMAL:
         newData[rowIndex][cellIndex] = count;
+        if (count === 0) {
+          checkSurroundingCells(rowIndex - 1, cellIndex - 1);
+          checkSurroundingCells(rowIndex - 1, cellIndex);
+          checkSurroundingCells(rowIndex - 1, cellIndex + 1);
+          checkSurroundingCells(rowIndex, cellIndex - 1);
+          checkSurroundingCells(rowIndex, cellIndex + 1);
+          checkSurroundingCells(rowIndex + 1, cellIndex - 1);
+          checkSurroundingCells(rowIndex + 1, cellIndex);
+          checkSurroundingCells(rowIndex + 1, cellIndex + 1);
+        }
         break;
       case CODE.MINE:
         newData[rowIndex][cellIndex] = CODE.CLICKED_MINE;
@@ -87,6 +128,7 @@ const FindMine = () => {
       default:
         return;
     }
+
     setData(newData);
   };
 
