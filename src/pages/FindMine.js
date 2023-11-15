@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useInput from "../hooks/useInput";
 
 const FindMine = () => {
   const [row, onChangeRow, setRow] = useInput();
   const [cell, onChangeCell, setCell] = useInput();
   const [mine, onChangeMine, setMine] = useInput();
-
   const [data, setData] = useState([]);
   const [halted, setHalted] = useState(false);
+  const [openedCount, setOpenedCount] = useState(0);
 
   const CODE = {
     NORMAL: -1,
@@ -19,6 +19,18 @@ const FindMine = () => {
     CLICKED_MINE: -6,
     OPENED: 0,
   };
+
+  useEffect(() => {
+    const arr = [];
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < data[i].length; j++) {
+        if (data[i][j] >= 0) {
+          arr.push(data[i][j]);
+        }
+      }
+    }
+    setOpenedCount(arr.length);
+  }, [data]);
 
   const plantMine = () => {
     const candidate = Array(row * cell)
@@ -51,24 +63,64 @@ const FindMine = () => {
   };
 
   const countMine = (rowIndex, cellIndex) => {
+    const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
+    let count = 0;
+
+    const checkCell = (r, c) => {
+      if (
+        r >= 0 &&
+        r < row &&
+        c >= 0 &&
+        c < cell &&
+        mines.includes(data[r][c])
+      ) {
+        count++;
+      }
+    };
+
+    checkCell(rowIndex - 1, cellIndex - 1);
+    checkCell(rowIndex - 1, cellIndex);
+    checkCell(rowIndex - 1, cellIndex + 1);
+    checkCell(rowIndex, cellIndex - 1);
+    checkCell(rowIndex, cellIndex + 1);
+    checkCell(rowIndex + 1, cellIndex - 1);
+    checkCell(rowIndex + 1, cellIndex);
+    checkCell(rowIndex + 1, cellIndex + 1);
+
+    return count;
+  };
+
+  const showMine = (clickedRowIndex, clickedCellIndex) => {
     const newData = [...data];
     const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
-    let i = 0;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex]) && i++;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex + 1]) && i++;
-    mines.includes(newData[rowIndex][cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex][cellIndex + 1]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex + 1]) && i++;
-    return i;
+
+    newData.forEach((row, rowIndex) => {
+      row.forEach((cell, cellIndex) => {
+        if (mines.includes(cell)) {
+          if (
+            (rowIndex !== clickedRowIndex || cellIndex !== clickedCellIndex) &&
+            cell !== CODE.FLAG &&
+            cell !== CODE.CLICKED_MINE
+          ) {
+            newData[rowIndex][cellIndex] = "X";
+          }
+        }
+      });
+    });
+
+    setData(newData);
   };
 
   const open = (rowIndex, cellIndex) => {
     if (halted) return;
     const newData = [...data];
     const count = countMine(rowIndex, cellIndex);
+
+    if (openedCount === row * cell - mine) {
+      setTimeout(() => {
+        alert("승리했습니다!");
+      }, 500);
+    }
 
     const checkSurroundingCells = (r, c) => {
       if (r < 0 || r >= row || c < 0 || c >= cell) {
@@ -89,7 +141,6 @@ const FindMine = () => {
       newData[r][c] = mineCount;
 
       if (mineCount === 0) {
-        // Recursively check surrounding cells if the count is 0
         checkSurroundingCells(r - 1, c - 1);
         checkSurroundingCells(r - 1, c);
         checkSurroundingCells(r - 1, c + 1);
@@ -124,6 +175,10 @@ const FindMine = () => {
       case CODE.MINE:
         newData[rowIndex][cellIndex] = CODE.CLICKED_MINE;
         setHalted(true);
+        showMine(rowIndex, cellIndex);
+        setTimeout(() => {
+          alert("실패");
+        }, 500);
         break;
       default:
         return;
@@ -135,6 +190,8 @@ const FindMine = () => {
   const onSubmit = (e) => {
     setData([]);
     setHalted(false);
+    setOpenedCount(0);
+
     e.preventDefault();
     const gameData = plantMine();
     setData(gameData);
@@ -167,7 +224,7 @@ const FindMine = () => {
       case CODE.NORMAL:
         return "";
       case CODE.MINE:
-        return "X";
+        return "";
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
         return "?";
@@ -211,7 +268,7 @@ const FindMine = () => {
         <button type="submit">생성</button>
       </form>
       <div id="timer"></div>
-
+      <div>열린 개수 :{openedCount}</div>
       <table>
         <tbody>
           {data &&
