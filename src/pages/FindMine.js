@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useInput from "../hooks/useInput";
 
 const FindMine = () => {
-  const [row, onChangeRow, setRow] = useInput();
-  const [cell, onChangeCell, setCell] = useInput();
-  const [mine, onChangeMine, setMine] = useInput();
-  const [openCount, setOpenCount] = useState(0);
+  const [row, onChangeRow] = useInput();
+  const [cell, onChangeCell] = useInput();
+  const [mine, onChangeMine] = useInput();
   const [data, setData] = useState([]);
+  const [halted, setHalted] = useState(false);
+  const [openedCount, setOpenedCount] = useState(0);
 
   const CODE = {
     NORMAL: -1,
@@ -14,9 +15,30 @@ const FindMine = () => {
     FLAG: -3,
     QUESTION_MINE: -4,
     FLAG_MINE: -5,
-    MINE: -6,
+    MINE: -7,
+    CLICKED_MINE: -6,
     OPENED: 0,
   };
+
+  useEffect(() => {
+    const arr = [];
+    for (let i = 0; i < data.length; i++) {
+      for (let j = 0; j < data[i].length; j++) {
+        if (data[i][j] >= 0) {
+          arr.push(data[i][j]);
+        }
+      }
+    }
+    setOpenedCount(arr.length);
+  }, [data]);
+
+  useEffect(() => {
+    if (row && cell && mine && openedCount === row * cell - mine) {
+      setTimeout(() => {
+        alert("승리했습니다!");
+      }, 500);
+    }
+  }, [cell, mine, openedCount, row]);
 
   const plantMine = () => {
     const candidate = Array(row * cell)
@@ -34,7 +56,7 @@ const FindMine = () => {
 
     const gameData = [];
     for (let i = 0; i < row; i++) {
-      const rowData = [];
+      const rowData = []; // 여기서 초기화
       gameData.push(rowData);
       for (let j = 0; j < cell; j++) {
         rowData.push(CODE.NORMAL);
@@ -49,44 +71,131 @@ const FindMine = () => {
   };
 
   const countMine = (rowIndex, cellIndex) => {
-    const newData = [...data];
     const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
-    let i = 0;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex]) && i++;
-    mines.includes(newData[rowIndex - 1]?.[cellIndex + 1]) && i++;
-    mines.includes(newData[rowIndex][cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex][cellIndex + 1]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex - 1]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex]) && i++;
-    mines.includes(newData[rowIndex + 1]?.[cellIndex + 1]) && i++;
-    return i;
-  };
+    let count = 0;
 
-  const open = (rowIndex, cellIndex) => {
-    const newData = [...data];
+    const checkCell = (r, c) => {
+      if (
+        r >= 0 &&
+        r < row &&
+        c >= 0 &&
+        c < cell &&
+        mines.includes(data[r][c])
+      ) {
+        count++;
+      }
+    };
 
-    if (newData[rowIndex]?.[cellIndex] >= CODE.OPENED) return;
+    checkCell(rowIndex - 1, cellIndex - 1);
+    checkCell(rowIndex - 1, cellIndex);
+    checkCell(rowIndex - 1, cellIndex + 1);
+    checkCell(rowIndex, cellIndex - 1);
+    checkCell(rowIndex, cellIndex + 1);
+    checkCell(rowIndex + 1, cellIndex - 1);
+    checkCell(rowIndex + 1, cellIndex);
+    checkCell(rowIndex + 1, cellIndex + 1);
 
-    const count = countMine(rowIndex, cellIndex);
-    newData[rowIndex][cellIndex] = count;
-    setData(newData);
-    setOpenCount(openCount + 1);
-
-    if (openCount === row * cell - mine) {
-      alert("성공");
-    }
     return count;
   };
 
-  const drawTable = () => {
-    const gameData = plantMine();
-    setData(gameData);
+  const showMine = (clickedRowIndex, clickedCellIndex) => {
+    const newData = [...data];
+    const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
+
+    newData.forEach((row, rowIndex) => {
+      row.forEach((cell, cellIndex) => {
+        if (mines.includes(cell)) {
+          if (
+            (rowIndex !== clickedRowIndex || cellIndex !== clickedCellIndex) &&
+            cell !== CODE.FLAG &&
+            cell !== CODE.CLICKED_MINE
+          ) {
+            newData[rowIndex][cellIndex] = "X";
+          }
+        }
+      });
+    });
+
+    setData(newData);
+  };
+
+  const open = (rowIndex, cellIndex) => {
+    if (halted) return;
+    const newData = [...data];
+    const count = countMine(rowIndex, cellIndex);
+
+    const checkSurroundingCells = (r, c) => {
+      if (r < 0 || r >= row || c < 0 || c >= cell) {
+        return;
+      }
+
+      if (
+        newData[r][c] === CODE.OPENED ||
+        newData[r][c] === CODE.FLAG_MINE ||
+        newData[r][c] === CODE.FLAG ||
+        newData[r][c] === CODE.QUESTION_MINE ||
+        newData[r][c] === CODE.QUESTION
+      ) {
+        return;
+      }
+
+      const mineCount = countMine(r, c);
+      newData[r][c] = mineCount;
+
+      if (mineCount === 0) {
+        checkSurroundingCells(r - 1, c - 1);
+        checkSurroundingCells(r - 1, c);
+        checkSurroundingCells(r - 1, c + 1);
+        checkSurroundingCells(r, c - 1);
+        checkSurroundingCells(r, c + 1);
+        checkSurroundingCells(r + 1, c - 1);
+        checkSurroundingCells(r + 1, c);
+        checkSurroundingCells(r + 1, c + 1);
+      }
+    };
+
+    switch (newData[rowIndex][cellIndex]) {
+      case CODE.OPENED:
+      case CODE.FLAG_MINE:
+      case CODE.FLAG:
+      case CODE.QUESTION_MINE:
+      case CODE.QUESTION:
+        return;
+      case CODE.NORMAL:
+        newData[rowIndex][cellIndex] = count;
+        if (count === 0) {
+          checkSurroundingCells(rowIndex - 1, cellIndex - 1);
+          checkSurroundingCells(rowIndex - 1, cellIndex);
+          checkSurroundingCells(rowIndex - 1, cellIndex + 1);
+          checkSurroundingCells(rowIndex, cellIndex - 1);
+          checkSurroundingCells(rowIndex, cellIndex + 1);
+          checkSurroundingCells(rowIndex + 1, cellIndex - 1);
+          checkSurroundingCells(rowIndex + 1, cellIndex);
+          checkSurroundingCells(rowIndex + 1, cellIndex + 1);
+        }
+        break;
+      case CODE.MINE:
+        newData[rowIndex][cellIndex] = CODE.CLICKED_MINE;
+        setHalted(true);
+        showMine(rowIndex, cellIndex);
+        setTimeout(() => {
+          alert("실패");
+        }, 500);
+        break;
+      default:
+        return;
+    }
+
+    setData(newData);
   };
 
   const onSubmit = (e) => {
+    setData([]);
+    setHalted(false);
+    setOpenedCount(0);
     e.preventDefault();
-    drawTable();
+    const gameData = plantMine();
+    setData(gameData);
   };
 
   const getStyle = (cellData) => {
@@ -96,7 +205,7 @@ const FindMine = () => {
         return { background: "#444" };
       case CODE.OPENED:
         return {
-          background: "blue",
+          background: "white",
         };
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
@@ -116,23 +225,24 @@ const FindMine = () => {
       case CODE.NORMAL:
         return "";
       case CODE.MINE:
-        return "X";
+        return "";
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
         return "?";
       case CODE.FLAG_MINE:
       case CODE.FLAG:
         return "!";
-
+      case CODE.CLICKED_MINE:
+        return "펑";
       default:
-        return "";
+        return cellData || ""; // 0이면 빈 문자
     }
   };
 
   const onRightClick = (rowIndex, cellIndex) => (e) => {
     e.preventDefault();
-    const newData = [...data];
-    const cellData = data[rowIndex][cellIndex];
+    const newData = [...data].map((row) => [...row]);
+    const cellData = newData[rowIndex][cellIndex];
 
     if (cellData === CODE.MINE) {
       newData[rowIndex][cellIndex] = CODE.QUESTION_MINE;
@@ -159,6 +269,7 @@ const FindMine = () => {
         <button type="submit">생성</button>
       </form>
       <div id="timer"></div>
+      <div>열린 개수 :{openedCount}</div>
       <table>
         <tbody>
           {data &&
