@@ -122,6 +122,20 @@ const FindMine = () => {
   const open = (rowIndex, cellIndex) => {
     if (halted) return;
     const newData = [...data];
+
+    if (openedCount === 0) {
+      let firstCellData = newData[rowIndex][cellIndex];
+      while (firstCellData === CODE.MINE) {
+        const newMineRowIndex = Math.floor(Math.random() * row);
+        const newMineCellIndex = Math.floor(Math.random() * cell);
+        if (newData[newMineRowIndex][newMineCellIndex] !== CODE.MINE) {
+          newData[rowIndex][cellIndex] = CODE.NORMAL; //클릭한 셀 노말로 바꾸고
+          newData[newMineRowIndex][newMineCellIndex] = CODE.MINE; //새로운 셀에 지뢰 심기
+        }
+        firstCellData = newData[rowIndex][cellIndex];
+      }
+    }
+
     const count = countMine(rowIndex, cellIndex);
 
     const checkSurroundingCells = (r, c) => {
@@ -225,7 +239,7 @@ const FindMine = () => {
       case CODE.NORMAL:
         return "";
       case CODE.MINE:
-        return "";
+        return "X";
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
         return "?";
