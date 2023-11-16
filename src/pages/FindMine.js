@@ -268,7 +268,7 @@ const FindMine = () => {
         <input value={mine} onChange={onChangeMine} size="5" />
         <button type="submit">생성</button>
       </form>
-      <div id="timer"></div>
+
       <div>열린 개수 :{openedCount}</div>
       <table>
         <tbody>
@@ -289,7 +289,6 @@ const FindMine = () => {
             ))}
         </tbody>
       </table>
-      <div id="result"></div>
     </div>
   );
 };
