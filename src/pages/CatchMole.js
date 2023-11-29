@@ -1,91 +1,194 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import styled, { keyframes, css } from "styled-components";
 import gopherImg from "../gopher.png";
+import bombImg from "../bomb.png";
 import moleHoleImg from "../mole-hole.png";
+import moleHoleFrontImg from "../mole-hole-front.png";
+import deadImg from "../dead_gopher.png";
 
-const Mole = ({ active, onClick }) => {
-  const moleStyle = {
-    width: "150px",
-    height: "150px",
-    cursor: "pointer",
+const CatchMole = () => {
+  const [moles, setMoles] = useState(
+    Array.from({ length: 9 }).fill({ type: null, clicked: false })
+  );
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
+
+  const generateRandomMoles = useCallback(() => {
+    const updatedMoles = [...moles];
+    const numberOfAppearances = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < numberOfAppearances; i++) {
+      const index = Math.floor(Math.random() * 9);
+      updatedMoles[index] =
+        Math.random() < 0.5
+          ? { type: "mole", clicked: false }
+          : { type: "bomb", clicked: false };
+    }
+    setMoles(updatedMoles);
+  }, [moles]);
+
+  const handleMoleClick = (index) => {
+    if (moles[index].clicked) {
+      return;
+    }
+    const updatedMoles = [...moles];
+    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
+    setMoles(updatedMoles);
+
+    setScore((prevScore) => prevScore + 1);
+
+    setTimeout(() => {
+      const resetMoles = [...moles];
+      resetMoles[index] = { ...resetMoles[index], clicked: false };
+      setMoles(resetMoles);
+    }, 1000);
   };
 
-  return (
-    <img
-      src={active ? gopherImg : moleHoleImg}
-      alt="img"
-      style={moleStyle}
-      onClick={onClick}
-    ></img>
-  );
-};
-
-const Game = () => {
-  const [moles, setMoles] = useState(Array(9).fill(false));
-  const [score, setScore] = useState(0);
+  const handleBombClick = () => {
+    setLives((prevLives) => prevLives - 1);
+  };
 
   useEffect(() => {
-    const moleInterval = setInterval(() => {
-      const numMolesToShow = Math.floor(Math.random() * 2) + 3;
-      const moleIndices = [];
-
-      while (moleIndices.length < numMolesToShow) {
-        const randomIndex = Math.floor(Math.random() * 9);
-        if (!moleIndices.includes(randomIndex)) {
-          moleIndices.push(randomIndex);
-        }
-      }
-
-      setMoles((prevMoles) =>
-        prevMoles.map((mole, index) =>
-          moleIndices.includes(index) ? true : mole
-        )
-      );
-
-      setTimeout(() => {
-        setMoles((prevMoles) =>
-          prevMoles.map((mole, index) =>
-            moleIndices.includes(index) ? false : mole
-          )
-        );
+    let intervalId;
+    if (isGameStarted) {
+      intervalId = setInterval(() => {
+        generateRandomMoles();
+        setTimeout(() => {
+          const resetMoles = moles.map((mole) =>
+            mole.type ? { ...mole, clicked: false } : mole
+          );
+          setMoles(resetMoles);
+        }, 2000);
       }, 1000);
-    }, 1000);
-
-    return () => clearInterval(moleInterval);
-  }, []);
-
-  const handleWhack = (index) => {
-    if (!moles[index]) return;
-    setMoles((prevMoles) =>
-      prevMoles.map((mole, moleIndex) => (moleIndex === index ? !mole : mole))
-    );
-
-    if (moles[index]) {
-      setScore((prevScore) => prevScore + 1);
     }
-  };
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [generateRandomMoles, isGameStarted, moles]);
 
-  const scoreStyle = {
-    fontSize: "24px",
-    marginBottom: "20px",
-  };
-
-  const molesContainerStyle = {
-    width: "500px",
-    display: "grid",
-    gridTemplateColumns: "repeat(3, 100px)",
-    gap: "100px",
+  const startGame = () => {
+    setIsGameStarted(true);
   };
 
   return (
-    <div>
-      <div style={scoreStyle}>Score: {score}</div>
-      <div style={molesContainerStyle}>
+    <>
+      {!isGameStarted && (
+        <StartButton onClick={startGame}>Start Game</StartButton>
+      )}
+      <HoleGrid>
         {moles.map((mole, index) => (
-          <Mole key={index} active={mole} onClick={() => handleWhack(index)} />
+          <Cell key={index}>
+            <Hole></Hole>
+            {isGameStarted && mole.type === "mole" && (
+              <Gopher
+                onClick={() => handleMoleClick(index)}
+                clicked={mole.clicked}
+              />
+            )}
+            {isGameStarted && mole.type === "bomb" && (
+              <Bomb onClick={handleBombClick} />
+            )}
+            <HoleFront></HoleFront>
+          </Cell>
         ))}
+      </HoleGrid>
+      <div>
+        Lives: {lives} | Score: {score}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Game;
+export default CatchMole;
+
+const HoleGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 100px;
+  row-gap: 50px;
+  justify-content: center;
+`;
+
+const Cell = styled.div`
+  display: inline-block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+`;
+
+const riseAnimation = keyframes`
+  from {
+    bottom: -200px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
+`;
+
+const fallAnimation = keyframes`
+  from {
+    bottom: 0;
+    opacity: 1;
+  }
+  to {
+    bottom: -200px;
+    opacity: 0;
+  }
+`;
+
+const Gopher = styled.div`
+  width: 200px;
+  height: 200px;
+  bottom: ${(props) => (props.clicked ? "0" : "-200px")};
+  position: absolute;
+  animation: ${(props) =>
+    props.clicked
+      ? css`
+          ${fallAnimation} 1s ease-in-out forwards
+        `
+      : css`
+          ${riseAnimation} 1s ease-in-out forwards
+        `};
+  background-image: url(${gopherImg});
+  background-size: contain;
+  transform-origin: bottom;
+  opacity: 1;
+  ${(props) =>
+    props.clicked &&
+    css`
+      background-image: url(${deadImg});
+    `}
+`;
+
+const Bomb = styled(Gopher)`
+  background: url(${bombImg}) center center no-repeat;
+`;
+
+const Hole = styled.div`
+  width: 200px;
+  height: 150px;
+  position: absolute;
+  bottom: 0;
+  background: url(${moleHoleImg}) center center no-repeat;
+  background-size: 200px 150px;
+  cursor: pointer;
+`;
+
+const HoleFront = styled.div`
+  width: 200px;
+  height: 30px;
+  position: absolute;
+  bottom: 0;
+  background: url(${moleHoleFrontImg}) center center no-repeat;
+  background-size: 200px 30px;
+`;
+
+const StartButton = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+`;
