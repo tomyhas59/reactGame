@@ -14,14 +14,14 @@ const CatchMole = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(8);
+  const [time, setTime] = useState(20);
 
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
       const updatedMoles = [...prevMoles];
-      const numberOfAppearances = Math.floor(Math.random() * 5) + 2;
+      const numberOfAppearances = Math.floor(Math.random() * 4);
 
-      for (let i = 0; i < numberOfAppearances; i++) {
+      for (let i = numberOfAppearances; i < 9; i++) {
         const index = Math.floor(Math.random() * 9);
         updatedMoles[index] =
           Math.random() < 0.5
@@ -57,7 +57,7 @@ const CatchMole = () => {
     if (isGameStarted) {
       const intervalId = setInterval(() => {
         generateRandomMoles();
-      }, 1000);
+      }, 2000);
       return () => {
         clearInterval(intervalId);
       };
@@ -74,7 +74,7 @@ const CatchMole = () => {
         alert(`게임 오버! 점수는 ${score}점`);
         setLives(3);
         setScore(0);
-        setTime(8);
+        setTime(20);
         setIsGameStarted(false);
         setMoles(
           Array.from({ length: 9 }).fill({ type: null, clicked: false })
@@ -96,7 +96,7 @@ const CatchMole = () => {
       }, 100);
       return () => clearInterval(intervalId);
     }
-  }, [isGameStarted, score, time]);
+  }, [isGameStarted, time]);
 
   return (
     <>
@@ -135,8 +135,8 @@ export default CatchMole;
 const HoleGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 100px;
-  row-gap: 50px;
+  column-gap: 50px;
+  row-gap: 20px;
   justify-content: center;
 `;
 
@@ -149,14 +149,11 @@ const Cell = styled.div`
 `;
 
 const basicAnimation = keyframes`
-  0% {
+  0% , 100% {
     bottom: -200px;
   }
  50% {
     bottom: 0;
-  }
-  100% {
-    bottom: -200px;
   }
 `;
 
@@ -175,7 +172,6 @@ const Gopher = styled.div`
   background-image: url(${gopherImg});
   width: 200px;
   height: 200px;
-  bottom: -200px;
   position: absolute;
   animation: ${basicAnimation} 2s ease-in-out forwards;
   background-size: contain;
