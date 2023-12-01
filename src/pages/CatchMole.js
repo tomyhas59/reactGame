@@ -9,12 +9,12 @@ import explodeImg from "../explode.png";
 
 const CatchMole = () => {
   const [moles, setMoles] = useState(
-    Array.from({ length: 9 }).fill({ type: null, clicked: false })
+    Array.from({ length: 9 }).fill({ type: null, clicked: false, rise: false })
   );
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(20);
+  const [time, setTime] = useState(2110);
 
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
@@ -25,39 +25,59 @@ const CatchMole = () => {
         const index = Math.floor(Math.random() * 9);
         updatedMoles[index] =
           Math.random() < 0.5
-            ? { type: "mole", clicked: false }
-            : { type: "bomb", clicked: false };
+            ? { type: "mole", clicked: false, rise: true }
+            : { type: "bomb", clicked: false, rise: true };
       }
       return updatedMoles;
     });
-  }, []);
 
-  const handleMoleClick = (index) => {
-    if (moles[index].clicked) {
-      return;
-    }
-    const updatedMoles = [...moles];
-    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
-    setMoles(updatedMoles);
+    setTimeout(() => {
+      setMoles((prevMoles) =>
+        prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
+      );
+    }, 1000);
+  }, [moles]);
 
-    setScore((prevScore) => prevScore + 1);
-  };
+  const handleMoleClick = useCallback(
+    (index) => {
+      if (moles[index].clicked) {
+        return;
+      }
+      const updatedMoles = [...moles];
+      updatedMoles[index] = {
+        ...updatedMoles[index],
+        clicked: true,
+        rise: false,
+      };
+      setMoles(updatedMoles);
 
-  const handleBombClick = (index) => {
-    if (moles[index].clicked) {
-      return;
-    }
-    const updatedMoles = [...moles];
-    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
-    setMoles(updatedMoles);
-    setLives((prevLives) => prevLives - 1);
-  };
+      setScore((prevScore) => prevScore + 1);
+    },
+    [moles, score]
+  );
+
+  const handleBombClick = useCallback(
+    (index) => {
+      if (moles[index].clicked) {
+        return;
+      }
+      const updatedMoles = [...moles];
+      updatedMoles[index] = {
+        ...updatedMoles[index],
+        clicked: true,
+        rise: false,
+      };
+      setMoles(updatedMoles);
+      setLives((prevLives) => prevLives - 1);
+    },
+    [moles, score]
+  );
 
   useEffect(() => {
     if (isGameStarted) {
       const intervalId = setInterval(() => {
         generateRandomMoles();
-      }, 2000);
+      }, 1000);
       return () => {
         clearInterval(intervalId);
       };
@@ -77,7 +97,11 @@ const CatchMole = () => {
         setTime(20);
         setIsGameStarted(false);
         setMoles(
-          Array.from({ length: 9 }).fill({ type: null, clicked: false })
+          Array.from({ length: 9 }).fill({
+            type: null,
+            clicked: false,
+            rise: false,
+          })
         );
       }, 50);
     }
@@ -114,12 +138,14 @@ const CatchMole = () => {
               <Gopher
                 onClick={() => handleMoleClick(index)}
                 clicked={mole.clicked}
+                rise={mole.rise}
               />
             )}
             {isGameStarted && mole.type === "bomb" && (
               <Bomb
                 onClick={() => handleBombClick(index)}
                 clicked={mole.clicked}
+                rise={mole.rise}
               />
             )}
             <HoleFront></HoleFront>
@@ -148,40 +174,20 @@ const Cell = styled.div`
   overflow: hidden;
 `;
 
-const basicAnimation = keyframes`
-  0% , 100% {
-    bottom: -200px;
-  }
- 50% {
-    bottom: 0;
-  }
-`;
-
-const fallAnimation = keyframes`
-  from {
-    bottom: 0;
-    opacity: 1;
-  }
-  to {
-    bottom: -200px;
-    opacity: 0;
-  }
-`;
-
 const Gopher = styled.div`
   background-image: url(${gopherImg});
+  position: absolute;
   width: 200px;
   height: 200px;
-  position: absolute;
-  animation: ${basicAnimation} 2s ease-in-out forwards;
+  bottom: 0;
   background-size: contain;
-  transform-origin: bottom;
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+  transition: transform 1s ease-in-out;
+  transform: translateY(${(props) => (props.rise ? "200px" : "0px")});
   ${(props) =>
     props.clicked &&
     css`
-      animation: ${fallAnimation} 1s ease-in-out forwards;
+      transform: translateY(200px);
       background-image: url(${deadImg});
     `}
 `;
@@ -191,7 +197,7 @@ const Bomb = styled(Gopher)`
   ${(props) =>
     props.clicked &&
     css`
-      animation: ${fallAnimation} 1s ease-in-out forwards;
+      transform: translateY(200px);
       background-image: url(${explodeImg});
     `}
 `;
