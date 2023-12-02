@@ -9,55 +9,75 @@ import explodeImg from "../explode.png";
 
 const CatchMole = () => {
   const [moles, setMoles] = useState(
-    Array.from({ length: 9 }).fill({ type: null, clicked: false })
+    Array.from({ length: 9 }).fill({ type: null, clicked: false, rise: false })
   );
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(8);
+  const [time, setTime] = useState(2110);
 
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
       const updatedMoles = [...prevMoles];
-      const numberOfAppearances = Math.floor(Math.random() * 5) + 2;
+      const numberOfAppearances = Math.floor(Math.random() * 4);
 
-      for (let i = 0; i < numberOfAppearances; i++) {
+      for (let i = numberOfAppearances; i < 9; i++) {
         const index = Math.floor(Math.random() * 9);
         updatedMoles[index] =
           Math.random() < 0.5
-            ? { type: "mole", clicked: false }
-            : { type: "bomb", clicked: false };
+            ? { type: "mole", clicked: false, rise: true }
+            : { type: "bomb", clicked: false, rise: true };
       }
       return updatedMoles;
     });
+
+    setTimeout(() => {
+      setMoles((prevMoles) =>
+        prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
+      );
+    }, 1000);
   }, []);
 
-  const handleMoleClick = (index) => {
-    if (moles[index].clicked) {
-      return;
-    }
-    const updatedMoles = [...moles];
-    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
-    setMoles(updatedMoles);
+  const handleMoleClick = useCallback(
+    (index) => {
+      if (moles[index].clicked) {
+        return;
+      }
+      const updatedMoles = [...moles];
+      updatedMoles[index] = {
+        ...updatedMoles[index],
+        clicked: true,
+        rise: false,
+      };
+      setMoles(updatedMoles);
 
-    setScore((prevScore) => prevScore + 1);
-  };
+      setScore((prevScore) => prevScore + 1);
+    },
+    [moles]
+  );
 
-  const handleBombClick = (index) => {
-    if (moles[index].clicked) {
-      return;
-    }
-    const updatedMoles = [...moles];
-    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
-    setMoles(updatedMoles);
-    setLives((prevLives) => prevLives - 1);
-  };
+  const handleBombClick = useCallback(
+    (index) => {
+      if (moles[index].clicked) {
+        return;
+      }
+      const updatedMoles = [...moles];
+      updatedMoles[index] = {
+        ...updatedMoles[index],
+        clicked: true,
+        rise: false,
+      };
+      setMoles(updatedMoles);
+      setLives((prevLives) => prevLives - 1);
+    },
+    [moles]
+  );
 
   useEffect(() => {
     if (isGameStarted) {
       const intervalId = setInterval(() => {
         generateRandomMoles();
-      }, 1000);
+      }, 2000);
       return () => {
         clearInterval(intervalId);
       };
@@ -74,10 +94,14 @@ const CatchMole = () => {
         alert(`게임 오버! 점수는 ${score}점`);
         setLives(3);
         setScore(0);
-        setTime(8);
+        setTime(20);
         setIsGameStarted(false);
         setMoles(
-          Array.from({ length: 9 }).fill({ type: null, clicked: false })
+          Array.from({ length: 9 }).fill({
+            type: null,
+            clicked: false,
+            rise: false,
+          })
         );
       }, 50);
     }
@@ -96,7 +120,7 @@ const CatchMole = () => {
       }, 100);
       return () => clearInterval(intervalId);
     }
-  }, [isGameStarted, score, time]);
+  }, [isGameStarted, time]);
 
   return (
     <>
@@ -114,12 +138,14 @@ const CatchMole = () => {
               <Gopher
                 onClick={() => handleMoleClick(index)}
                 clicked={mole.clicked}
+                rise={mole.rise}
               />
             )}
             {isGameStarted && mole.type === "bomb" && (
               <Bomb
                 onClick={() => handleBombClick(index)}
                 clicked={mole.clicked}
+                rise={mole.rise}
               />
             )}
             <HoleFront></HoleFront>
@@ -135,8 +161,8 @@ export default CatchMole;
 const HoleGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 100px;
-  row-gap: 50px;
+  column-gap: 50px;
+  row-gap: 20px;
   justify-content: center;
 `;
 
@@ -148,44 +174,20 @@ const Cell = styled.div`
   overflow: hidden;
 `;
 
-const basicAnimation = keyframes`
-  0% {
-    bottom: -200px;
-  }
- 50% {
-    bottom: 0;
-  }
-  100% {
-    bottom: -200px;
-  }
-`;
-
-const fallAnimation = keyframes`
-  from {
-    bottom: 0;
-    opacity: 1;
-  }
-  to {
-    bottom: -200px;
-    opacity: 0;
-  }
-`;
-
 const Gopher = styled.div`
   background-image: url(${gopherImg});
+  position: absolute;
   width: 200px;
   height: 200px;
-  bottom: -200px;
-  position: absolute;
-  animation: ${basicAnimation} 2s ease-in-out forwards;
+  bottom: 0;
   background-size: contain;
-  transform-origin: bottom;
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+  transition: transform 1s ease-in-out;
+  transform: translateY(${(props) => (props.rise ? "200px" : "0px")});
   ${(props) =>
     props.clicked &&
     css`
-      animation: ${fallAnimation} 1s ease-in-out forwards;
+      transform: translateY(200px);
       background-image: url(${deadImg});
     `}
 `;
@@ -195,7 +197,7 @@ const Bomb = styled(Gopher)`
   ${(props) =>
     props.clicked &&
     css`
-      animation: ${fallAnimation} 1s ease-in-out forwards;
+      transform: translateY(200px);
       background-image: url(${explodeImg});
     `}
 `;

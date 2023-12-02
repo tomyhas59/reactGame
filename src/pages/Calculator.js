@@ -38,40 +38,10 @@ const Calculator = () => {
   };
 
   const onClickOperator = (op) => {
-    if (numTwo) {
-      let calculatedResult;
-      switch (operator) {
-        case "+":
-          calculatedResult = parseFloat(numOne) + parseFloat(numTwo);
-          break;
-        case "-":
-          calculatedResult = parseFloat(numOne) - parseFloat(numTwo);
-          break;
-        case "/":
-          if (parseFloat(numTwo) === 0) {
-            alert("0으로 나눌 수 없습니다.");
-            clearCalculator();
-            return;
-          }
-          calculatedResult = parseFloat(numOne) / parseFloat(numTwo);
-          break;
-        case "*":
-          calculatedResult = parseFloat(numOne) * parseFloat(numTwo);
-          break;
-        default:
-          alert("올바른 연산자가 아닙니다.");
-          clearCalculator();
-          return;
-      }
-      setNumOne(calculatedResult.toString());
-      setNumTwo("");
-      setResult(calculatedResult.toString());
-    }
-    if (numOne) {
+    if (!numOne) return;
+    if (operator !== op) {
       setOperator(op);
-      setResult(result);
-    } else {
-      alert("숫자와 연산자를 모두 입력하세요.");
+      setNumTwo("");
     }
   };
 
@@ -119,7 +89,11 @@ const Calculator = () => {
 
   return (
     <div>
-      <input style={{ textAlign: "right" }} readOnly value={operator} />
+      <input
+        style={{ textAlign: "right", fontSize: "50px", width: "300px" }}
+        readOnly
+        value={operator}
+      />
       <table>
         <tbody>
           {buttons.map((row, rowIndex) => (
@@ -127,6 +101,11 @@ const Calculator = () => {
               {row.map((btnText) => (
                 <td key={btnText}>
                   <button
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                      fontSize: "50px",
+                    }}
                     onClick={() => {
                       if (btnText === "±") {
                         onMinusClick();
@@ -153,7 +132,7 @@ const Calculator = () => {
         readOnly
         type="text"
         value={result}
-        style={{ textAlign: "right" }}
+        style={{ textAlign: "right", fontSize: "50px", width: "300px" }}
       />
     </div>
   );
