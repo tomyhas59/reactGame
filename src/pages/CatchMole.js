@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styled, { keyframes, css } from "styled-components";
+import styled, { css } from "styled-components";
 import gopherImg from "../gopher.png";
 import bombImg from "../bomb.png";
 import moleHoleImg from "../mole-hole.png";
