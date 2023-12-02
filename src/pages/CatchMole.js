@@ -28,14 +28,13 @@ const CatchMole = () => {
             ? { type: "mole", clicked: false, rise: true }
             : { type: "bomb", clicked: false, rise: true };
       }
+      setTimeout(() => {
+        setMoles((prevMoles) =>
+          prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
+        );
+      }, 1000);
       return updatedMoles;
     });
-
-    setTimeout(() => {
-      setMoles((prevMoles) =>
-        prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
-      );
-    }, 1000);
   }, []);
 
   const handleMoleClick = useCallback(
@@ -75,9 +74,7 @@ const CatchMole = () => {
 
   useEffect(() => {
     if (isGameStarted) {
-      const intervalId = setInterval(() => {
-        generateRandomMoles();
-      }, 2000);
+      const intervalId = setInterval(generateRandomMoles, 2000);
       return () => {
         clearInterval(intervalId);
       };
