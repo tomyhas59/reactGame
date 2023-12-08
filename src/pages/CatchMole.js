@@ -19,7 +19,7 @@ const CatchMole = () => {
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
       const updatedMoles = [...prevMoles];
-      const numberOfAppearances = Math.floor(Math.random() * 4);
+      const numberOfAppearances = Math.floor(Math.random() * 4) + 3;
 
       for (let i = numberOfAppearances; i < 9; i++) {
         const index = Math.floor(Math.random() * 9);
