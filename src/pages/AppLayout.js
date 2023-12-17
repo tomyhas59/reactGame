@@ -11,7 +11,6 @@ const AppLayout = ({ children }) => {
     { to: "findMine", label: "지뢰찾기" },
     { to: "lotto", label: "로또" },
     { to: "make2048", label: "2048게임" },
-    { to: "omok", label: "오목" },
     { to: "responseCheck", label: "반응속도체크" },
     { to: "RSP", label: "가위바위보" },
     { to: "textRPG", label: "텍스트RPG" },
@@ -21,17 +20,20 @@ const AppLayout = ({ children }) => {
 
   return (
     <LayoutWrapper>
-      <Link to="/">
-        <Main>Y의 즐거운 게임 세상</Main>
-      </Link>
-      <br />
-      <ul>
-        {links.map((link, index) => (
-          <Link to={link.to} key={index}>
-            <li>{link.label}</li>
-          </Link>
-        ))}
-      </ul>
+      <Header>
+        <Link to="/">
+          <Main>Y의 즐거운 게임 세상</Main>
+        </Link>
+      </Header>
+      <Aside>
+        <ul>
+          {links.map((link, index) => (
+            <Link to={link.to} key={index}>
+              <li>{link.label}</li>
+            </Link>
+          ))}
+        </ul>
+      </Aside>
       <ContentWrapper>{children}</ContentWrapper>
     </LayoutWrapper>
   );
@@ -43,8 +45,8 @@ const Main = styled.div`
   width: 1000px;
   margin: 0 auto;
   color: green;
-  text-shadow: 5px 5px yellowgreen;
-  font-size: 100px;
+  text-shadow: 3px 3px yellowgreen;
+  font-size: 50px;
   &:hover {
     color: yellowgreen;
     text-shadow: 5px 5px green;
@@ -56,11 +58,60 @@ const LayoutWrapper = styled.div`
   flex-direction: column;
   min-height: 100vh;
   margin-top: 1rem;
+  & a {
+    text-decoration: none;
+  }
 `;
 
-const ContentWrapper = styled.div`
-  flex-grow: 1;
-  padding-top: 50px;
-  overflow-y: auto;
+const ContentWrapper = styled.article`
+  float: right;
+  padding-top: 70px;
+  width: 30%;
   margin: 0 auto;
+`;
+
+const Aside = styled.aside`
+  position: fixed;
+  background-color: yellowgreen;
+  width: 15%;
+  top: 60px;
+  bottom: 0;
+  padding-top: 25px;
+  & ul {
+    margin: 0;
+    padding: 0;
+  }
+  & ul > a {
+    text-align: center;
+    text-decoration: none;
+    color: #000;
+  }
+  & ul > a > li {
+    background-color: white;
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
+    list-style: none;
+    border: 1px solid;
+    padding: 5px;
+    margin-top: 5px;
+    border-radius: 20%;
+    box-shadow: 2px 2px;
+    cursor: pointer;
+    &:hover {
+      background-color: darkgrey;
+      color: antiquewhite;
+    }
+  }
+`;
+
+const Header = styled.header`
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  z-index: 2000;
+  background-color: #fff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
 `;
