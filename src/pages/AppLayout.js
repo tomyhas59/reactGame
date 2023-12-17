@@ -41,6 +41,18 @@ const AppLayout = ({ children }) => {
 
 export default AppLayout;
 
+const Header = styled.header`
+  position: fixed;
+  text-align: center;
+  padding: 10px;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  z-index: 2000;
+  background-color: #fff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
+`;
+
 const Main = styled.div`
   width: 1000px;
   margin: 0 auto;
@@ -49,7 +61,7 @@ const Main = styled.div`
   font-size: 50px;
   &:hover {
     color: yellowgreen;
-    text-shadow: 5px 5px green;
+    text-shadow: 3px 3px green;
   }
 `;
 
@@ -65,7 +77,7 @@ const LayoutWrapper = styled.div`
 
 const ContentWrapper = styled.article`
   float: right;
-  padding-top: 70px;
+  padding-top: 100px;
   width: 30%;
   margin: 0 auto;
 `;
@@ -74,7 +86,7 @@ const Aside = styled.aside`
   position: fixed;
   background-color: yellowgreen;
   width: 15%;
-  top: 60px;
+  top: 70px;
   bottom: 0;
   padding-top: 25px;
   & ul {
@@ -103,15 +115,4 @@ const Aside = styled.aside`
       color: antiquewhite;
     }
   }
-`;
-
-const Header = styled.header`
-  position: fixed;
-  text-align: center;
-  top: 0;
-  width: 100%;
-  height: 60px;
-  z-index: 2000;
-  background-color: #fff;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
 `;
