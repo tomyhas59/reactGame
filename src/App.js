@@ -6,7 +6,6 @@ import WordGame from "./pages/WordGame";
 import RSP from "./pages/RSP";
 import TextRPG from "./pages/TextRPG";
 import ResponseCheck from "./pages/ResponseCheck";
-import Omok from "./pages/Omok";
 import Make2048 from "./pages/Make2048";
 import Lotto from "./pages/Lotto";
 import FindMine from "./pages/FindMine";
@@ -27,7 +26,6 @@ const App = () => {
           <Route path="/textRPG" element={<TextRPG />} />
           <Route path="/RSP" element={<RSP />} />
           <Route path="/responseCheck" element={<ResponseCheck />} />
-          <Route path="/omok" element={<Omok />} />
           <Route path="/make2048" element={<Make2048 />} />
           <Route path="/findMine" element={<FindMine />} />
           <Route path="/lotto" element={<Lotto />} />

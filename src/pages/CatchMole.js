@@ -21,18 +21,20 @@ const CatchMole = () => {
       const updatedMoles = [...prevMoles];
       const numberOfAppearances = Math.floor(Math.random() * 4) + 3;
 
-      for (let i = numberOfAppearances; i < 9; i++) {
+      for (let i = 0; i < numberOfAppearances; i++) {
         const index = Math.floor(Math.random() * 9);
         updatedMoles[index] =
           Math.random() < 0.5
             ? { type: "mole", clicked: false, rise: true }
             : { type: "bomb", clicked: false, rise: true };
       }
+
       setTimeout(() => {
         setMoles((prevMoles) =>
           prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
         );
       }, 1000);
+
       return updatedMoles;
     });
   }, []);
@@ -49,7 +51,6 @@ const CatchMole = () => {
         rise: false,
       };
       setMoles(updatedMoles);
-
       setScore((prevScore) => prevScore + 1);
     },
     [moles]
@@ -75,6 +76,7 @@ const CatchMole = () => {
   useEffect(() => {
     if (isGameStarted) {
       const intervalId = setInterval(generateRandomMoles, 2000);
+
       return () => {
         clearInterval(intervalId);
       };

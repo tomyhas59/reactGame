@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import styled from "styled-components";
 const Lotto = () => {
   const [winBalls, setWinBalls] = useState([]);
   const [bonusBall, setBonusBall] = useState(null);
@@ -59,23 +59,13 @@ const Lotto = () => {
       <div>
         결과:
         {winBalls.slice(0, i).map((winBall) => (
-          <div
-            className="ball"
-            style={{ color: "white", backgroundColor: getColor(winBall) }}
-          >
-            {winBall}
-          </div>
+          <Ball style={{ backgroundColor: getColor(winBall) }}>{winBall}</Ball>
         ))}
       </div>
       <div>
         보너스 볼:
         {i === 7 && (
-          <div
-            className="ball"
-            style={{ color: "white", backgroundColor: getColor() }}
-          >
-            {bonusBall}
-          </div>
+          <Ball style={{ backgroundColor: getColor() }}>{bonusBall}</Ball>
         )}
       </div>
       {i === 7 && <button onClick={reDraw}>다시 뽑기</button>}
@@ -84,3 +74,18 @@ const Lotto = () => {
 };
 
 export default Lotto;
+
+const Ball = styled.div`
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 20px;
+  text-align: center;
+  margin-right: 20px;
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+`;

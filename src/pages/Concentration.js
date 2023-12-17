@@ -1,39 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
-const CardContainer = styled.div`
-  width: 200px;
-  height: 300px;
-  perspective: 1000px;
-  cursor: pointer;
-  margin: 10px;
-`;
-
-const Card = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-`;
-
-const Front = styled(Card)`
-  background-color: blue;
-  transform: ${(props) =>
-    props.isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"};
-`;
-
-const Back = styled(Card)`
-  background-color: ${(props) => props.color};
-  transform: ${(props) =>
-    props.isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
-`;
-
 function Concentration() {
   const colorArr = useMemo(
     () => [
@@ -157,16 +124,54 @@ function Concentration() {
     <div>
       <button onClick={startGame}>게임 시작</button>
       {completed.length === total && <button onClick={reset}>리셋</button>}
-      <div style={{ display: "flex", flexWrap: "wrap" }}>
+      <CardGrid>
         {cards.map((isFlipped, index) => (
           <CardContainer key={index} onClick={() => handleClick(index)}>
             <Front isFlipped={isFlipped}></Front>
             <Back isFlipped={isFlipped} color={colors[index]}></Back>
           </CardContainer>
         ))}
-      </div>
+      </CardGrid>
     </div>
   );
 }
 
 export default Concentration;
+
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+`;
+
+const CardContainer = styled.div`
+  width: 200px;
+  height: 300px;
+  perspective: 1000px; /* 원근 거리 설정 */
+  cursor: pointer;
+  margin: 10px;
+`;
+
+const Card = styled.div`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+`;
+
+const Front = styled(Card)`
+  background-color: blue;
+  transform: ${(props) =>
+    props.isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"};
+`;
+
+const Back = styled(Card)`
+  background-color: ${(props) => props.color};
+  transform: ${(props) =>
+    props.isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
+`;

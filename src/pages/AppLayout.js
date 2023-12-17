@@ -22,7 +22,7 @@ const AppLayout = ({ children }) => {
   return (
     <LayoutWrapper>
       <Link to="/">
-        <div className="main">Y의 즐거운 게임 세상</div>
+        <Main>Y의 즐거운 게임 세상</Main>
       </Link>
       <br />
       <ul>
@@ -37,6 +37,20 @@ const AppLayout = ({ children }) => {
   );
 };
 
+export default AppLayout;
+
+const Main = styled.div`
+  width: 1000px;
+  margin: 0 auto;
+  color: green;
+  text-shadow: 5px 5px yellowgreen;
+  font-size: 100px;
+  &:hover {
+    color: yellowgreen;
+    text-shadow: 5px 5px green;
+  }
+`;
+
 const LayoutWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -50,5 +64,3 @@ const ContentWrapper = styled.div`
   overflow-y: auto;
   margin: 0 auto;
 `;
-
-export default AppLayout;
