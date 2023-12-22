@@ -9,29 +9,29 @@ import explodeImg from "../explode.png";
 
 const CatchMole = () => {
   const [moles, setMoles] = useState(
-    Array.from({ length: 9 }).fill({ type: null, clicked: false, rise: false })
+    Array.from({ length: 9 }).fill({ type: null, clicked: false })
   );
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(2110);
+  const [time, setTime] = useState(20);
 
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
       const updatedMoles = [...prevMoles];
-      const numberOfAppearances = Math.floor(Math.random() * 4) + 3;
+      const numberOfAppearances = Math.floor(Math.random() * 3 + 4);
 
       for (let i = 0; i < numberOfAppearances; i++) {
         const index = Math.floor(Math.random() * 9);
         updatedMoles[index] =
           Math.random() < 0.5
-            ? { type: "mole", clicked: false, rise: true }
-            : { type: "bomb", clicked: false, rise: true };
+            ? { type: "mole", clicked: false }
+            : { type: "bomb", clicked: false };
       }
 
       setTimeout(() => {
         setMoles((prevMoles) =>
-          prevMoles.map((mole) => (mole.rise ? { ...mole, rise: false } : mole))
+          prevMoles.map((mole) => (mole.type ? { ...mole, type: null } : mole))
         );
       }, 1000);
 
@@ -99,7 +99,6 @@ const CatchMole = () => {
           Array.from({ length: 9 }).fill({
             type: null,
             clicked: false,
-            rise: false,
           })
         );
       }, 50);
@@ -123,30 +122,29 @@ const CatchMole = () => {
 
   return (
     <>
-      {!isGameStarted && (
-        <StartButton onClick={startGame}>Start Game</StartButton>
-      )}
       <div>
-        Lives: {lives} | Score: {score} | Time:{time.toFixed(1)}
+        {!isGameStarted && (
+          <StartButton onClick={startGame}>Start Game</StartButton>
+        )}
+        <span>
+          Lives: {lives} | Score: {score} | Time:{time.toFixed(1)}
+        </span>
       </div>
       <HoleGrid>
         {moles.map((mole, index) => (
           <Cell key={index}>
             <Hole></Hole>
-            {isGameStarted && mole.type === "mole" && (
-              <Gopher
-                onClick={() => handleMoleClick(index)}
-                clicked={mole.clicked}
-                rise={mole.rise}
-              />
-            )}
-            {isGameStarted && mole.type === "bomb" && (
-              <Bomb
-                onClick={() => handleBombClick(index)}
-                clicked={mole.clicked}
-                rise={mole.rise}
-              />
-            )}
+            <Gopher
+              onClick={() => handleMoleClick(index)}
+              clicked={mole.clicked}
+              type={mole.type}
+            />
+            <Bomb
+              onClick={() => handleBombClick(index)}
+              clicked={mole.clicked}
+              type={mole.type}
+            />
+
             <HoleFront></HoleFront>
           </Cell>
         ))}
@@ -173,30 +171,44 @@ const Cell = styled.div`
   overflow: hidden;
 `;
 
-const Gopher = styled.div`
-  background-image: url(${gopherImg});
+const BaseMoleStyle = css`
   position: absolute;
   width: 200px;
   height: 200px;
-  bottom: 0;
+  bottom: -200px;
   background-size: contain;
   opacity: 1;
-  transition: transform 1s ease-in-out;
-  transform: translateY(${(props) => (props.rise ? "200px" : "0px")});
+  transition: bottom 1s ease-in-out;
+`;
+
+const Gopher = styled.div`
+  ${BaseMoleStyle}
+  background-image: url(${gopherImg});
+  ${(props) =>
+    props.type === "mole" &&
+    css`
+      bottom: 0;
+    `}
   ${(props) =>
     props.clicked &&
     css`
-      transform: translateY(200px);
+      bottom: -200px;
       background-image: url(${deadImg});
     `}
 `;
 
-const Bomb = styled(Gopher)`
-  background: url(${bombImg}) center center no-repeat;
+const Bomb = styled.div`
+  ${BaseMoleStyle}
+  background: url(${bombImg}) center no-repeat;
+  ${(props) =>
+    props.type === "bomb" &&
+    css`
+      bottom: 0;
+    `}
   ${(props) =>
     props.clicked &&
     css`
-      transform: translateY(200px);
+      bottom: -200px;
       background-image: url(${explodeImg});
     `}
 `;
