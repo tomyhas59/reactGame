@@ -5,7 +5,7 @@ const Baseball = () => {
   const [input, onChangeInput, setInput] = useInput();
   const [logs, setLogs] = useState([]);
   const [tries, setTries] = useState([]);
-  const [outCount, setOutCount] = useState(1); // 아웃 횟수를 세는 변수
+  const [outCount, setOutCount] = useState(1); 
   const inputRef = useRef(null);
   const [answer, setAnswer] = useState(getNumber());
 
@@ -17,7 +17,7 @@ const Baseball = () => {
     }
     const array = [];
     for (let n = 0; n <= 3; n += 1) {
-      const index = Math.floor(Math.random() * numbers.length); // 0~8 정수
+      const index = Math.floor(Math.random() * numbers.length);
       array.push(numbers[index]);
       numbers.splice(index, 1);
     }

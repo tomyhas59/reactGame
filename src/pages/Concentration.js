@@ -1,20 +1,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
+import img1 from "../img/animal_1.png";
+import img2 from "../img/animal_2.png";
+import img3 from "../img/animal_3.png";
+import img4 from "../img/animal_4.png";
+import img5 from "../img/animal_5.png";
+import img6 from "../img/animal_6.png";
+import img7 from "../img/animal_7.png";
+import img8 from "../img/animal_8.png";
+import img9 from "../img/animal_9.png";
+import img10 from "../img/animal_10.png";
 
 function Concentration() {
   const colorArr = useMemo(
-    () => [
-      "red",
-      "orange",
-      "yellow",
-      "green",
-      "white",
-      "pink",
-      "cyan",
-      "violet",
-      "gray",
-      "black",
-    ],
+    () => [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10],
     []
   );
 
@@ -116,9 +115,10 @@ function Concentration() {
       const endTime = new Date();
       setTimeout(() => {
         alert(`${(endTime - startTime) / 1000}초 성공`);
+        reset();
       }, 200);
     }
-  }, [completed.length, startTime]);
+  }, [completed.length, reset, startTime]);
 
   return (
     <div>
@@ -171,7 +171,10 @@ const Front = styled(Card)`
 `;
 
 const Back = styled(Card)`
-  background-color: ${(props) => props.color};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-image: url(${(props) => props.color});
   transform: ${(props) =>
     props.isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
 `;
