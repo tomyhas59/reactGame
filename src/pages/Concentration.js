@@ -1,21 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import img1 from "../img/animal_1.png";
-import img2 from "../img/animal_2.png";
-import img3 from "../img/animal_3.png";
-import img4 from "../img/animal_4.png";
-import img5 from "../img/animal_5.png";
-import img6 from "../img/animal_6.png";
-import img7 from "../img/animal_7.png";
-import img8 from "../img/animal_8.png";
-import img9 from "../img/animal_9.png";
-import img10 from "../img/animal_10.png";
 
 function Concentration() {
-  const colorArr = useMemo(
-    () => [img1, img2, img3, img4, img5, img6, img7, img8, img9, img10],
-    []
-  );
+  const imgCount = 10;
+  const colorArr = useMemo(() => {
+    const importedImages = [];
+    for (let i = 1; i <= imgCount; i++) {
+      importedImages.push(require(`../img/animal_${i}.png`));
+    }
+    return importedImages;
+  }, []);
 
   const [colors, setColors] = useState(colorArr);
   const total = 10;
