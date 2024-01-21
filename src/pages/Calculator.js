@@ -67,7 +67,8 @@ const Calculator = () => {
           return;
       }
       setNumOne(calculatedResult.toString());
-      setResult(calculatedResult.toString());
+      setNumTwo("");
+      setResult("");
     } else {
       alert("숫자와 연산자를 모두 입력하세요.");
     }
@@ -92,7 +93,7 @@ const Calculator = () => {
       <input
         style={{ textAlign: "right", fontSize: "50px", width: "300px" }}
         readOnly
-        value={operator}
+        value={numOne + operator}
       />
       <table>
         <tbody>
