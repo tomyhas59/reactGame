@@ -239,7 +239,7 @@ const FindMine = () => {
       case CODE.NORMAL:
         return "";
       case CODE.MINE:
-        return "X";
+        return ""; //지뢰 위치 표시 X
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
         return "?";
