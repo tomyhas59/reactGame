@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 function Concentration() {
+  //이미지 데이터
   const imgCount = 10;
   const colorArr = useMemo(() => {
     const importedImages = [];
@@ -36,10 +37,11 @@ function Concentration() {
   const [clicked, setClicked] = useState([]);
   const [completed, setCompleted] = useState([]);
   const [clickable, setClickable] = useState(true);
+  const [firstStart, setFirstStart] = useState(false);
   const [startTime, setStartTime] = useState();
 
   const handleClick = (index) => {
-    if (!clickable) {
+    if (!clickable || !firstStart) {
       return; // 클릭 불가능할 때 함수를 실행하지 않음
     }
     if (!cards[index] && clicked.length < 2) {
@@ -78,6 +80,7 @@ function Concentration() {
   }, [cards, clicked, colors]);
 
   const startGame = useCallback(() => {
+    setFirstStart(true);
     setClickable(false);
     const startCard = [...cards];
     for (let i = 0; i < cards.length; i++) {
@@ -102,6 +105,7 @@ function Concentration() {
     setClicked([]);
     setCompleted([]);
     setCards(initialCards());
+    setFirstStart(false);
   }, [initialCards]);
 
   useEffect(() => {
@@ -134,12 +138,12 @@ export default Concentration;
 
 const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 `;
 
 const CardContainer = styled.div`
-  width: 200px;
-  height: 300px;
+  width: 150px;
+  height: 250px;
   perspective: 1000px; /* 원근 거리 설정 */
   cursor: pointer;
   margin: 10px;

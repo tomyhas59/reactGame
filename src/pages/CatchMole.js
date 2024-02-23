@@ -14,7 +14,7 @@ const CatchMole = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(20);
+  const [time, setTime] = useState(5);
 
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
@@ -93,14 +93,8 @@ const CatchMole = () => {
         alert(`게임 오버! 점수는 ${score}점`);
         setLives(3);
         setScore(0);
-        setTime(20);
+        setTime(5);
         setIsGameStarted(false);
-        setMoles(
-          Array.from({ length: 9 }).fill({
-            type: null,
-            clicked: false,
-          })
-        );
       }, 50);
     }
   }, [lives, score, time]);
