@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import SRP from "../rsp.png";
+import SRP from "../img/rsp.png";
 import styled from "styled-components";
 
 const RSP = () => {

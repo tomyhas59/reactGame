@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
-import gopherImg from "../gopher.png";
-import bombImg from "../bomb.png";
-import moleHoleImg from "../mole-hole.png";
-import moleHoleFrontImg from "../mole-hole-front.png";
-import deadImg from "../dead_gopher.png";
-import explodeImg from "../explode.png";
+import gopherImg from "../img/gopher.png";
+import bombImg from "../img/bomb.png";
+import moleHoleImg from "../img/mole-hole.png";
+import moleHoleFrontImg from "../img/mole-hole-front.png";
+import deadImg from "../img/dead_gopher.png";
+import explodeImg from "../img/explode.png";
 
 const CatchMole = () => {
   const [moles, setMoles] = useState(
