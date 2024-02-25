@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
-import gopherImg from "../img/gopher.png";
+import moleImg from "../img/mole.png";
+import deadYMoleImg from "../img/deadYMole.png";
+import YMoleImg from "../img/YMole.png";
 import bombImg from "../img/bomb.png";
 import moleHoleImg from "../img/mole-hole.png";
 import moleHoleFrontImg from "../img/mole-hole-front.png";
-import deadImg from "../img/dead_gopher.png";
+import deadMoleImg from "../img/deadMole.png";
 import explodeImg from "../img/explode.png";
 
 const CatchMole = () => {
@@ -14,8 +16,9 @@ const CatchMole = () => {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
-  const [time, setTime] = useState(5);
+  const [time, setTime] = useState(20);
 
+  //두더지 랜덤 등장
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
       const updatedMoles = [...prevMoles];
@@ -26,6 +29,8 @@ const CatchMole = () => {
         updatedMoles[index] =
           Math.random() < 0.5
             ? { type: "mole", clicked: false }
+            : Math.random() < 0.1
+            ? { type: "YMole", clicked: false }
             : { type: "bomb", clicked: false };
       }
 
@@ -39,6 +44,7 @@ const CatchMole = () => {
     });
   }, []);
 
+  //클릭 이벤트---------------------------------------
   const handleMoleClick = useCallback(
     (index) => {
       if (moles[index].clicked) {
@@ -73,6 +79,23 @@ const CatchMole = () => {
     [moles]
   );
 
+  const handleYMoleClick = useCallback(
+    (index) => {
+      if (moles[index].clicked) {
+        return;
+      }
+      const updatedMoles = [...moles];
+      updatedMoles[index] = {
+        ...updatedMoles[index],
+        clicked: true,
+        rise: false,
+      };
+      setMoles(updatedMoles);
+      setScore((prevScore) => prevScore + 10);
+    },
+    [moles]
+  );
+  //--------------------------------------------------------------
   useEffect(() => {
     if (isGameStarted) {
       const intervalId = setInterval(generateRandomMoles, 2000);
@@ -93,7 +116,7 @@ const CatchMole = () => {
         alert(`게임 오버! 점수는 ${score}점`);
         setLives(3);
         setScore(0);
-        setTime(5);
+        setTime(20);
         setIsGameStarted(false);
       }, 50);
     }
@@ -128,7 +151,7 @@ const CatchMole = () => {
         {moles.map((mole, index) => (
           <Cell key={index}>
             <Hole></Hole>
-            <Gopher
+            <Mole
               onClick={() => handleMoleClick(index)}
               clicked={mole.clicked}
               type={mole.type}
@@ -138,7 +161,11 @@ const CatchMole = () => {
               clicked={mole.clicked}
               type={mole.type}
             />
-
+            <YMole
+              onClick={() => handleYMoleClick(index)}
+              clicked={mole.clicked}
+              type={mole.type}
+            />
             <HoleFront></HoleFront>
           </Cell>
         ))}
@@ -170,14 +197,14 @@ const BaseMoleStyle = css`
   width: 200px;
   height: 200px;
   bottom: -200px;
-  background-size: contain;
+  background-size: cover;
   opacity: 1;
   transition: bottom 1s ease-in-out;
 `;
 
-const Gopher = styled.div`
+const Mole = styled.div`
   ${BaseMoleStyle}
-  background-image: url(${gopherImg});
+  background-image: url(${moleImg});
   ${(props) =>
     props.type === "mole" &&
     css`
@@ -187,7 +214,23 @@ const Gopher = styled.div`
     props.clicked &&
     css`
       bottom: -200px;
-      background-image: url(${deadImg});
+      background-image: url(${deadMoleImg});
+    `}
+`;
+
+const YMole = styled.div`
+  ${BaseMoleStyle}
+  background-image: url(${YMoleImg});
+  ${(props) =>
+    props.type === "YMole" &&
+    css`
+      bottom: 0;
+    `}
+  ${(props) =>
+    props.clicked &&
+    css`
+      bottom: -200px;
+      background-image: url(${deadYMoleImg});
     `}
 `;
 
