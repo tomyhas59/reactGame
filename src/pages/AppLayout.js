@@ -76,10 +76,10 @@ const LayoutWrapper = styled.div`
 `;
 
 const ContentWrapper = styled.article`
-  float: right;
   padding-top: 100px;
-  width: 30%;
+  width: 50%;
   margin: 0 auto;
+  border: 1px solid;
 `;
 
 const Aside = styled.aside`
@@ -92,6 +92,10 @@ const Aside = styled.aside`
   & ul {
     margin: 0;
     padding: 0;
+    @media (max-width: 750px) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
   & ul > a {
     text-align: center;
@@ -113,6 +117,9 @@ const Aside = styled.aside`
     &:hover {
       background-color: darkgrey;
       color: antiquewhite;
+    }
+    @media (max-width: 750px) {
+      width: 20px;
     }
   }
 `;

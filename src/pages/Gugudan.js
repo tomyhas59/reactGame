@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import useInput from "../hooks/useInput";
-
+import styled from "styled-components";
 const Gugudan = () => {
   const [value, onChangeValue, setValue] = useInput("");
   const [num1, setNum1] = useState(Math.ceil(Math.random() * 9));
@@ -31,13 +31,13 @@ const Gugudan = () => {
         {num1} 곱하기 {num2}는?
       </div>
       <form onSubmit={onSubmit}>
-        <input
+        <Input
           type="number"
           value={value}
           onChange={onChangeValue}
           ref={inputRef}
         />
-        <button type="submit">입력!</button>
+        <Button type="submit">입력!</Button>
       </form>
       <div>{message}</div>
     </div>
@@ -45,3 +45,22 @@ const Gugudan = () => {
 };
 
 export default Gugudan;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;

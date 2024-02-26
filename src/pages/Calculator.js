@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import styled from "styled-components";
 const Calculator = () => {
   const [numOne, setNumOne] = useState("");
   const [numTwo, setNumTwo] = useState("");
@@ -89,24 +89,15 @@ const Calculator = () => {
   ];
 
   return (
-    <div>
-      <input
-        style={{ textAlign: "right", fontSize: "50px", width: "300px" }}
-        readOnly
-        value={numOne + operator}
-      />
+    <Container>
+      <Input readOnly value={numOne + operator} />
       <table>
         <tbody>
           {buttons.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((btnText) => (
                 <td key={btnText}>
-                  <button
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      fontSize: "50px",
-                    }}
+                  <Button
                     onClick={() => {
                       if (btnText === "±") {
                         onMinusClick();
@@ -122,20 +113,47 @@ const Calculator = () => {
                     }}
                   >
                     {btnText}
-                  </button>
+                  </Button>
                 </td>
               ))}
             </tr>
           ))}
         </tbody>
       </table>
-      <input
-        readOnly
-        type="text"
-        value={result}
-        style={{ textAlign: "right", fontSize: "50px", width: "300px" }}
-      />
-    </div>
+      <Input readOnly type="text" value={result} />
+    </Container>
   );
 };
 export default Calculator;
+
+const Container = styled.div``;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 2px solid #45a049;
+  border-radius: 5px;
+  font-size: 50px;
+  width: 390px;
+  text-align: right;
+  @media (max-width: 750px) {
+    width: 195px;
+  }
+`;
+
+const Button = styled.button`
+  width: 100px;
+  height: 100px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 50px;
+  &:hover {
+    background-color: #45a049;
+  }
+  @media (max-width: 750px) {
+    width: 50px;
+    height: 50px;
+  }
+`;

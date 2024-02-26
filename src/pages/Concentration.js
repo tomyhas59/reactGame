@@ -119,9 +119,9 @@ function Concentration() {
   }, [completed.length, reset, startTime]);
 
   return (
-    <div>
-      <button onClick={startGame}>게임 시작</button>
-      {completed.length === total && <button onClick={reset}>리셋</button>}
+    <Container>
+      <Button onClick={startGame}>게임 시작</Button>
+      {completed.length === total && <Button onClick={reset}>리셋</Button>}
       <CardGrid>
         {cards.map((isFlipped, index) => (
           <CardContainer key={index} onClick={() => handleClick(index)}>
@@ -130,15 +130,39 @@ function Concentration() {
           </CardContainer>
         ))}
       </CardGrid>
-    </div>
+    </Container>
   );
 }
-
 export default Concentration;
+
+const Container = styled.div`
+  width: 100%;
+  border: 1px solid;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
 
 const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const CardContainer = styled.div`
@@ -146,7 +170,10 @@ const CardContainer = styled.div`
   height: 250px;
   perspective: 1000px; /* 원근 거리 설정 */
   cursor: pointer;
-  margin: 10px;
+  @media (max-width: 750px) {
+    width: 75px;
+    height: 125px;
+  }
 `;
 
 const Card = styled.div`
@@ -163,7 +190,7 @@ const Card = styled.div`
 `;
 
 const Front = styled(Card)`
-  background-color: blue;
+  background-color: #2196f3;
   transform: ${(props) =>
     props.isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"};
 `;

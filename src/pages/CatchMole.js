@@ -138,14 +138,14 @@ const CatchMole = () => {
   }, [isGameStarted, time]);
 
   return (
-    <>
+    <div>
       <div>
         {!isGameStarted && (
           <StartButton onClick={startGame}>Start Game</StartButton>
         )}
-        <span>
+        <InfoSpan>
           Lives: {lives} | Score: {score} | Time:{time.toFixed(1)}
-        </span>
+        </InfoSpan>
       </div>
       <HoleGrid>
         {moles.map((mole, index) => (
@@ -170,7 +170,7 @@ const CatchMole = () => {
           </Cell>
         ))}
       </HoleGrid>
-    </>
+    </div>
   );
 };
 
@@ -182,6 +182,9 @@ const HoleGrid = styled.div`
   column-gap: 50px;
   row-gap: 20px;
   justify-content: center;
+  @media (max-width: 750px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const Cell = styled.div`
@@ -190,6 +193,10 @@ const Cell = styled.div`
   width: 200px;
   height: 200px;
   overflow: hidden;
+  @media (max-width: 750px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const BaseMoleStyle = css`
@@ -200,6 +207,10 @@ const BaseMoleStyle = css`
   background-size: cover;
   opacity: 1;
   transition: bottom 1s ease-in-out;
+  @media (max-width: 750px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const Mole = styled.div`
@@ -248,6 +259,9 @@ const Bomb = styled.div`
       bottom: -200px;
       background-image: url(${explodeImg});
     `}
+   @media (max-width: 750px) {
+    background-size: 100px 100px;
+  }
 `;
 
 const Hole = styled.div`
@@ -258,6 +272,10 @@ const Hole = styled.div`
   background: url(${moleHoleImg}) center center no-repeat;
   background-size: 200px 150px;
   cursor: pointer;
+  @media (max-width: 750px) {
+    width: 100px;
+    height: 75px;
+  }
 `;
 
 const HoleFront = styled.div`
@@ -267,11 +285,28 @@ const HoleFront = styled.div`
   bottom: 0;
   background: url(${moleHoleFrontImg}) center center no-repeat;
   background-size: 200px 30px;
+  @media (max-width: 750px) {
+    width: 100px;
+    height: 15px;
+  }
 `;
 
 const StartButton = styled.button`
-  margin-top: 20px;
+  margin: 10px;
   padding: 10px 20px;
-  font-size: 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const InfoSpan = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 `;

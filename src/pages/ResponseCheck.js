@@ -57,20 +57,29 @@ const ResponseCheck = () => {
   }, [records]);
 
   return (
-    <div>
+    <Container>
       <Screen color={color} onClick={onClickScreen}>
         {text}
       </Screen>
-      <div>결과: {current}ms</div>
-      <div>평균: {average}ms</div>
-      {fastRecord.map((v, i) => (
-        <div key={i}>{`${i + 1}위: ${v}ms`}</div>
-      ))}
-    </div>
+      <Result>결과: {current}ms</Result>
+      <Result>평균: {average}ms</Result>
+      <Ranking>
+        {fastRecord.map((v, i) => (
+          <RankingItem key={i}>{`${i + 1}위: ${v}ms`}</RankingItem>
+        ))}
+      </Ranking>
+    </Container>
   );
 };
 
 export default ResponseCheck;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
 
 const Screen = styled.div`
   background-color: ${(props) => props.color};
@@ -80,4 +89,23 @@ const Screen = styled.div`
   line-height: 200px;
   user-select: none;
   cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
+`;
+
+const Result = styled.div`
+  font-size: 18px;
+  margin-bottom: 10px;
+`;
+
+const Ranking = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const RankingItem = styled.div`
+  font-size: 16px;
+  margin-bottom: 5px;
 `;

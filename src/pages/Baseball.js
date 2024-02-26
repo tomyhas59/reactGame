@@ -1,11 +1,11 @@
 import React, { useRef, useState, useCallback } from "react";
 import useInput from "../hooks/useInput";
-
+import styled from "styled-components";
 const Baseball = () => {
   const [input, onChangeInput, setInput] = useInput();
   const [logs, setLogs] = useState([]);
   const [tries, setTries] = useState([]);
-  const [outCount, setOutCount] = useState(1); 
+  const [outCount, setOutCount] = useState(1);
   const inputRef = useRef(null);
   const [answer, setAnswer] = useState(getNumber());
 
@@ -108,34 +108,67 @@ const Baseball = () => {
   }, []);
 
   return (
-    <div>
+    <Container>
       <div>숫자 4자리를 입력해 주세요</div>
       <form onSubmit={onSubmit}>
-        <input
+        <Input
           type="text"
           value={input}
           onChange={onChangeInput}
           ref={inputRef}
         />
-        <button type="submit">확인</button>
+        <Button type="submit">확인</Button>
       </form>
       <div>
         결과:
-        <div>
+        <LogsContainer>
           {logs.map((log, i) =>
             log.includes("홈") || log.includes("패") ? (
-              <>
+              <Logs>
                 <div key={i}>{log}</div>
-                <button onClick={restartGame}>재시작</button>
-              </>
+                <Button onClick={restartGame}>재시작</Button>
+              </Logs>
             ) : (
-              <div key={i}>{log}</div>
+              <Logs key={i}>{log}</Logs>
             )
           )}
-        </div>
+        </LogsContainer>
       </div>
-    </div>
+    </Container>
   );
 };
 
 export default Baseball;
+
+const Container = styled.div`
+  text-align: center;
+`;
+
+const Input = styled.input`
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const LogsContainer = styled.div`
+  margin-top: 20px;
+`;
+
+const Logs = styled.div`
+  margin-top: 10px;
+`;

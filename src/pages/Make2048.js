@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import styled from "styled-components";
 const Game2048 = () => {
   const [data, setData] = useState([]);
   const [score, setScore] = useState(0);
@@ -199,26 +199,84 @@ const Game2048 = () => {
   }, [moveCells]);
 
   return (
-    <div>
-      <table id="table">
+    <Container>
+      <GameTable>
         {data.map((row, i) => (
-          <tr key={i}>
+          <TableRow key={i}>
             {row.map((cell, j) => (
-              <td key={j} className={`color-${cell}`}>
+              <TableCell key={j} className={`color-${cell}`}>
                 {cell === 0 ? "" : cell}
-              </td>
+              </TableCell>
             ))}
-          </tr>
+          </TableRow>
         ))}
-      </table>
-
-      <div id="score">{score}</div>
-      <button id="back" onClick={back}>
-        뒤로
-      </button>
-      {reGame && <button onClick={reGameStart}>다시 하기</button>}
-    </div>
+      </GameTable>
+      <Score>{score}</Score>
+      <BackButton onClick={back}>뒤로</BackButton>
+      {reGame && <RestartButton onClick={reGameStart}>다시 하기</RestartButton>}
+    </Container>
   );
 };
 
 export default Game2048;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const GameTable = styled.table`
+  border-collapse: collapse;
+`;
+
+const TableRow = styled.tr`
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const TableCell = styled.td`
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #ccc;
+  font-size: 24px;
+`;
+
+const Score = styled.div`
+  margin-top: 20px;
+  font-size: 20px;
+`;
+
+const Button = styled.button`
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+`;
+
+const BackButton = styled(Button)`
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const RestartButton = styled(Button)`
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #218838;
+  }
+`;

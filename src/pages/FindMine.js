@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useInput from "../hooks/useInput";
-
+import styled from "styled-components";
 const FindMine = () => {
   const [row, onChangeRow] = useInput();
   const [cell, onChangeCell] = useInput();
@@ -275,36 +275,79 @@ const FindMine = () => {
   };
 
   return (
-    <div>
+    <Container>
       <form onSubmit={onSubmit}>
-        <input value={row} onChange={onChangeRow} size="5" />
-        <input value={cell} onChange={onChangeCell} size="5" />
-        <input value={mine} onChange={onChangeMine} size="5" />
-        <button type="submit">생성</button>
+        <Input value={row} onChange={onChangeRow} size="5" />
+        <Input value={cell} onChange={onChangeCell} size="5" />
+        <Input value={mine} onChange={onChangeMine} size="5" />
+        <Button type="submit">생성</Button>
       </form>
 
-      <div>열린 개수 :{openedCount}</div>
-      <table>
+      <OpenedCount>열린 개수: {openedCount}</OpenedCount>
+      <Table>
         <tbody>
           {data &&
             data.map((rowData, rowIndex) => (
-              <tr key={rowIndex}>
+              <TableRow key={rowIndex}>
                 {rowData.map((cellData, cellIndex) => (
-                  <td
+                  <TableData
                     onClick={() => open(rowIndex, cellIndex)}
                     onContextMenu={(e) => onRightClick(rowIndex, cellIndex)(e)}
                     key={cellIndex}
                     style={getStyle(cellData)}
                   >
                     {getText(cellData)}
-                  </td>
+                  </TableData>
                 ))}
-              </tr>
+              </TableRow>
             ))}
         </tbody>
-      </table>
-    </div>
+      </Table>
+    </Container>
   );
 };
 
 export default FindMine;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const Input = styled.input`
+  margin-right: 10px;
+`;
+
+const Button = styled.button`
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
+
+const OpenedCount = styled.div`
+  margin-top: 10px;
+`;
+
+const Table = styled.table`
+  border-collapse: collapse;
+  margin-top: 20px;
+`;
+
+const TableRow = styled.tr``;
+
+const TableData = styled.td`
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid #ccc;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;

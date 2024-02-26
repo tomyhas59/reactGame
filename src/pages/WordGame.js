@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import useInput from "../hooks/useInput";
-
+import styled from "styled-components";
 const WordGame = () => {
   const [wordInput, onChangeWordInput, setWordInput] = useInput();
   const [numberInput, onChangeNumberInput, setNumberInput] = useInput();
@@ -55,38 +55,83 @@ const WordGame = () => {
 
   if (start) {
     return (
-      <div>
-        <div>
-          <span>{number}명 참가</span>
-        </div>
-        <div>{order}번째 차례</div>
-        <div>
-          제시어: <span id="word">{word}</span>
-        </div>
-        <input
+      <Container>
+        <InfoBlock>
+          <InfoText>
+            <Participant>{number}명 참가</Participant>
+          </InfoText>
+          <InfoText>{order}번째 차례</InfoText>
+          <InfoText>
+            제시어: <WordSpan id="word">{word}</WordSpan>
+          </InfoText>
+        </InfoBlock>
+        <Input
           ref={wordRef}
           type="text"
           value={wordInput}
           onChange={onChangeWordInput}
           onKeyDown={onEnter}
+          placeholder="단어를 입력하세요"
         />
-        <button onClick={onWordBtn}>입력</button>
-      </div>
+        <Button onClick={onWordBtn}>입력</Button>
+      </Container>
     );
   } else {
     return (
       <div>
-        <input
+        <Input
           type="number"
           ref={numberRef}
           placeholder="참가자 몇 명?"
           value={numberInput}
           onChange={onChangeNumberInput}
         />
-        <button onClick={onNumberBtn}>확인</button>
+        <Button onClick={onNumberBtn}>확인</Button>
       </div>
     );
   }
 };
 
 export default WordGame;
+
+const Container = styled.div`
+  align-items: center;
+  margin-top: 20px;
+`;
+
+const InfoBlock = styled.div`
+  margin-bottom: 20px;
+`;
+
+const InfoText = styled.div`
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+`;
+
+const Participant = styled.span`
+  font-weight: bold;
+`;
+
+const WordSpan = styled.span`
+  font-weight: bold;
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;

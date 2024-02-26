@@ -68,7 +68,7 @@ const Lotto = () => {
           <Ball style={{ backgroundColor: getColor() }}>{bonusBall}</Ball>
         )}
       </div>
-      {i === 7 && <button onClick={reDraw}>다시 뽑기</button>}
+      {i === 7 && <Button onClick={reDraw}>다시 뽑기</Button>}
     </div>
   );
 };
@@ -88,4 +88,18 @@ const Ball = styled.div`
   color: white;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
+`;
+
+const Button = styled.button`
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
 `;

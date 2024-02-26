@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useInput from "../hooks/useInput";
-
+import styled from "styled-components";
 const TextRPG = () => {
   const [text, onChangeText, setText] = useInput();
   const [start, setStart] = useState(false);
@@ -139,55 +139,136 @@ const TextRPG = () => {
 
   if (start) {
     return (
-      <>
-        <div>{text} 모험 시작</div>
-        <div>레벨 : {hero.lev}</div>
-        <div>
+      <Container>
+        <StyledHeader>{text} 모험 시작</StyledHeader>
+        <StyledInfo>레벨 : {hero.lev}</StyledInfo>
+        <StyledInfo>
           HP: {hero.hp}/{hero.maxHp}
-        </div>
-        <div>
+        </StyledInfo>
+        <StyledInfo>
           XP: {hero.xp}/{15 * hero.lev}
-        </div>
-        <div>ATT: {hero.att}</div>
-        <button onClick={startAdventure}>모험</button>
-        <button onClick={() => rest(hero)}>휴식</button>
-        <button onClick={quit}>종료</button>
-        <div>{message}</div>
-      </>
+        </StyledInfo>
+        <StyledInfo>ATT: {hero.att}</StyledInfo>
+        <AdventureButton onClick={startAdventure}>모험</AdventureButton>
+        <RestButton onClick={() => rest(hero)}>휴식</RestButton>
+        <QuitButton onClick={quit}>종료</QuitButton>
+        <Message>{message}</Message>
+      </Container>
     );
   } else if (adventure) {
     return (
-      <>
-        <div>레벨 : {hero.lev}</div>
-        <div>
+      <Container>
+        <StyledInfo>레벨 : {hero.lev}</StyledInfo>
+        <StyledInfo>
           HP: {hero.hp}/{hero.maxHp}
-        </div>
-        <div>
+        </StyledInfo>
+        <StyledInfo>
           XP: {hero.xp}/{15 * hero.lev}
-        </div>
-        <div>ATT: {hero.att}</div>
-        <button onClick={() => attack(hero, monster)}>공격</button>
-        <button onClick={() => heal(hero, monster)}>회복</button>
-        <button onClick={escape}> 도망</button>
-        <div>{message}</div>
-        <div>
+        </StyledInfo>
+        <StyledInfo>ATT: {hero.att}</StyledInfo>
+        <StyledButton onClick={() => attack(hero, monster)}>공격</StyledButton>
+        <StyledButton onClick={() => heal(hero, monster)}>회복</StyledButton>
+        <StyledButton onClick={escape}>도망</StyledButton>
+        <Message>{message}</Message>
+        <AdventureInfo>
           {monster.name}: HP:{monster.hp}/{monster.maxHp} ATT:{monster.att}
-        </div>
-      </>
+        </AdventureInfo>
+      </Container>
     );
   } else if (main) {
     return (
-      <form onSubmit={createHero}>
-        <input
+      <StyledForm onSubmit={createHero}>
+        <StyledInput
           placeholder="주인공 이름을 입력하세요"
           value={text}
           onChange={onChangeText}
         />
-        <button>시작</button>
-        <div>{message}</div>
-      </form>
+        <StyledButton>시작</StyledButton>
+        <Message>{message}</Message>
+      </StyledForm>
     );
   }
 };
 
 export default TextRPG;
+
+const Container = styled.div`
+  text-align: center;
+  margin-top: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const Input = styled.input`
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Message = styled.div`
+  margin-top: 10px;
+`;
+
+const AdventureInfo = styled.div`
+  margin-top: 20px;
+`;
+
+const AdventureButton = styled(Button)`
+  background-color: #f44336;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+`;
+
+const RestButton = styled(Button)`
+  background-color: #2196f3;
+
+  &:hover {
+    background-color: #1976d2;
+  }
+`;
+
+const QuitButton = styled(Button)`
+  background-color: #9e9e9e;
+
+  &:hover {
+    background-color: #757575;
+  }
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #4caf50;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;
+
+const StyledInput = styled(Input)`
+  width: 200px;
+`;
+
+const StyledForm = styled.form`
+  margin-top: 20px;
+`;
+
+const StyledHeader = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+`;
+
+const StyledInfo = styled.div`
+  margin-top: 10px;
+`;
