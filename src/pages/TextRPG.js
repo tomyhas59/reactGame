@@ -149,9 +149,9 @@ const TextRPG = () => {
           XP: {hero.xp}/{15 * hero.lev}
         </StyledInfo>
         <StyledInfo>ATT: {hero.att}</StyledInfo>
-        <AdventureButton onClick={startAdventure}>모험</AdventureButton>
-        <RestButton onClick={() => rest(hero)}>휴식</RestButton>
-        <QuitButton onClick={quit}>종료</QuitButton>
+        <RedButton onClick={startAdventure}>모험</RedButton>
+        <BlueButton onClick={() => rest(hero)}>휴식</BlueButton>
+        <GrayButton onClick={quit}>종료</GrayButton>
         <Message>{message}</Message>
       </Container>
     );
@@ -166,9 +166,9 @@ const TextRPG = () => {
           XP: {hero.xp}/{15 * hero.lev}
         </StyledInfo>
         <StyledInfo>ATT: {hero.att}</StyledInfo>
-        <StyledButton onClick={() => attack(hero, monster)}>공격</StyledButton>
-        <StyledButton onClick={() => heal(hero, monster)}>회복</StyledButton>
-        <StyledButton onClick={escape}>도망</StyledButton>
+        <RedButton onClick={() => attack(hero, monster)}>공격</RedButton>
+        <GreenButton onClick={() => heal(hero, monster)}>회복</GreenButton>
+        <GrayButton onClick={escape}>도망</GrayButton>
         <Message>{message}</Message>
         <AdventureInfo>
           {monster.name}: HP:{monster.hp}/{monster.maxHp} ATT:{monster.att}
@@ -183,7 +183,7 @@ const TextRPG = () => {
           value={text}
           onChange={onChangeText}
         />
-        <StyledButton>시작</StyledButton>
+        <GreenButton>시작</GreenButton>
         <Message>{message}</Message>
       </StyledForm>
     );
@@ -224,15 +224,14 @@ const AdventureInfo = styled.div`
   margin-top: 20px;
 `;
 
-const AdventureButton = styled(Button)`
+const RedButton = styled(Button)`
   background-color: #f44336;
-
   &:hover {
     background-color: #d32f2f;
   }
 `;
 
-const RestButton = styled(Button)`
+const BlueButton = styled(Button)`
   background-color: #2196f3;
 
   &:hover {
@@ -240,7 +239,7 @@ const RestButton = styled(Button)`
   }
 `;
 
-const QuitButton = styled(Button)`
+const GrayButton = styled(Button)`
   background-color: #9e9e9e;
 
   &:hover {
@@ -248,7 +247,7 @@ const QuitButton = styled(Button)`
   }
 `;
 
-const StyledButton = styled(Button)`
+const GreenButton = styled(Button)`
   background-color: #4caf50;
 
   &:hover {

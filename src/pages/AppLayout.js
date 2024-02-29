@@ -19,107 +19,112 @@ const AppLayout = ({ children }) => {
   ];
 
   return (
-    <LayoutWrapper>
+    <>
       <Header>
         <Link to="/">
-          <Main>Y의 즐거운 게임 세상</Main>
+          <Title>Y의 즐거운 게임 세상</Title>
         </Link>
       </Header>
-      <Aside>
-        <ul>
-          {links.map((link, index) => (
-            <Link to={link.to} key={index}>
-              <li>{link.label}</li>
-            </Link>
-          ))}
-        </ul>
-      </Aside>
-      <ContentWrapper>{children}</ContentWrapper>
-    </LayoutWrapper>
+      <MainWrapper>
+        <Aside>
+          <ul>
+            {links.map((link, index) => (
+              <Link to={link.to} key={index}>
+                <li>{link.label}</li>
+              </Link>
+            ))}
+          </ul>
+        </Aside>
+        <ContentWrapper>{children}</ContentWrapper>
+      </MainWrapper>
+    </>
   );
 };
 
 export default AppLayout;
 
 const Header = styled.header`
-  position: fixed;
   text-align: center;
   padding: 10px;
   top: 0;
   width: 100%;
   height: 70px;
   z-index: 2000;
-  background-color: #fff;
+  background-color: #000;
+  color: #fff;
+  font-family: "Arial", sans-serif;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
-`;
-
-const Main = styled.div`
-  width: 1000px;
-  margin: 0 auto;
-  color: green;
-  text-shadow: 3px 3px yellowgreen;
-  font-size: 50px;
-  &:hover {
-    color: yellowgreen;
-    text-shadow: 3px 3px green;
-  }
-`;
-
-const LayoutWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin-top: 1rem;
   & a {
     text-decoration: none;
+    color: #fff;
   }
 `;
 
-const ContentWrapper = styled.article`
-  padding-top: 100px;
-  width: 50%;
+const Title = styled.div`
+  width: 100%;
   margin: 0 auto;
-  border: 1px solid;
+  color: #ff0;
+  text-shadow: 3px 3px #f00;
+  font-size: 50px;
+  font-family: "Arial", sans-serif;
+  &:hover {
+    color: #f00;
+    text-shadow: 3px 3px #ff0;
+  }
+`;
+
+const MainWrapper = styled.div`
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 15% 70%;
+  grid-column-gap: 30px;
+  @media (max-width: 750px) {
+    grid-template-columns: 25% 75%;
+  }
 `;
 
 const Aside = styled.aside`
-  position: fixed;
-  background-color: yellowgreen;
-  width: 15%;
-  top: 70px;
-  bottom: 0;
   padding-top: 25px;
+  background-color: #444;
   & ul {
     margin: 0;
     padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
     @media (max-width: 750px) {
-      display: grid;
       grid-template-columns: repeat(3, 1fr);
     }
   }
   & ul > a {
     text-align: center;
     text-decoration: none;
-    color: #000;
+    color: #fff;
+    margin-bottom: 10px;
+    font-family: "Arial", sans-serif;
   }
   & ul > a > li {
-    background-color: white;
-    width: 80%;
-    margin: 0 auto;
+    background-color: #4caf50;
     text-align: center;
     list-style: none;
-    border: 1px solid;
-    padding: 5px;
-    margin-top: 5px;
-    border-radius: 20%;
-    box-shadow: 2px 2px;
+    border: 1px solid #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 2px 2px #666;
     cursor: pointer;
     &:hover {
-      background-color: darkgrey;
-      color: antiquewhite;
+      background-color: #45a049;
     }
     @media (max-width: 750px) {
-      width: 20px;
+      width: 1rem;
+      height: 8rem;
     }
   }
+`;
+
+const ContentWrapper = styled.article`
+  padding: 20px;
+  display: flex;
+  justify-content: center; /* 가로 중앙 정렬 */
+  font-family: "Arial", sans-serif;
+  font-size: 1.2rem;
 `;

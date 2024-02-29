@@ -137,7 +137,6 @@ export default Concentration;
 
 const Container = styled.div`
   width: 100%;
-  border: 1px solid;
 `;
 
 const Button = styled.button`
