@@ -22,7 +22,7 @@ const AppLayout = ({ children }) => {
     <>
       <Header>
         <Link to="/">
-          <Title>Y의 즐거운 게임 세상</Title>
+          <Title>미니 게임 천국</Title>
         </Link>
       </Header>
       <MainWrapper>
@@ -50,7 +50,7 @@ const Header = styled.header`
   width: 100%;
   height: 70px;
   z-index: 2000;
-  background-color: #000;
+  background-color: #444;
   color: #fff;
   font-family: "Arial", sans-serif;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
@@ -78,6 +78,7 @@ const MainWrapper = styled.div`
   display: grid;
   grid-template-columns: 15% 70%;
   grid-column-gap: 30px;
+
   @media (max-width: 750px) {
     grid-template-columns: 25% 75%;
   }

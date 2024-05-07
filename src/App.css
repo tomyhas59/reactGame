@@ -1,14 +1,9 @@
-#table {
-  border-collapse: collapse;
-  user-select: none;
-}
-#table td {
-  border: 10px solid #bbada0;
-  width: 116px;
-  height: 128px;
-  font-size: 50px;
-  font-weight: bold;
-  text-align: center;
+body {
+  margin: 0;
+  padding: 0;
+
+  overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 /*2048게임*/
@@ -57,9 +52,6 @@
   color: #000;
 }
 
-table {
-  border-collapse: collapse;
-}
 td {
   border: 1px solid #bbb;
   text-align: center;

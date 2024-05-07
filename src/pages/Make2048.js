@@ -212,7 +212,7 @@ const Game2048 = () => {
         ))}
       </GameTable>
       <Score>{score}</Score>
-      <BackButton onClick={back}>뒤로</BackButton>
+      <BackButton onClick={back}>무르기</BackButton>
       {reGame && <RestartButton onClick={reGameStart}>다시 하기</RestartButton>}
     </Container>
   );

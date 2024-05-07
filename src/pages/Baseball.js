@@ -10,7 +10,6 @@ const Baseball = () => {
   const [answer, setAnswer] = useState(getNumber());
 
   function getNumber() {
-    //function은 호이스팅이 가능(어느 위치에서든 호출 가능)
     const numbers = [];
     for (let n = 0; n < 9; n += 1) {
       numbers.push(n + 1);

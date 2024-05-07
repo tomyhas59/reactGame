@@ -141,7 +141,9 @@ const CatchMole = () => {
     <div>
       <div>
         {!isGameStarted && (
-          <StartButton onClick={startGame}>Start Game</StartButton>
+          <StartButton onClick={startGame} style={{ cursor: "pointer" }}>
+            Start Game
+          </StartButton>
         )}
         <InfoSpan>
           Lives: {lives} | Score: {score} | Time:{time.toFixed(1)}

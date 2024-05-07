@@ -3,11 +3,11 @@ import SRP from "../img/rsp.png";
 import styled from "styled-components";
 
 const RSP = () => {
-  const [computerChoice, setComputerChoice] = useState("scissors");
+  const [computerChoice, setComputerChoice] = useState("가위");
   const rspX = {
-    scissors: "0",
-    rock: "-220px",
-    paper: "-440px",
+    가위: "0",
+    바위: "-220px",
+    보: "-440px",
   };
   const rspXKeys = Object.keys(rspX);
 
@@ -17,12 +17,12 @@ const RSP = () => {
   const intervalId = useRef(null);
 
   const changeComputerHand = useCallback(() => {
-    if (computerChoice === "scissors") {
-      setComputerChoice("rock");
-    } else if (computerChoice === "rock") {
-      setComputerChoice("paper");
-    } else if (computerChoice === "paper") {
-      setComputerChoice("scissors");
+    if (computerChoice === "가위") {
+      setComputerChoice("바위");
+    } else if (computerChoice === "바위") {
+      setComputerChoice("보");
+    } else if (computerChoice === "보") {
+      setComputerChoice("가위");
     }
   }, [computerChoice, setComputerChoice]);
 
@@ -48,9 +48,9 @@ const RSP = () => {
         setMessage("무승부");
       } else {
         if (
-          (props === "scissors" && computerChoice === "paper") ||
-          (props === "rock" && computerChoice === "scissors") ||
-          (props === "paper" && computerChoice === "rock")
+          (props === "가위" && computerChoice === "보") ||
+          (props === "바위" && computerChoice === "가위") ||
+          (props === "보" && computerChoice === "바위")
         ) {
           setScore((prevScore) => prevScore + 2);
           setMessage("승리");
