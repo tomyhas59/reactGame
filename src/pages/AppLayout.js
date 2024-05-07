@@ -1,8 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const AppLayout = ({ children }) => {
+  const location = useLocation();
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
     { to: "calculator", label: "계산기" },
@@ -18,6 +19,7 @@ const AppLayout = ({ children }) => {
     { to: "gugudan", label: "구구단" },
   ];
 
+  console.log(location.pathname);
   return (
     <>
       <Header>
@@ -30,7 +32,13 @@ const AppLayout = ({ children }) => {
           <ul>
             {links.map((link, index) => (
               <Link to={link.to} key={index}>
-                <li>{link.label}</li>
+                <li
+                  className={
+                    location.pathname === `/${link.to}` ? "active" : ""
+                  }
+                >
+                  {link.label}
+                </li>
               </Link>
             ))}
           </ul>
@@ -112,9 +120,13 @@ const Aside = styled.aside`
     border-radius: 10px;
     box-shadow: 2px 2px #666;
     cursor: pointer;
+    &.active {
+      background-color: #ff9800; /* 활성화된 링크 배경색 */
+    }
     &:hover {
       background-color: #45a049;
     }
+
     @media (max-width: 750px) {
       width: 1rem;
       height: 8rem;
