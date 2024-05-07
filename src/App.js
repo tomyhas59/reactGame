@@ -15,7 +15,6 @@ import Calculator from "./pages/Calculator";
 import Baseball from "./pages/Baseball";
 import Main from "./pages/Main";
 import Gugudan from "./pages/Gugudan";
-import OrderApp from "./pages/OrderApp";
 
 const App = () => {
   return (
@@ -30,7 +29,6 @@ const App = () => {
           <Route path="/make2048" element={<Make2048 />} />
           <Route path="/findMine" element={<FindMine />} />
           <Route path="/lotto" element={<Lotto />} />
-          <Route path="/orderApp" element={<OrderApp />} />
           <Route path="/concentration" element={<Concentration />} />
           <Route path="/catchMole" element={<CatchMole />} />
           <Route path="/calculator" element={<Calculator />} />
