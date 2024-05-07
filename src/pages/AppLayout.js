@@ -22,7 +22,7 @@ const AppLayout = ({ children }) => {
     <>
       <Header>
         <Link to="/">
-          <Title>미니 게임 천국</Title>
+          <Title>심심풀이</Title>
         </Link>
       </Header>
       <MainWrapper>
