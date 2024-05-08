@@ -82,7 +82,9 @@ const RSP = () => {
       </ImgContainer>
       <ButtonContainer>
         {rspXKeys.map((item) => (
-          <Button onClick={() => onClickRsp(item)}>{item}</Button>
+          <Button key={item} onClick={() => onClickRsp(item)}>
+            {item}
+          </Button>
         ))}
       </ButtonContainer>
       <Message>{message}</Message>

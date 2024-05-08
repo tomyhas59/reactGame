@@ -19,7 +19,6 @@ const AppLayout = ({ children }) => {
     { to: "gugudan", label: "구구단" },
   ];
 
-  console.log(location.pathname);
   return (
     <>
       <Header>

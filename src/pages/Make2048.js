@@ -201,15 +201,17 @@ const Game2048 = () => {
   return (
     <Container>
       <GameTable>
-        {data.map((row, i) => (
-          <TableRow key={i}>
-            {row.map((cell, j) => (
-              <TableCell key={j} className={`color-${cell}`}>
-                {cell === 0 ? "" : cell}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
+        <tbody>
+          {data.map((row, i) => (
+            <TableRow key={i}>
+              {row.map((cell, j) => (
+                <TableCell key={j} className={`color-${cell}`}>
+                  {cell === 0 ? "" : cell}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </tbody>
       </GameTable>
       <Score>{score}</Score>
       <BackButton onClick={back}>무르기</BackButton>

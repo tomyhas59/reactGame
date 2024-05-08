@@ -155,17 +155,17 @@ const CatchMole = () => {
             <Hole></Hole>
             <Mole
               onClick={() => handleMoleClick(index)}
-              clicked={mole.clicked}
+              clicked={!!mole.clicked}
               type={mole.type}
             />
             <Bomb
               onClick={() => handleBombClick(index)}
-              clicked={mole.clicked}
+              clicked={!!mole.clicked}
               type={mole.type}
             />
             <YMole
               onClick={() => handleYMoleClick(index)}
-              clicked={mole.clicked}
+              clicked={!!mole.clicked}
               type={mole.type}
             />
             <HoleFront></HoleFront>
@@ -312,3 +312,7 @@ const InfoSpan = styled.span`
   font-weight: bold;
   color: #333;
 `;
+
+Mole.shouldForwardProp = (prop) => prop !== "clicked";
+YMole.shouldForwardProp = (prop) => prop !== "clicked";
+Bomb.shouldForwardProp = (prop) => prop !== "clicked";

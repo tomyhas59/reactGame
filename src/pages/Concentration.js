@@ -202,3 +202,6 @@ const Back = styled(Card)`
   transform: ${(props) =>
     props.isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
 `;
+
+Front.shouldForwardProp = (prop) => prop === "$isFlipped";
+Back.shouldForwardProp = (prop) => prop === "$isFlipped";
