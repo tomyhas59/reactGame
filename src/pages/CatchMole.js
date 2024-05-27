@@ -17,6 +17,20 @@ const CatchMole = () => {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [time, setTime] = useState(20);
+  const [topScores, setTopScores] = useState([]);
+
+  // 로컬 스토리지에서 상위 5개 점수 불러오기
+  useEffect(() => {
+    const savedTopScores = JSON.parse(localStorage.getItem("topScores")) || [];
+    setTopScores(savedTopScores);
+  }, []);
+
+  // 상위 5개 점수 저장하기
+  useEffect(() => {
+    if (topScores.length > 0) {
+      localStorage.setItem("topScores", JSON.stringify(topScores));
+    }
+  }, [topScores]);
 
   //두더지 랜덤 등장
   const generateRandomMoles = useCallback(() => {
@@ -114,6 +128,13 @@ const CatchMole = () => {
     if (lives === 0 || time === 0) {
       setTimeout(() => {
         alert(`게임 오버! 점수는 ${score}점`);
+        setTopScores((prevTopScores) => {
+          const newScores = [...prevTopScores, score]
+            .sort((a, b) => b - a)
+            .slice(0, 5);
+          localStorage.setItem("topScores", JSON.stringify(newScores));
+          return newScores;
+        });
         setLives(3);
         setScore(0);
         setTime(20);
@@ -148,6 +169,11 @@ const CatchMole = () => {
         <InfoSpan>
           Lives: {lives} | Score: {score} | Time:{time.toFixed(1)}
         </InfoSpan>
+      </div>
+      <div>
+        {topScores.map((v, i) => (
+          <div key={i}>{`${i + 1}위 : ${v}점`}</div>
+        ))}
       </div>
       <HoleGrid>
         {moles.map((mole, index) => (
