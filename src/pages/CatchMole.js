@@ -25,13 +25,6 @@ const CatchMole = () => {
     setTopScores(savedTopScores);
   }, []);
 
-  // 상위 5개 점수 저장하기
-  useEffect(() => {
-    if (topScores.length > 0) {
-      localStorage.setItem("topScores", JSON.stringify(topScores));
-    }
-  }, [topScores]);
-
   //두더지 랜덤 등장
   const generateRandomMoles = useCallback(() => {
     setMoles((prevMoles) => {
