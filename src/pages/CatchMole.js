@@ -134,7 +134,7 @@ const CatchMole = () => {
         setIsGameStarted(false);
       }, 50);
     }
-  }, [lives, score, time]);
+  }, [lives, time]);
 
   useEffect(() => {
     if (isGameStarted) {
