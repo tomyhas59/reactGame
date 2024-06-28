@@ -83,10 +83,9 @@ const Title = styled.div`
 const MainWrapper = styled.div`
   height: 100vh;
   display: grid;
-  grid-template-columns: 15% 70%;
-  grid-column-gap: 30px;
-
-  @media (max-width: 750px) {
+  grid-template-columns: 15% 80%;
+  grid-column-gap: 10px;
+  @media (max-width: 480px) {
     grid-template-columns: 25% 75%;
   }
 `;
@@ -94,20 +93,21 @@ const MainWrapper = styled.div`
 const Aside = styled.aside`
   padding-top: 25px;
   background-color: #444;
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
   & ul {
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    @media (max-width: 750px) {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   & ul > a {
     text-align: center;
     text-decoration: none;
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
     font-family: "Arial", sans-serif;
   }
   & ul > a > li {
@@ -118,6 +118,8 @@ const Aside = styled.aside`
     padding: 10px;
     border-radius: 10px;
     box-shadow: 2px 2px #666;
+    width: 140px;
+
     cursor: pointer;
     &.active {
       background-color: #ff9800; /* 활성화된 링크 배경색 */
@@ -126,9 +128,8 @@ const Aside = styled.aside`
       background-color: #45a049;
     }
 
-    @media (max-width: 750px) {
-      width: 1rem;
-      height: 8rem;
+    @media (max-width: 480px) {
+      width: 70px;
     }
   }
 `;
@@ -136,7 +137,11 @@ const Aside = styled.aside`
 const ContentWrapper = styled.article`
   padding: 20px;
   display: flex;
-  justify-content: center; /* 가로 중앙 정렬 */
+  justify-content: center;
   font-family: "Arial", sans-serif;
   font-size: 1.2rem;
+  @media (max-width: 480px) {
+    padding: 0;
+    transform: scale(0.8);
+  }
 `;

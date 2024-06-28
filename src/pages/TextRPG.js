@@ -38,7 +38,7 @@ const TextRPG = () => {
     hero.lev = 1;
 
     hero.attack = function (target) {
-      target.hp -= hero.att;
+      target.hp -= this.att;
     };
 
     hero.getXp = function (xp) {
@@ -75,7 +75,7 @@ const TextRPG = () => {
   };
 
   //공격 회복 도망--------------------------------------------------
-  const attack = (hero, monster) => {
+  function attack(hero, monster) {
     hero.attack(monster); // 주인공이 몬스터를 공격
     if (monster.hp <= 0) {
       const xp = monster.xp;
@@ -96,7 +96,7 @@ const TextRPG = () => {
     }
     setHero({ ...hero }); // 주인공 상태 업데이트
     setMonster({ ...monster }); // 몬스터 상태 업데이트
-  };
+  }
 
   const heal = (hero, monster) => {
     if (hero.hp === hero.maxHp) {
