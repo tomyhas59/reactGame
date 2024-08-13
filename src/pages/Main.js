@@ -1,7 +1,56 @@
 import React from "react";
+import styled, { keyframes } from "styled-components";
 
 const Main = () => {
-  return <div>환영합니다</div>;
+  return (
+    <Container>
+      <WelcomeText>환영합니다</WelcomeText>
+    </Container>
+  );
 };
 
 export default Main;
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const gradientShift = keyframes`
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+`;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f3ec78, #af4261);
+  background-size: 200% 200%;
+  overflow: hidden;
+  position: relative;
+  animation: ${gradientShift} 5s ease infinite;
+`;
+
+const WelcomeText = styled.h1`
+  font-size: 3rem;
+  color: #fff;
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  animation: ${fadeInUp} 2s ease-out forwards;
+`;

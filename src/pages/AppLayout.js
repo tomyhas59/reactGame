@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
     { to: "calculator", label: "계산기" },
@@ -19,129 +21,151 @@ const AppLayout = ({ children }) => {
     { to: "gugudan", label: "구구단" },
   ];
 
+  const handleLinkClick = () => {
+    if (window.innerWidth <= 768) {
+      setIsMenuOpen(false); // 모바일에서 클릭 시 메뉴 닫기
+    }
+  };
+
   return (
-    <>
+    <Container>
       <Header>
-        <Link to="/">
-          <Title>심심풀이</Title>
-        </Link>
+        <TitleWrapper>
+          <Link to="/">
+            <Title>심심풀이</Title>
+          </Link>
+        </TitleWrapper>
+        <MenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</MenuToggle>
       </Header>
       <MainWrapper>
-        <Aside>
+        <Aside isOpen={isMenuOpen}>
           <ul>
             {links.map((link, index) => (
-              <Link to={link.to} key={index}>
-                <li
+              <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
+                <LinkItem
                   className={
                     location.pathname === `/${link.to}` ? "active" : ""
                   }
                 >
                   {link.label}
-                </li>
-              </Link>
+                </LinkItem>
+              </StyledLink>
             ))}
           </ul>
         </Aside>
         <ContentWrapper>{children}</ContentWrapper>
       </MainWrapper>
-    </>
+    </Container>
   );
 };
 
 export default AppLayout;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+`;
+
 const Header = styled.header`
-  text-align: center;
-  padding: 10px;
-  top: 0;
-  width: 100%;
-  height: 70px;
-  z-index: 2000;
-  background-color: #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background: #333;
   color: #fff;
-  font-family: "Arial", sans-serif;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
-  & a {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  > a {
     text-decoration: none;
-    color: #fff;
   }
 `;
 
 const Title = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  color: #ff0;
-  text-shadow: 3px 3px #f00;
-  font-size: 50px;
-  font-family: "Arial", sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 2px 2px 4px rgba(255, 0, 0, 0.5);
+  transition: color 0.3s, text-shadow 0.3s;
   &:hover {
-    color: #f00;
-    text-shadow: 3px 3px #ff0;
+    color: #ff4500;
+    text-shadow: 2px 2px 4px rgba(255, 255, 0, 0.7);
+  }
+`;
+
+const MenuToggle = styled.div`
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  @media (max-width: 768px) {
+    display: block;
   }
 `;
 
 const MainWrapper = styled.div`
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 15% 80%;
-  grid-column-gap: 10px;
-  @media (max-width: 480px) {
-    grid-template-columns: 25% 75%;
-  }
+  display: flex;
+  flex: 1;
 `;
 
 const Aside = styled.aside`
-  padding-top: 25px;
-  background-color: #444;
-  @media (max-width: 480px) {
-    font-size: 10px;
-  }
-  & ul {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  & ul > a {
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    margin-bottom: 3px;
-    font-family: "Arial", sans-serif;
-  }
-  & ul > a > li {
-    background-color: #4caf50;
-    text-align: center;
-    list-style: none;
-    border: 1px solid #fff;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 2px 2px #666;
-    width: 140px;
-
-    cursor: pointer;
-    &.active {
-      background-color: #ff9800; /* 활성화된 링크 배경색 */
-    }
-    &:hover {
-      background-color: #45a049;
-    }
-
-    @media (max-width: 480px) {
-      width: 70px;
-    }
+  background-color: #1f1f1f;
+  color: #eee;
+  width: 250px;
+  padding: 20px;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+  border-right: 1px solid #444;
+  transition: transform 0.3s ease;
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: -30px;
+    height: 100%;
+    z-index: 999;
+    background-color: #1f1f1f;
+    transform: scale(0.9)
+      ${(props) => (props.isOpen ? "translateX(0)" : "translateX(-100%)")};
   }
 `;
 
 const ContentWrapper = styled.article`
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  font-family: "Arial", sans-serif;
-  font-size: 1.2rem;
-  @media (max-width: 480px) {
-    padding: 0;
-    transform: scale(0.8);
+  flex: 1;
+  background: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Roboto", sans-serif;
+  font-size: 1.1rem;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: block;
+`;
+
+const LinkItem = styled.li`
+  background-color: #2a2a2a;
+  color: #ddd;
+  text-align: center;
+  list-style: none;
+  border: 1px solid #444;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  &:hover {
+    background-color: #444;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+  &.active {
+    background-color: #ff5722;
+    color: #fff;
   }
 `;

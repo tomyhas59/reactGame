@@ -136,7 +136,11 @@ function Concentration() {
 export default Concentration;
 
 const Container = styled.div`
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const Button = styled.button`

@@ -1,6 +1,7 @@
 import React, { useRef, useState, useCallback } from "react";
 import useInput from "../hooks/useInput";
 import styled from "styled-components";
+
 const Baseball = () => {
   const [input, onChangeInput, setInput] = useInput();
   const [logs, setLogs] = useState([]);
@@ -81,16 +82,16 @@ const Baseball = () => {
         if (newOutCount >= 3) {
           setLogs([
             ...logs,
-            `${newOutCount}아웃, 패배! 정답은 ${answer.join("")}`,
+            `${newOutCount} 아웃, 패배! 정답은 ${answer.join("")}`,
           ]);
         }
-        setLogs([...logs, `${input}: ${newOutCount}아웃`]);
+        setLogs([...logs, `${input}: ${newOutCount} 아웃`]);
       } else if (input === answer.join("")) {
         setLogs([...logs, "홈런!"]);
       } else if (tries.length >= 9) {
         setLogs([...logs, `패배! 정답은 ${answer.join("")}`]);
       } else {
-        setLogs([...logs, `${input}: ${strike}스트라이크 ${ball}볼`]);
+        setLogs([...logs, `${input}: ${strike} 스트라이크 ${ball} 볼`]);
       }
       setInput("");
       inputRef.current.focus();
@@ -108,31 +109,32 @@ const Baseball = () => {
 
   return (
     <Container>
-      <div>숫자 4자리를 입력해 주세요</div>
-      <form onSubmit={onSubmit}>
+      <Title>숫자 야구 게임</Title>
+      <Form onSubmit={onSubmit}>
         <Input
           type="text"
           value={input}
           onChange={onChangeInput}
           ref={inputRef}
+          maxLength={4}
+          placeholder="4자리 숫자"
         />
-        <Button type="submit">확인</Button>
-      </form>
-      <div>
-        결과:
-        <LogsContainer>
-          {logs.map((log, i) =>
-            log.includes("홈") || log.includes("패") ? (
-              <Logs>
-                <div key={i}>{log}</div>
-                <Button onClick={restartGame}>재시작</Button>
-              </Logs>
-            ) : (
-              <Logs key={i}>{log}</Logs>
-            )
-          )}
-        </LogsContainer>
-      </div>
+        <SubmitButton type="submit">확인</SubmitButton>
+      </Form>
+      <LogsContainer>
+        {logs.map((log, i) => (
+          <LogEntry
+            key={i}
+            isGameOver={log.includes("홈") || log.includes("패")}
+          >
+            <LogText>{log}</LogText>
+            {log.includes("홈") ||
+              (log.includes("패") && (
+                <RestartButton onClick={restartGame}>재시작</RestartButton>
+              ))}
+          </LogEntry>
+        ))}
+      </LogsContainer>
     </Container>
   );
 };
@@ -140,34 +142,88 @@ const Baseball = () => {
 export default Baseball;
 
 const Container = styled.div`
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+`;
+
+const Title = styled.h1`
+  margin-bottom: 20px;
+  font-size: 2rem;
+  color: #333;
+  font-family: "Roboto", sans-serif;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Input = styled.input`
-  margin: 10px;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  width: 120px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  &:focus {
+    border-color: #4caf50;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    outline: none;
+  }
 `;
 
-const Button = styled.button`
-  margin: 10px;
+const SubmitButton = styled.button`
   padding: 10px 20px;
   background-color: #4caf50;
-  color: white;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s, box-shadow 0.3s;
   &:hover {
     background-color: #45a049;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 `;
 
 const LogsContainer = styled.div`
   margin-top: 20px;
+  width: 100%;
+  max-width: 600px;
 `;
 
-const Logs = styled.div`
+const LogEntry = styled.div`
+  background-color: ${({ isGameOver }) => (isGameOver ? "#ffebee" : "#fff")};
+  border: 1px solid ${({ isGameOver }) => (isGameOver ? "#f44336" : "#ddd")};
+  border-radius: 8px;
+  padding: 15px;
   margin-top: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const LogText = styled.p`
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0;
+`;
+
+const RestartButton = styled(SubmitButton)`
+  background-color: #ff5722;
+  margin-top: 10px;
+  &:hover {
+    background-color: #e64a19;
+  }
 `;

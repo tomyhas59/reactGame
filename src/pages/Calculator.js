@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+
 const Calculator = () => {
   const [numOne, setNumOne] = useState("");
   const [numTwo, setNumTwo] = useState("");
@@ -8,45 +9,34 @@ const Calculator = () => {
 
   const onClickNumber = (number) => {
     if (!operator) {
-      const newNumOne = numOne + number;
-      setNumOne(newNumOne);
-      setResult(newNumOne);
+      setNumOne((prev) => prev + number);
+      setResult((prev) => prev + number);
     } else {
-      const newNumTwo = numTwo + number;
-      setNumTwo(newNumTwo);
-      setResult(newNumTwo);
+      setNumTwo((prev) => prev + number);
+      setResult((prev) => prev + number);
     }
   };
+
   const onMinusClick = () => {
     if (!operator) {
-      if (numOne[0] === "-") {
-        setNumOne(numOne.substring(1));
-        setResult(result.substring(1));
-      } else {
-        setNumOne("-" + numOne);
-        setResult("-" + result);
-      }
+      setNumOne((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
+      setResult((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
     } else {
-      if (numTwo[0] === "-") {
-        setNumTwo(numTwo.substring(1));
-        setResult(result.substring(1));
-      } else {
-        setNumTwo("-" + numTwo);
-        setResult("-" + result);
-      }
+      setNumTwo((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
+      setResult((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
     }
   };
 
   const onClickOperator = (op) => {
-    if (!numOne) return;
-    if (operator !== op) {
+    if (numOne) {
       setOperator(op);
       setNumTwo("");
+      setResult((prev) => prev + " " + op + " ");
     }
   };
 
   const calculateResult = () => {
-    if (numTwo) {
+    if (numOne && numTwo && operator) {
       let calculatedResult;
       switch (operator) {
         case "+":
@@ -68,7 +58,8 @@ const Calculator = () => {
       }
       setNumOne(calculatedResult.toString());
       setNumTwo("");
-      setResult("");
+      setOperator("");
+      setResult(calculatedResult.toString());
     } else {
       alert("숫자와 연산자를 모두 입력하세요.");
     }
@@ -90,70 +81,106 @@ const Calculator = () => {
 
   return (
     <Container>
-      <Input readOnly value={numOne + operator} />
-      <table>
-        <tbody>
-          {buttons.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((btnText) => (
-                <td key={btnText}>
-                  <Button
-                    onClick={() => {
-                      if (btnText === "±") {
-                        onMinusClick();
-                      } else if (btnText === "=") {
-                        calculateResult();
-                      } else if (btnText === "C") {
-                        clearCalculator();
-                      } else if (isNaN(btnText)) {
-                        onClickOperator(btnText);
-                      } else {
-                        onClickNumber(btnText);
-                      }
-                    }}
-                  >
-                    {btnText}
-                  </Button>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Input readOnly type="text" value={result} />
+      <Display value={result || numOne + operator + numTwo} readOnly />
+      <ButtonGrid>
+        {buttons.map((row, rowIndex) => (
+          <ButtonRow key={rowIndex}>
+            {row.map((btnText) => (
+              <Button
+                key={btnText}
+                onClick={() => {
+                  if (btnText === "±") {
+                    onMinusClick();
+                  } else if (btnText === "=") {
+                    calculateResult();
+                  } else if (btnText === "C") {
+                    clearCalculator();
+                  } else if (["+", "-", "/", "*"].includes(btnText)) {
+                    onClickOperator(btnText);
+                  } else {
+                    onClickNumber(btnText);
+                  }
+                }}
+                isOperator={["+", "-", "/", "*", "="].includes(btnText)}
+              >
+                {btnText}
+              </Button>
+            ))}
+          </ButtonRow>
+        ))}
+      </ButtonGrid>
     </Container>
   );
 };
+
 export default Calculator;
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 0 auto;
+`;
 
-const Input = styled.input`
-  padding: 10px;
-  border: 2px solid #45a049;
-  border-radius: 5px;
-  font-size: 50px;
-  width: 390px;
+const Display = styled.input`
+  width: 100%;
+  padding: 20px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  font-size: 2rem;
   text-align: right;
+  margin-bottom: 20px;
+  background-color: #fff;
+  color: #333;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   @media (max-width: 750px) {
-    width: 195px;
+    font-size: 1.5rem;
   }
 `;
 
-const Button = styled.button`
-  width: 100px;
-  height: 100px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 50px;
-  &:hover {
-    background-color: #45a049;
-  }
+const ButtonGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  grid-gap: 10px;
   @media (max-width: 750px) {
-    width: 50px;
-    height: 50px;
+    grid-template-columns: repeat(4, 60px);
+    grid-gap: 5px;
+  }
+`;
+
+const ButtonRow = styled.div`
+  display: contents;
+`;
+
+const Button = styled.button`
+  width: 80px;
+  height: 80px;
+  background-color: ${({ isOperator }) => (isOperator ? "#ff5722" : "#4caf50")};
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s;
+
+  &:hover {
+    background-color: ${({ isOperator }) =>
+      isOperator ? "#e64a19" : "#45a049"};
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: 750px) {
+    width: 60px;
+    height: 60px;
+    font-size: 1.2rem;
   }
 `;

@@ -226,7 +226,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const GameTable = styled.table`

@@ -26,7 +26,7 @@ const Gugudan = () => {
   };
 
   return (
-    <div>
+    <Container>
       <div>
         {num1} 곱하기 {num2}는?
       </div>
@@ -40,11 +40,19 @@ const Gugudan = () => {
         <Button type="submit">입력!</Button>
       </form>
       <div>{message}</div>
-    </div>
+    </Container>
   );
 };
 
 export default Gugudan;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+`;
 
 const Button = styled.button`
   padding: 10px 20px;

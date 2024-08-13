@@ -78,7 +78,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const Screen = styled.div`

@@ -78,7 +78,7 @@ const WordGame = () => {
     );
   } else {
     return (
-      <div>
+      <Container>
         <Input
           type="number"
           ref={numberRef}
@@ -87,7 +87,7 @@ const WordGame = () => {
           onChange={onChangeNumberInput}
         />
         <Button onClick={onNumberBtn}>확인</Button>
-      </div>
+      </Container>
     );
   }
 };
@@ -95,8 +95,11 @@ const WordGame = () => {
 export default WordGame;
 
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const InfoBlock = styled.div`

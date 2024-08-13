@@ -99,6 +99,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const ImgContainer = styled.div`

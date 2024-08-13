@@ -260,7 +260,11 @@ const StyledInput = styled(Input)`
 `;
 
 const StyledForm = styled.form`
-  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
 `;
 
 const StyledHeader = styled.div`

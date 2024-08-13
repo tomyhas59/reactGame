@@ -55,7 +55,7 @@ const Lotto = () => {
   };
 
   return (
-    <div>
+    <Container>
       <div>
         결과:
         {winBalls.slice(0, i).map((winBall) => (
@@ -69,12 +69,19 @@ const Lotto = () => {
         )}
       </div>
       {i === 7 && <Button onClick={reDraw}>다시 뽑기</Button>}
-    </div>
+    </Container>
   );
 };
 
 export default Lotto;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+`;
 const Ball = styled.div`
   display: inline-block;
   border: 1px solid #000;

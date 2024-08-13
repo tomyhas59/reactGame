@@ -152,7 +152,7 @@ const CatchMole = () => {
   }, [isGameStarted, time]);
 
   return (
-    <div>
+    <Container>
       <div>
         {!isGameStarted && (
           <StartButton onClick={startGame} style={{ cursor: "pointer" }}>
@@ -191,18 +191,24 @@ const CatchMole = () => {
           </Cell>
         ))}
       </HoleGrid>
-    </div>
+    </Container>
   );
 };
 
 export default CatchMole;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+  min-height: 100vh;
+`;
 
 const HoleGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  column-gap: 50px;
-  row-gap: 20px;
   justify-content: center;
+  gap: 20px;
   @media (max-width: 950px) {
     grid-template-columns: repeat(2, 1fr);
   }
