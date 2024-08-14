@@ -146,7 +146,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  background-color: #f0f2f5;
   min-height: 100vh;
 `;
 

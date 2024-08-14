@@ -37,24 +37,20 @@ const AppLayout = ({ children }) => {
         </TitleWrapper>
         <MenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</MenuToggle>
       </Header>
-      <MainWrapper>
-        <Aside isOpen={isMenuOpen}>
-          <ul>
-            {links.map((link, index) => (
-              <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
-                <LinkItem
-                  className={
-                    location.pathname === `/${link.to}` ? "active" : ""
-                  }
-                >
-                  {link.label}
-                </LinkItem>
-              </StyledLink>
-            ))}
-          </ul>
-        </Aside>
+      <ListContainer>
+        <List isOpen={isMenuOpen}>
+          {links.map((link, index) => (
+            <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
+              <LinkItem
+                className={location.pathname === `/${link.to}` ? "active" : ""}
+              >
+                {link.label}
+              </LinkItem>
+            </StyledLink>
+          ))}
+        </List>
         <ContentWrapper>{children}</ContentWrapper>
-      </MainWrapper>
+      </ListContainer>
     </Container>
   );
 };
@@ -77,7 +73,7 @@ const Header = styled.header`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 999;
 `;
 
 const TitleWrapper = styled.div`
@@ -109,48 +105,40 @@ const MenuToggle = styled.div`
   }
 `;
 
-const MainWrapper = styled.div`
+const ListContainer = styled.div`
   display: flex;
-  flex: 1;
 `;
 
-const Aside = styled.aside`
+const List = styled.ul`
   background-color: #1f1f1f;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
   color: #eee;
-  width: 250px;
-  padding: 20px;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
-  border-right: 1px solid #444;
+  width: 200px;
+  height: 100%;
+  padding: 10px;
   transition: transform 0.3s ease;
   @media (max-width: 768px) {
     position: fixed;
-    top: 0;
-    left: -30px;
-    height: 100%;
-    z-index: 999;
+    right: -30px;
+    z-index: 555;
+    font-size: 12px;
+    width: 150px;
     background-color: #1f1f1f;
-    transform: scale(0.9)
-      ${(props) => (props.isOpen ? "translateX(0)" : "translateX(-100%)")};
+    transform: ${(props) =>
+      props.isOpen ? "translateX(0)" : "translateX(100%)"};
   }
-`;
-
-const ContentWrapper = styled.article`
-  flex: 1;
-  background: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: "Roboto", sans-serif;
-  font-size: 1.1rem;
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: inherit;
-  display: block;
 `;
 
 const LinkItem = styled.li`
   background-color: #2a2a2a;
+  width: 150px;
   color: #ddd;
   text-align: center;
   list-style: none;
@@ -168,4 +156,13 @@ const LinkItem = styled.li`
     background-color: #ff5722;
     color: #fff;
   }
+  @media (max-width: 768px) {
+    padding: 5px;
+    width: 100px;
+  }
+`;
+
+const ContentWrapper = styled.article`
+  width: 100%;
+  font-size: 1.1rem;
 `;

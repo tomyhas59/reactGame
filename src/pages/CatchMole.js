@@ -19,7 +19,7 @@ const CatchMole = () => {
   const [time, setTime] = useState(20);
   const [topScores, setTopScores] = useState([]);
 
-  // 로컬 스토리지에서 상위 5개 점수 불러오기
+  // 로컬 스토리지에서 상위 3개 점수 불러오기
   useEffect(() => {
     const savedTopScores = JSON.parse(localStorage.getItem("topScores")) || [];
     setTopScores(savedTopScores);
@@ -124,7 +124,7 @@ const CatchMole = () => {
         setTopScores((prevTopScores) => {
           const newScores = [...prevTopScores, score]
             .sort((a, b) => b - a)
-            .slice(0, 5);
+            .slice(0, 3);
           localStorage.setItem("topScores", JSON.stringify(newScores));
           return newScores;
         });
@@ -196,12 +196,16 @@ const CatchMole = () => {
 };
 
 export default CatchMole;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px;
   min-height: 100vh;
+  @media (max-width: 950px) {
+    margin-top: -150px;
+    transform: scale(0.5);
+  }
 `;
 
 const HoleGrid = styled.div`
@@ -210,7 +214,7 @@ const HoleGrid = styled.div`
   justify-content: center;
   gap: 20px;
   @media (max-width: 950px) {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -220,10 +224,6 @@ const Cell = styled.div`
   width: 200px;
   height: 200px;
   overflow: hidden;
-  @media (max-width: 950px) {
-    width: 100px;
-    height: 100px;
-  }
 `;
 
 const BaseMoleStyle = css`
@@ -234,10 +234,6 @@ const BaseMoleStyle = css`
   background-size: cover;
   opacity: 1;
   transition: bottom 1s ease-in-out;
-  @media (max-width: 950px) {
-    width: 100px;
-    height: 100px;
-  }
 `;
 
 const Mole = styled.div`
@@ -286,9 +282,6 @@ const Bomb = styled.div`
       bottom: -200px;
       background-image: url(${explodeImg});
     `}
-   @media (max-width: 950px) {
-    background-size: 100px 100px;
-  }
 `;
 
 const Hole = styled.div`
@@ -299,10 +292,6 @@ const Hole = styled.div`
   background: url(${moleHoleImg}) center center no-repeat;
   background-size: 200px 150px;
   cursor: pointer;
-  @media (max-width: 950px) {
-    width: 100px;
-    height: 75px;
-  }
 `;
 
 const HoleFront = styled.div`
@@ -312,10 +301,6 @@ const HoleFront = styled.div`
   bottom: 0;
   background: url(${moleHoleFrontImg}) center center no-repeat;
   background-size: 200px 30px;
-  @media (max-width: 950px) {
-    width: 100px;
-    height: 15px;
-  }
 `;
 
 const StartButton = styled.button`
