@@ -35,21 +35,15 @@ const gradientShift = keyframes`
 `;
 
 const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(135deg, #f3ec78, #af4261);
-  background-size: 200% 200%;
-  overflow: hidden;
-  position: relative;
   animation: ${gradientShift} 5s ease infinite;
 `;
 
 const WelcomeText = styled.h1`
   font-size: 3rem;
+  text-align: center;
   color: #fff;
-  font-family: "Arial", sans-serif;
   font-weight: bold;
   text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   animation: ${fadeInUp} 2s ease-out forwards;

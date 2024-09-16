@@ -23,7 +23,7 @@ const AppLayout = ({ children }) => {
 
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
-      setIsMenuOpen(false); // 모바일에서 클릭 시 메뉴 닫기
+      setIsMenuOpen(false);
     }
   };
 
@@ -60,7 +60,6 @@ export default AppLayout;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100vh;
 `;
 
 const Header = styled.header`
@@ -106,7 +105,8 @@ const MenuToggle = styled.div`
 `;
 
 const ListContainer = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: 30% 70%;
 `;
 
 const List = styled.ul`
@@ -117,7 +117,7 @@ const List = styled.ul`
   align-items: flex-start;
   color: #eee;
   width: 200px;
-  height: 100%;
+
   padding: 10px;
   transition: transform 0.3s ease;
   @media (max-width: 768px) {
@@ -140,10 +140,11 @@ const LinkItem = styled.li`
   background-color: #2a2a2a;
   width: 150px;
   color: #ddd;
+  font-size: 12px;
   text-align: center;
   list-style: none;
   border: 1px solid #444;
-  padding: 15px;
+  padding: 5px;
   border-radius: 8px;
   margin-bottom: 10px;
   transition: background-color 0.3s, box-shadow 0.3s;
