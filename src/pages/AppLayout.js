@@ -54,7 +54,7 @@ const AppLayout = ({ children }) => {
         <MenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</MenuToggle>
       </Header>
       <ContentContainer>
-        <List isOpen={isMenuOpen} ref={menuRef}>
+        <List $isOpen={isMenuOpen} ref={menuRef}>
           {links.map((link, index) => (
             <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
               <LinkItem
@@ -141,7 +141,7 @@ const List = styled.ul`
     height: 100%;
     background-color: #1f1f1f;
     transform: ${(props) =>
-      props.isOpen ? "translateX(0)" : "translateX(100%)"};
+      props.$isOpen ? "translateX(0)" : "translateX(100%)"};
   }
 `;
 
