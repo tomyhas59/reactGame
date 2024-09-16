@@ -76,39 +76,42 @@ const Calculator = () => {
     ["1", "2", "3", "+"],
     ["4", "5", "6", "-"],
     ["7", "8", "9", "/"],
-    ["±", "0", "*", "=", "C"],
+    ["±", "0", "*", "="],
+    ["C"],
   ];
 
   return (
     <Container>
-      <Display value={result || numOne + operator + numTwo} readOnly />
-      <ButtonGrid>
-        {buttons.map((row, rowIndex) => (
-          <ButtonRow key={rowIndex}>
-            {row.map((btnText) => (
-              <Button
-                key={btnText}
-                onClick={() => {
-                  if (btnText === "±") {
-                    onMinusClick();
-                  } else if (btnText === "=") {
-                    calculateResult();
-                  } else if (btnText === "C") {
-                    clearCalculator();
-                  } else if (["+", "-", "/", "*"].includes(btnText)) {
-                    onClickOperator(btnText);
-                  } else {
-                    onClickNumber(btnText);
-                  }
-                }}
-                isOperator={["+", "-", "/", "*", "="].includes(btnText)}
-              >
-                {btnText}
-              </Button>
-            ))}
-          </ButtonRow>
-        ))}
-      </ButtonGrid>
+      <Content>
+        <Display value={result || numOne + operator + numTwo} readOnly />
+        <ButtonGrid>
+          {buttons.map((row, rowIndex) => (
+            <ButtonRow key={rowIndex}>
+              {row.map((btnText) => (
+                <Button
+                  key={btnText}
+                  onClick={() => {
+                    if (btnText === "±") {
+                      onMinusClick();
+                    } else if (btnText === "=") {
+                      calculateResult();
+                    } else if (btnText === "C") {
+                      clearCalculator();
+                    } else if (["+", "-", "/", "*"].includes(btnText)) {
+                      onClickOperator(btnText);
+                    } else {
+                      onClickNumber(btnText);
+                    }
+                  }}
+                  isOperator={["+", "-", "/", "*", "="].includes(btnText)}
+                >
+                  {btnText}
+                </Button>
+              ))}
+            </ButtonRow>
+          ))}
+        </ButtonGrid>
+      </Content>
     </Container>
   );
 };
@@ -120,11 +123,19 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   margin: 0 auto;
+  height: 100vh;
+`;
+
+const Content = styled.div`
+  background-color: #d3d3d3;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px #4f4f4f;
+  @media (max-width: 750px) {
+    width: 80%;
+  }
 `;
 
 const Display = styled.input`
@@ -137,7 +148,6 @@ const Display = styled.input`
   margin-bottom: 20px;
   background-color: #fff;
   color: #333;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
   @media (max-width: 750px) {
     font-size: 1.5rem;
   }

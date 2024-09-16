@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef(false);
 
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
@@ -27,6 +28,21 @@ const AppLayout = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        if (window.innerWidth <= 768) {
+          setIsMenuOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -37,8 +53,8 @@ const AppLayout = ({ children }) => {
         </TitleWrapper>
         <MenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</MenuToggle>
       </Header>
-      <ListContainer>
-        <List isOpen={isMenuOpen}>
+      <ContentContainer>
+        <List isOpen={isMenuOpen} ref={menuRef}>
           {links.map((link, index) => (
             <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
               <LinkItem
@@ -49,8 +65,8 @@ const AppLayout = ({ children }) => {
             </StyledLink>
           ))}
         </List>
-        <ContentWrapper>{children}</ContentWrapper>
-      </ListContainer>
+        <Content>{children}</Content>
+      </ContentContainer>
     </Container>
   );
 };
@@ -58,8 +74,7 @@ const AppLayout = ({ children }) => {
 export default AppLayout;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  display: block;
 `;
 
 const Header = styled.header`
@@ -104,28 +119,26 @@ const MenuToggle = styled.div`
   }
 `;
 
-const ListContainer = styled.div`
-  display: grid;
-  grid-template-columns: 30% 70%;
+const ContentContainer = styled.div`
+  display: flex;
 `;
 
 const List = styled.ul`
   background-color: #1f1f1f;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
   color: #eee;
-  width: 200px;
-
+  width: 170px;
   padding: 10px;
   transition: transform 0.3s ease;
   @media (max-width: 768px) {
     position: fixed;
+    top: 70px;
     right: -30px;
     z-index: 555;
     font-size: 12px;
     width: 150px;
+    height: 100%;
     background-color: #1f1f1f;
     transform: ${(props) =>
       props.isOpen ? "translateX(0)" : "translateX(100%)"};
@@ -163,7 +176,6 @@ const LinkItem = styled.li`
   }
 `;
 
-const ContentWrapper = styled.article`
+const Content = styled.article`
   width: 100%;
-  font-size: 1.1rem;
 `;
