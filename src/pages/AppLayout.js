@@ -20,6 +20,7 @@ const AppLayout = ({ children }) => {
     { to: "textRPG", label: "텍스트RPG" },
     { to: "wordGame", label: "끝말잇기" },
     { to: "gugudan", label: "구구단" },
+    { to: "onet", label: "그림 맞추기" },
   ];
 
   const handleLinkClick = () => {
