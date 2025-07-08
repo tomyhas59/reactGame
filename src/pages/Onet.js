@@ -116,7 +116,7 @@ function App() {
   const endGame = () => {
     setTimerActive(false);
     const timeTaken = Math.floor((Date.now() - startTime) / 1000);
-    alert(`성공! \n소요 시간: ${timeTaken}초`);
+    alert(`더 이상 이을 쌍이 업습니다! \n소요 시간: ${timeTaken}초`);
     saveRecord(timeTaken);
   };
 
@@ -192,8 +192,8 @@ function App() {
         <Button onClick={startNewGame}>새 게임 ▶️</Button>
       </ButtonGroup>
       <StatusBar>⏱️ 경과 시간: {elapsedTime}초</StatusBar>
-      <GameBoard>
-        {board.flatMap((row, i) =>
+      <GameBoard size={BOARD_SIZE}>
+        {board.map((row, i) =>
           row.map((cell, j) => (
             <Cell
               key={`${i}-${j}`}
@@ -263,16 +263,14 @@ const StatusBar = styled.div`
 
 const GameBoard = styled.div`
   display: grid;
-  grid-template-columns: repeat(10, minmax(30px, 1fr));
+  grid-template-columns: ${({ size }) => `repeat(${size}, minmax(30px, 1fr))`};
   gap: 4px;
-  width: 90vw;
-  max-width: 500px;
-  min-height: 500px;
 `;
 
 const Cell = styled.div`
   font-size: 24px;
-  padding: 5px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;

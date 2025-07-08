@@ -52,56 +52,18 @@ const CatchMole = () => {
   }, []);
 
   //클릭 이벤트---------------------------------------
-  const handleMoleClick = useCallback(
-    (index) => {
-      if (moles[index].clicked) {
-        return;
-      }
-      const updatedMoles = [...moles];
-      updatedMoles[index] = {
-        ...updatedMoles[index],
-        clicked: true,
-        rise: false,
-      };
-      setMoles(updatedMoles);
-      setScore((prevScore) => prevScore + 1);
-    },
-    [moles]
-  );
 
-  const handleBombClick = useCallback(
-    (index) => {
-      if (moles[index].clicked) {
-        return;
-      }
-      const updatedMoles = [...moles];
-      updatedMoles[index] = {
-        ...updatedMoles[index],
-        clicked: true,
-        rise: false,
-      };
-      setMoles(updatedMoles);
-      setLives((prevLives) => prevLives - 1);
-    },
-    [moles]
-  );
+  const handleClick = (index, type) => {
+    if (moles[index].clicked) return;
+    const updatedMoles = [...moles];
+    updatedMoles[index] = { ...updatedMoles[index], clicked: true };
+    setMoles(updatedMoles);
 
-  const handleYMoleClick = useCallback(
-    (index) => {
-      if (moles[index].clicked) {
-        return;
-      }
-      const updatedMoles = [...moles];
-      updatedMoles[index] = {
-        ...updatedMoles[index],
-        clicked: true,
-        rise: false,
-      };
-      setMoles(updatedMoles);
-      setScore((prevScore) => prevScore + 10);
-    },
-    [moles]
-  );
+    if (type === "mole") setScore((s) => s + 1);
+    else if (type === "YMole") setScore((s) => s + 10);
+    else if (type === "bomb") setLives((l) => l - 1);
+  };
+
   //--------------------------------------------------------------
   useEffect(() => {
     if (isGameStarted) {
@@ -114,27 +76,33 @@ const CatchMole = () => {
   }, [generateRandomMoles, isGameStarted]);
 
   const startGame = () => {
+    setScore(0);
+    setLives(3);
+    setTime(20);
+    setMoles(Array.from({ length: 9 }).fill({ type: null, clicked: false }));
     setIsGameStarted(true);
   };
 
   useEffect(() => {
-    if (lives === 0 || time === 0) {
-      setTimeout(() => {
-        alert(`게임 오버! 점수는 ${score}점`);
-        setTopScores((prevTopScores) => {
-          const newScores = [...prevTopScores, score]
-            .sort((a, b) => b - a)
-            .slice(0, 3);
-          localStorage.setItem("topScores", JSON.stringify(newScores));
-          return newScores;
-        });
-        setLives(3);
-        setScore(0);
-        setTime(20);
-        setIsGameStarted(false);
-      }, 50);
-    }
-  }, [lives, score, time]);
+    if (!isGameStarted) return;
+    if (lives > 0 && time > 0) return;
+    setIsGameStarted(false);
+
+    setTimeout(() => {
+      alert(`게임 오버! 점수는 ${score}점`);
+      setTopScores((prevTopScores) => {
+        const newScores = Array.from(new Set([...prevTopScores, score]))
+          .sort((a, b) => b - a)
+          .slice(0, 3);
+        localStorage.setItem("topScores", JSON.stringify(newScores));
+        return newScores;
+      });
+      setLives(3);
+      setScore(0);
+      setTime(20);
+      setIsGameStarted(false);
+    }, 50);
+  }, [lives, score, time, isGameStarted]);
 
   useEffect(() => {
     if (isGameStarted) {
@@ -173,17 +141,17 @@ const CatchMole = () => {
           <Cell key={index}>
             <Hole></Hole>
             <Mole
-              onClick={() => handleMoleClick(index)}
+              onClick={() => handleClick(index, "mole")}
               clicked={!!mole.clicked}
               type={mole.type}
             />
             <Bomb
-              onClick={() => handleBombClick(index)}
+              onClick={() => handleClick(index, "YMole")}
               clicked={!!mole.clicked}
               type={mole.type}
             />
             <YMole
-              onClick={() => handleYMoleClick(index)}
+              onClick={() => handleClick(index, "bomb")}
               clicked={!!mole.clicked}
               type={mole.type}
             />

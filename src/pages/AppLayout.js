@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(false);
+  const menuRef = useRef(null);
 
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
@@ -56,8 +56,8 @@ const AppLayout = ({ children }) => {
       </Header>
       <ContentContainer>
         <List $isOpen={isMenuOpen} ref={menuRef}>
-          {links.map((link, index) => (
-            <StyledLink to={link.to} key={index} onClick={handleLinkClick}>
+          {links.map((link) => (
+            <StyledLink to={link.to} key={link.to} onClick={handleLinkClick}>
               <LinkItem
                 className={location.pathname === `/${link.to}` ? "active" : ""}
               >
@@ -74,9 +74,7 @@ const AppLayout = ({ children }) => {
 
 export default AppLayout;
 
-const Container = styled.div`
-  display: block;
-`;
+const Container = styled.div``;
 
 const Header = styled.header`
   display: flex;
@@ -111,7 +109,7 @@ const Title = styled.div`
   }
 `;
 
-const MenuToggle = styled.div`
+const MenuToggle = styled.button`
   display: none;
   font-size: 2rem;
   cursor: pointer;
@@ -140,7 +138,6 @@ const List = styled.ul`
     font-size: 12px;
     width: 150px;
     height: 100%;
-    background-color: #1f1f1f;
     transform: ${(props) =>
       props.$isOpen ? "translateX(0)" : "translateX(100%)"};
   }

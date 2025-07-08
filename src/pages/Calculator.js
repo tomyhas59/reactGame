@@ -5,71 +5,80 @@ const Calculator = () => {
   const [numOne, setNumOne] = useState("");
   const [numTwo, setNumTwo] = useState("");
   const [operator, setOperator] = useState("");
-  const [result, setResult] = useState("");
 
   const onClickNumber = (number) => {
     if (!operator) {
       setNumOne((prev) => prev + number);
-      setResult((prev) => prev + number);
     } else {
       setNumTwo((prev) => prev + number);
-      setResult((prev) => prev + number);
     }
   };
 
   const onMinusClick = () => {
     if (!operator) {
-      setNumOne((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
-      setResult((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
+      setNumOne((prev) => toggleMinus(prev));
     } else {
-      setNumTwo((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
-      setResult((prev) => (prev[0] === "-" ? prev.slice(1) : "-" + prev));
+      setNumTwo((prev) => toggleMinus(prev));
     }
+  };
+
+  const toggleMinus = (num) => {
+    if (!num) return "-";
+    if (num === "-") return "";
+    return num[0] === "-" ? num.slice(1) : "-" + num;
   };
 
   const onClickOperator = (op) => {
-    if (numOne) {
-      setOperator(op);
-      setNumTwo("");
-      setResult((prev) => prev + " " + op + " ");
+    if (!numOne) {
+      alert("먼저 숫자를 입력하세요.");
+      return;
     }
+    if (operator) {
+      alert("이미 연산자를 선택했습니다.");
+      return;
+    }
+    setOperator(op);
   };
-
   const calculateResult = () => {
-    if (numOne && numTwo && operator) {
-      let calculatedResult;
-      switch (operator) {
-        case "+":
-          calculatedResult = parseFloat(numOne) + parseFloat(numTwo);
-          break;
-        case "-":
-          calculatedResult = parseFloat(numOne) - parseFloat(numTwo);
-          break;
-        case "/":
-          calculatedResult = parseFloat(numOne) / parseFloat(numTwo);
-          break;
-        case "*":
-          calculatedResult = parseFloat(numOne) * parseFloat(numTwo);
-          break;
-        default:
-          alert("올바른 연산자가 아닙니다.");
+    if (!numOne || !operator || !numTwo) {
+      alert("계산식을 완성해주세요.");
+      return;
+    }
+    let calculated;
+    const n1 = parseFloat(numOne);
+    const n2 = parseFloat(numTwo);
+    switch (operator) {
+      case "+":
+        calculated = n1 + n2;
+        break;
+      case "-":
+        calculated = n1 - n2;
+        break;
+      case "*":
+        calculated = n1 * n2;
+        break;
+      case "/":
+        if (n2 === 0) {
+          alert("0으로 나눌 수 없습니다!");
           clearCalculator();
           return;
-      }
-      setNumOne(calculatedResult.toString());
-      setNumTwo("");
-      setOperator("");
-      setResult(calculatedResult.toString());
-    } else {
-      alert("숫자와 연산자를 모두 입력하세요.");
+        }
+        calculated = n1 / n2;
+        break;
+      default:
+        alert("올바른 연산자가 아닙니다.");
+        clearCalculator();
+        return;
     }
+    setNumOne(calculated.toString());
+    setNumTwo("");
+    setOperator("");
   };
 
   const clearCalculator = () => {
     setNumOne("");
     setNumTwo("");
     setOperator("");
-    setResult("");
   };
 
   const buttons = [
@@ -80,29 +89,25 @@ const Calculator = () => {
     ["C"],
   ];
 
+  const handleButtonClick = (btn) => {
+    if (btn === "±") onMinusClick();
+    else if (btn === "=") calculateResult();
+    else if (btn === "C") clearCalculator();
+    else if (["+", "-", "/", "*"].includes(btn)) onClickOperator(btn);
+    else onClickNumber(btn);
+  };
+
   return (
     <Container>
       <Content>
-        <Display value={result || numOne + operator + numTwo} readOnly />
+        <Display value={`${numOne}${operator}${numTwo}`} readOnly />
         <ButtonGrid>
           {buttons.map((row, rowIndex) => (
             <ButtonRow key={rowIndex}>
               {row.map((btnText) => (
                 <Button
                   key={btnText}
-                  onClick={() => {
-                    if (btnText === "±") {
-                      onMinusClick();
-                    } else if (btnText === "=") {
-                      calculateResult();
-                    } else if (btnText === "C") {
-                      clearCalculator();
-                    } else if (["+", "-", "/", "*"].includes(btnText)) {
-                      onClickOperator(btnText);
-                    } else {
-                      onClickNumber(btnText);
-                    }
-                  }}
+                  onClick={() => handleButtonClick(btnText)}
                   isOperator={["+", "-", "/", "*", "="].includes(btnText)}
                 >
                   {btnText}

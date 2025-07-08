@@ -8,9 +8,8 @@ const Baseball = () => {
   const [tries, setTries] = useState([]);
   const [outCount, setOutCount] = useState(1);
   const inputRef = useRef(null);
-  const [answer, setAnswer] = useState(getNumber());
 
-  function getNumber() {
+  const getNumber = useCallback(() => {
     const numbers = [];
     for (let n = 0; n < 9; n += 1) {
       numbers.push(n + 1);
@@ -22,7 +21,9 @@ const Baseball = () => {
       numbers.splice(index, 1);
     }
     return array;
-  }
+  }, []);
+
+  const [answer, setAnswer] = useState(() => getNumber());
 
   const checkInput = useCallback(
     (input) => {
@@ -79,13 +80,13 @@ const Baseball = () => {
       if (strike === 0 && ball === 0) {
         const newOutCount = outCount + 1;
         setOutCount(newOutCount);
-        if (newOutCount >= 3) {
-          setLogs([
-            ...logs,
-            `${newOutCount} 아웃, 패배! 정답은 ${answer.join("")}`,
-          ]);
-        }
-        setLogs([...logs, `${input}: ${newOutCount} 아웃`]);
+        setLogs([
+          ...logs,
+          `${input}: ${newOutCount} 아웃`,
+          ...(newOutCount >= 3
+            ? [`${newOutCount} 아웃, 패배! 정답은 ${answer.join("")}`]
+            : []),
+        ]);
       } else if (input === answer.join("")) {
         setLogs([...logs, "홈런!"]);
       } else if (tries.length >= 9) {
@@ -95,7 +96,7 @@ const Baseball = () => {
       }
       setInput("");
       inputRef.current.focus();
-      setTries([...tries, input]);
+      setTries((prev) => [...prev, input]);
     },
     [logs, checkInput, input, answer, tries, setInput, outCount]
   );
@@ -105,7 +106,7 @@ const Baseball = () => {
     setTries([]);
     setOutCount(1);
     setAnswer(getNumber());
-  }, []);
+  }, [getNumber]);
 
   return (
     <Container>
