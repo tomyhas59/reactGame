@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 const Lotto = () => {
   const [winBalls, setWinBalls] = useState([]);
@@ -58,8 +58,10 @@ const Lotto = () => {
     <Container>
       <div>
         결과:
-        {winBalls.slice(0, i).map((winBall) => (
-          <Ball style={{ backgroundColor: getColor(winBall) }}>{winBall}</Ball>
+        {winBalls.slice(0, i).map((winBall, index) => (
+          <Ball key={index} style={{ backgroundColor: getColor(winBall) }}>
+            {winBall}
+          </Ball>
         ))}
       </div>
       <div>

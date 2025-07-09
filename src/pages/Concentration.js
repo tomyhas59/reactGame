@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 
 function Concentration() {
@@ -15,22 +15,20 @@ function Concentration() {
   const [colors, setColors] = useState(colorArr);
   const total = 10;
 
+  const shuffle = (array) => {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+    }
+    return newArr;
+  };
+
   const initialCards = useCallback(() => {
-    const colors = [...colorArr]; //리셋 시 color 초기화
-    let randomColors = [];
-    while (colors.length > 0) {
-      const random = Math.floor(Math.random() * colors.length);
-      randomColors = randomColors.concat(colors.splice(random, 1));
-    }
-    let selectedColors = randomColors.slice(0, total / 2);
-    let colorCopy = [...selectedColors, ...selectedColors];
-    let newShuffled = [];
-    for (let i = 0; colorCopy.length > 0; i += 1) {
-      const randomIndex = Math.floor(Math.random() * colorCopy.length);
-      newShuffled = [...newShuffled].concat(colorCopy.splice(randomIndex, 1));
-    }
-    setColors(newShuffled);
-    return newShuffled.map(() => false); // 모든 카드 front, false면 front
+    let selectedColors = shuffle(colorArr).slice(0, total / 2);
+    let colorCopy = shuffle([...selectedColors, ...selectedColors]);
+    setColors(colorCopy);
+    return colorCopy.map(() => false);
   }, [colorArr]);
 
   const [cards, setCards] = useState(initialCards);
@@ -116,17 +114,17 @@ function Concentration() {
         reset();
       }, 200);
     }
-  }, [completed.length, reset, startTime]);
+  }, [completed, reset, startTime]);
 
   return (
     <Container>
-      <Button onClick={startGame}>게임 시작</Button>
+      {!firstStart && <Button onClick={startGame}>게임 시작</Button>}
       {completed.length === total && <Button onClick={reset}>리셋</Button>}
       <CardGrid>
         {cards.map((isFlipped, index) => (
           <CardContainer key={index} onClick={() => handleClick(index)}>
-            <Front isFlipped={isFlipped}></Front>
-            <Back isFlipped={isFlipped} color={colors[index]}></Back>
+            <Front $isFlipped={isFlipped}></Front>
+            <Back $isFlipped={isFlipped} color={colors[index]}></Back>
           </CardContainer>
         ))}
       </CardGrid>
@@ -195,7 +193,7 @@ const Card = styled.div`
 const Front = styled(Card)`
   background-color: #2196f3;
   transform: ${(props) =>
-    props.isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"};
+    props.$isFlipped ? "rotateY(180deg)" : "rotateY(0deg)"};
 `;
 
 const Back = styled(Card)`
@@ -204,8 +202,5 @@ const Back = styled(Card)`
   background-position: center;
   background-image: url(${(props) => props.color});
   transform: ${(props) =>
-    props.isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
+    props.$isFlipped ? "rotateY(0deg)" : "rotateY(-180deg)"};
 `;
-
-Front.shouldForwardProp = (prop) => prop === "$isFlipped";
-Back.shouldForwardProp = (prop) => prop === "$isFlipped";

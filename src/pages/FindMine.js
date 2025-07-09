@@ -1,36 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useInput from "../hooks/useInput";
 import styled from "styled-components";
+
+const CODE = {
+  NORMAL: -1,
+  QUESTION: -2,
+  FLAG: -3,
+  QUESTION_MINE: -4,
+  FLAG_MINE: -5,
+  MINE: -7,
+  CLICKED_MINE: -6,
+  OPENED: 0,
+};
+
 const FindMine = () => {
   const [row, onChangeRow] = useInput();
   const [cell, onChangeCell] = useInput();
   const [mine, onChangeMine] = useInput();
-  const [data, setData] = useState([]);
+  const [board, setBoard] = useState([]);
   const [halted, setHalted] = useState(false);
   const [openedCount, setOpenedCount] = useState(0);
 
-  const CODE = {
-    NORMAL: -1,
-    QUESTION: -2,
-    FLAG: -3,
-    QUESTION_MINE: -4,
-    FLAG_MINE: -5,
-    MINE: -7,
-    CLICKED_MINE: -6,
-    OPENED: 0,
-  };
-
   useEffect(() => {
     const arr = [];
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < data[i].length; j++) {
-        if (data[i][j] >= 0) {
-          arr.push(data[i][j]);
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        if (board[i][j] >= 0) {
+          arr.push(board[i][j]);
         }
       }
     }
     setOpenedCount(arr.length);
-  }, [data]);
+  }, [board]);
 
   useEffect(() => {
     if (row && cell && mine && openedCount === row * cell - mine) {
@@ -54,20 +55,20 @@ const FindMine = () => {
       shuffle.push(chosen);
     }
 
-    const gameData = [];
+    const gameBoard = [];
     for (let i = 0; i < row; i++) {
-      const rowData = []; // 여기서 초기화
-      gameData.push(rowData);
+      const rowBoard = []; // 여기서 초기화
+      gameBoard.push(rowBoard);
       for (let j = 0; j < cell; j++) {
-        rowData.push(CODE.NORMAL);
+        rowBoard.push(CODE.NORMAL);
       }
     }
     for (let k = 0; k < shuffle.length; k++) {
       const ver = Math.floor(shuffle[k] / cell);
       const hor = shuffle[k] % cell;
-      gameData[ver][hor] = CODE.MINE;
+      gameBoard[ver][hor] = CODE.MINE;
     }
-    return gameData;
+    return gameBoard;
   };
 
   const countMine = (rowIndex, cellIndex) => {
@@ -80,7 +81,7 @@ const FindMine = () => {
         r < row &&
         c >= 0 &&
         c < cell &&
-        mines.includes(data[r][c])
+        mines.includes(board[r][c])
       ) {
         count++;
       }
@@ -99,10 +100,10 @@ const FindMine = () => {
   };
 
   const showMine = (clickedRowIndex, clickedCellIndex) => {
-    const newData = [...data];
+    const newBoard = [...board];
     const mines = [CODE.MINE, CODE.QUESTION_MINE, CODE.FLAG_MINE];
 
-    newData.forEach((row, rowIndex) => {
+    newBoard.forEach((row, rowIndex) => {
       row.forEach((cell, cellIndex) => {
         if (mines.includes(cell)) {
           if (
@@ -110,29 +111,29 @@ const FindMine = () => {
             cell !== CODE.FLAG &&
             cell !== CODE.CLICKED_MINE
           ) {
-            newData[rowIndex][cellIndex] = "X";
+            newBoard[rowIndex][cellIndex] = "💣";
           }
         }
       });
     });
 
-    setData(newData);
+    setBoard(newBoard);
   };
 
   const open = (rowIndex, cellIndex) => {
     if (halted) return;
-    const newData = [...data];
+    const newBoard = [...board];
 
     if (openedCount === 0) {
-      let firstCellData = newData[rowIndex][cellIndex];
-      while (firstCellData === CODE.MINE) {
+      let firstCellBoard = newBoard[rowIndex][cellIndex];
+      while (firstCellBoard === CODE.MINE) {
         const newMineRowIndex = Math.floor(Math.random() * row);
         const newMineCellIndex = Math.floor(Math.random() * cell);
-        if (newData[newMineRowIndex][newMineCellIndex] !== CODE.MINE) {
-          newData[rowIndex][cellIndex] = CODE.NORMAL; //클릭한 셀 노말로 바꾸고
-          newData[newMineRowIndex][newMineCellIndex] = CODE.MINE; //새로운 셀에 지뢰 심기
+        if (newBoard[newMineRowIndex][newMineCellIndex] !== CODE.MINE) {
+          newBoard[rowIndex][cellIndex] = CODE.NORMAL; //클릭한 셀 노말로 바꾸고
+          newBoard[newMineRowIndex][newMineCellIndex] = CODE.MINE; //새로운 셀에 지뢰 심기
         }
-        firstCellData = newData[rowIndex][cellIndex];
+        firstCellBoard = newBoard[rowIndex][cellIndex];
       }
     }
 
@@ -144,17 +145,17 @@ const FindMine = () => {
       }
 
       if (
-        newData[r][c] === CODE.OPENED ||
-        newData[r][c] === CODE.FLAG_MINE ||
-        newData[r][c] === CODE.FLAG ||
-        newData[r][c] === CODE.QUESTION_MINE ||
-        newData[r][c] === CODE.QUESTION
+        newBoard[r][c] === CODE.OPENED ||
+        newBoard[r][c] === CODE.FLAG_MINE ||
+        newBoard[r][c] === CODE.FLAG ||
+        newBoard[r][c] === CODE.QUESTION_MINE ||
+        newBoard[r][c] === CODE.QUESTION
       ) {
         return;
       }
 
       const mineCount = countMine(r, c);
-      newData[r][c] = mineCount;
+      newBoard[r][c] = mineCount;
 
       if (mineCount === 0) {
         checkSurroundingCells(r - 1, c - 1);
@@ -168,7 +169,7 @@ const FindMine = () => {
       }
     };
 
-    switch (newData[rowIndex][cellIndex]) {
+    switch (newBoard[rowIndex][cellIndex]) {
       case CODE.OPENED:
       case CODE.FLAG_MINE:
       case CODE.FLAG:
@@ -176,7 +177,7 @@ const FindMine = () => {
       case CODE.QUESTION:
         return;
       case CODE.NORMAL:
-        newData[rowIndex][cellIndex] = count;
+        newBoard[rowIndex][cellIndex] = count;
         if (count === 0) {
           checkSurroundingCells(rowIndex - 1, cellIndex - 1);
           checkSurroundingCells(rowIndex - 1, cellIndex);
@@ -189,7 +190,7 @@ const FindMine = () => {
         }
         break;
       case CODE.MINE:
-        newData[rowIndex][cellIndex] = CODE.CLICKED_MINE;
+        newBoard[rowIndex][cellIndex] = CODE.CLICKED_MINE;
         setHalted(true);
         showMine(rowIndex, cellIndex);
         setTimeout(() => {
@@ -200,20 +201,20 @@ const FindMine = () => {
         return;
     }
 
-    setData(newData);
+    setBoard(newBoard);
   };
 
   const onSubmit = (e) => {
-    setData([]);
+    setBoard([]);
     setHalted(false);
     setOpenedCount(0);
     e.preventDefault();
-    const gameData = plantMine();
-    setData(gameData);
+    const gameBoard = plantMine();
+    setBoard(gameBoard);
   };
 
-  const getStyle = (cellData) => {
-    switch (cellData) {
+  const getStyle = (cellBoard) => {
+    switch (cellBoard) {
       case CODE.NORMAL:
       case CODE.MINE:
         return { background: "#444" };
@@ -234,70 +235,75 @@ const FindMine = () => {
     }
   };
 
-  const getText = (cellData) => {
-    switch (cellData) {
+  const getText = (cellBoard) => {
+    switch (cellBoard) {
       case CODE.NORMAL:
         return "";
       case CODE.MINE:
         return ""; //지뢰 위치 표시 X
       case CODE.QUESTION_MINE:
       case CODE.QUESTION:
-        return "?";
+        return "❓";
       case CODE.FLAG_MINE:
       case CODE.FLAG:
-        return "!";
+        return "🚩";
       case CODE.CLICKED_MINE:
-        return "펑";
+        return "💥";
       default:
-        return cellData || ""; // 0이면 빈 문자
+        return cellBoard || ""; // 0이면 빈 문자
     }
   };
 
   const onRightClick = (rowIndex, cellIndex) => (e) => {
     e.preventDefault();
-    const newData = [...data].map((row) => [...row]);
-    const cellData = newData[rowIndex][cellIndex];
+    const newBoard = [...board].map((row) => [...row]);
+    const cellBoard = newBoard[rowIndex][cellIndex];
 
-    if (cellData === CODE.MINE) {
-      newData[rowIndex][cellIndex] = CODE.QUESTION_MINE;
-    } else if (cellData === CODE.QUESTION_MINE) {
-      newData[rowIndex][cellIndex] = CODE.FLAG_MINE;
-    } else if (cellData === CODE.FLAG_MINE) {
-      newData[rowIndex][cellIndex] = CODE.MINE;
-    } else if (cellData === CODE.NORMAL) {
-      newData[rowIndex][cellIndex] = CODE.QUESTION;
-    } else if (cellData === CODE.QUESTION) {
-      newData[rowIndex][cellIndex] = CODE.FLAG;
-    } else if (cellData === CODE.FLAG) {
-      newData[rowIndex][cellIndex] = CODE.NORMAL;
+    if (cellBoard === CODE.MINE) {
+      newBoard[rowIndex][cellIndex] = CODE.QUESTION_MINE;
+    } else if (cellBoard === CODE.QUESTION_MINE) {
+      newBoard[rowIndex][cellIndex] = CODE.FLAG_MINE;
+    } else if (cellBoard === CODE.FLAG_MINE) {
+      newBoard[rowIndex][cellIndex] = CODE.MINE;
+    } else if (cellBoard === CODE.NORMAL) {
+      newBoard[rowIndex][cellIndex] = CODE.QUESTION;
+    } else if (cellBoard === CODE.QUESTION) {
+      newBoard[rowIndex][cellIndex] = CODE.FLAG;
+    } else if (cellBoard === CODE.FLAG) {
+      newBoard[rowIndex][cellIndex] = CODE.NORMAL;
     }
-    setData(newData);
+    setBoard(newBoard);
   };
 
   return (
     <Container>
       <form onSubmit={onSubmit}>
-        <Input value={row} onChange={onChangeRow} size="5" />
-        <Input value={cell} onChange={onChangeCell} size="5" />
-        <Input value={mine} onChange={onChangeMine} size="5" />
+        <Input value={row} onChange={onChangeRow} size="5" placeholder="행" />
+        <Input value={cell} onChange={onChangeCell} size="5" placeholder="열" />
+        <Input
+          value={mine}
+          onChange={onChangeMine}
+          size="5"
+          placeholder="지뢰 개수"
+        />
         <Button type="submit">생성</Button>
       </form>
 
       <OpenedCount>열린 개수: {openedCount}</OpenedCount>
       <Table>
         <tbody>
-          {data &&
-            data.map((rowData, rowIndex) => (
+          {board &&
+            board.map((rowBoard, rowIndex) => (
               <TableRow key={rowIndex}>
-                {rowData.map((cellData, cellIndex) => (
-                  <TableData
+                {rowBoard.map((cellBoard, cellIndex) => (
+                  <TableBoard
                     onClick={() => open(rowIndex, cellIndex)}
                     onContextMenu={(e) => onRightClick(rowIndex, cellIndex)(e)}
                     key={cellIndex}
-                    style={getStyle(cellData)}
+                    style={getStyle(cellBoard)}
                   >
-                    {getText(cellData)}
-                  </TableData>
+                    {getText(cellBoard)}
+                  </TableBoard>
                 ))}
               </TableRow>
             ))}
@@ -341,7 +347,7 @@ const Table = styled.table`
 
 const TableRow = styled.tr``;
 
-const TableData = styled.td`
+const TableBoard = styled.td`
   width: 30px;
   height: 30px;
   text-align: center;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
 import moleImg from "../img/mole.png";
 import deadYMoleImg from "../img/deadYMole.png";

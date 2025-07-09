@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 const Game2048 = () => {
   const [data, setData] = useState([]);
@@ -60,6 +60,7 @@ const Game2048 = () => {
           score: score,
         },
       ]);
+
       switch (direction) {
         case "left": {
           const newData = [[], [], [], []]; //배열 초기화 (이동 후 데이터 담을 공간)
