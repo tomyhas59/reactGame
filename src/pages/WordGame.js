@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useInput from "../hooks/useInput";
 import styled from "styled-components";
 const WordGame = () => {
@@ -29,16 +29,15 @@ const WordGame = () => {
         setWordInput("");
         return;
       }
-      if (
-        (!word && wordInput.length === 3) ||
-        (word[word.length - 1] === wordInput[0] && wordInput.length === 3)
-      ) {
+      const isFirst = !word && wordInput.length === 3;
+      const isValidNext =
+        word &&
+        word[word.length - 1] === wordInput[0] &&
+        wordInput.length === 3;
+
+      if (isFirst || isValidNext) {
         setWord(wordInput);
-        if (order + 1 > number) {
-          setOrder(1);
-        } else {
-          setOrder(order + 1);
-        }
+        setOrder((order % number) + 1);
       } else {
         alert("세 글자만 됩니다");
       }
