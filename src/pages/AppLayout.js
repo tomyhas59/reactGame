@@ -6,6 +6,7 @@ const AppLayout = ({ children }) => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const menuToggleRef = useRef(null);
 
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
@@ -30,36 +31,55 @@ const AppLayout = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!isMenuOpen) return;
+
     const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        if (window.innerWidth <= 768) {
-          setIsMenuOpen(false);
-        }
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        menuToggleRef.current &&
+        !menuToggleRef.current.contains(e.target)
+      ) {
+        setIsMenuOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
-  }, []);
+  }, [isMenuOpen]);
 
   return (
     <Container>
       <Header>
         <TitleWrapper>
-          <Link to="/">
+          <Link to="/" onClick={handleLinkClick}>
             <Title>심심풀이</Title>
           </Link>
         </TitleWrapper>
-        <MenuToggle onClick={() => setIsMenuOpen(!isMenuOpen)}>☰</MenuToggle>
+        <MenuToggle
+          ref={menuToggleRef}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+        >
+          ☰
+        </MenuToggle>
       </Header>
       <ContentContainer>
         <List $isOpen={isMenuOpen} ref={menuRef}>
           {links.map((link) => (
-            <StyledLink to={link.to} key={link.to} onClick={handleLinkClick}>
+            <StyledLink
+              to={`/${link.to}`}
+              key={link.to}
+              onClick={handleLinkClick}
+            >
               <LinkItem
-                className={location.pathname === `/${link.to}` ? "active" : ""}
+                className={
+                  location.pathname.startsWith(`/${link.to}`) ? "active" : ""
+                }
               >
                 {link.label}
               </LinkItem>
@@ -86,7 +106,7 @@ const Header = styled.header`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1000;
 `;
 
 const TitleWrapper = styled.div`
@@ -112,6 +132,9 @@ const Title = styled.div`
 const MenuToggle = styled.button`
   display: none;
   font-size: 2rem;
+  background-color: transparent;
+  color: #fff;
+  border: none;
   cursor: pointer;
   @media (max-width: 768px) {
     display: block;
@@ -129,17 +152,20 @@ const List = styled.ul`
   color: #eee;
   width: 170px;
   padding: 10px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+
   @media (max-width: 768px) {
     position: fixed;
     top: 70px;
-    right: -30px;
-    z-index: 555;
-    font-size: 12px;
+    right: 0;
+    z-index: 1000;
     width: 150px;
     height: 100%;
     transform: ${(props) =>
       props.$isOpen ? "translateX(0)" : "translateX(100%)"};
+    opacity: ${(props) => (props.$isOpen ? 1 : 0)};
+    font-size: 12px;
   }
 `;
 
@@ -160,14 +186,17 @@ const LinkItem = styled.li`
   margin-bottom: 10px;
   transition: background-color 0.3s, box-shadow 0.3s;
   cursor: pointer;
+
   &:hover {
     background-color: #444;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
+
   &.active {
     background-color: #ff5722;
     color: #fff;
   }
+
   @media (max-width: 768px) {
     padding: 5px;
     width: 100px;

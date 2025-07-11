@@ -269,8 +269,8 @@ const GameBoard = styled.div`
 
 const Cell = styled.div`
   font-size: 24px;
-  width: 50px;
-  height: 50px;
+  padding: 8px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,10 +278,10 @@ const Cell = styled.div`
     props.removed ? "transparent" : props.selected ? "lightblue" : "silver"};
   border-radius: 6px;
   cursor: ${(props) => (props.removed ? "default" : "pointer")};
-  user-select: none;
   visibility: ${(props) => (props.removed ? "hidden" : "visible")};
   transition: background 0.2s;
 `;
+
 const RecordList = styled.div`
   max-width: 500px;
   width: 90vw;
