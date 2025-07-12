@@ -146,12 +146,12 @@ const CatchMole = () => {
               type={mole.type}
             />
             <Bomb
-              onClick={() => handleClick(index, "YMole")}
+              onClick={() => handleClick(index, "bomb")}
               clicked={!!mole.clicked}
               type={mole.type}
             />
             <YMole
-              onClick={() => handleClick(index, "bomb")}
+              onClick={() => handleClick(index, "YMole")}
               clicked={!!mole.clicked}
               type={mole.type}
             />
