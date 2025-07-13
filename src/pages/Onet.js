@@ -197,8 +197,8 @@ function App() {
           row.map((cell, j) => (
             <Cell
               key={`${i}-${j}`}
-              removed={cell === 0}
-              selected={first && first.x === i && first.y === j}
+              $removed={cell === 0}
+              $selected={first && first.x === i && first.y === j}
               onClick={() => onCellClick(i, j)}
             >
               {cell !== 0 ? cell : ""}
@@ -275,10 +275,10 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
   background: ${(props) =>
-    props.removed ? "transparent" : props.selected ? "lightblue" : "silver"};
+    props.$removed ? "transparent" : props.$selected ? "lightblue" : "silver"};
   border-radius: 6px;
-  cursor: ${(props) => (props.removed ? "default" : "pointer")};
-  visibility: ${(props) => (props.removed ? "hidden" : "visible")};
+  cursor: ${(props) => (props.$removed ? "default" : "pointer")};
+  visibility: ${(props) => (props.$removed ? "hidden" : "visible")};
   transition: background 0.2s;
 `;
 

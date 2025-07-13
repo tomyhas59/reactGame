@@ -21,7 +21,8 @@ const AppLayout = ({ children }) => {
     { to: "textRPG", label: "텍스트RPG" },
     { to: "wordGame", label: "끝말잇기" },
     { to: "gugudan", label: "구구단" },
-    { to: "onet", label: "그림 맞추기" },
+    { to: "onet", label: "그림 짝 맞추기" },
+    { to: "poker", label: "점수포커" },
   ];
 
   const handleLinkClick = () => {

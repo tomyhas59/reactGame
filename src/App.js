@@ -16,6 +16,7 @@ import Baseball from "./pages/Baseball";
 import Main from "./pages/Main";
 import Gugudan from "./pages/Gugudan";
 import Onet from "./pages/Onet";
+import Poker from "./pages/poker";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           <Route path="/baseball" element={<Baseball />} />
           <Route path="/gugudan" element={<Gugudan />} />
           <Route path="/onet" element={<Onet />} />
+          <Route path="/poker" element={<Poker />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
