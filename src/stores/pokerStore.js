@@ -4,9 +4,8 @@ import { generateDeck, shuffle } from "../pages/poker";
 export const usePokerStore = create((set, get) => ({
   deck: [],
   hand: [],
-  selectedForPlay: [],
-  selectedForDiscard: [],
-  totalScore: 0,
+  selectedCards: [],
+  scoreDetail: null,
   stage: 1,
   remainingTurns: 3,
   discardChances: 3,
@@ -14,9 +13,19 @@ export const usePokerStore = create((set, get) => ({
 
   setDeck: (deck) => set({ deck }),
   setHand: (hand) => set({ hand }),
-  setSelectedForPlay: (cards) => set({ selectedForPlay: cards }),
-  setSelectedForDiscard: (cards) => set({ selectedForDiscard: cards }),
-  setTotalScore: (score) => set({ totalScore: score }),
+  setSelectedCards: (cards) => set({ selectedCards: cards }),
+  setScoreDetail: (newScore) =>
+    set((state) => {
+      const currentTotal = state.scoreDetail?.total || 0;
+      const updatedTotal = currentTotal + newScore.finalScore;
+
+      return {
+        scoreDetail: {
+          ...newScore,
+          total: updatedTotal, // ✅ 누적 점수 추가
+        },
+      };
+    }),
   setStage: (stage) => set({ stage }),
   setRemainingTurns: (turns) => set({ remainingTurns: turns }),
   setDiscardChances: (chances) => set({ discardChances: chances }),
@@ -37,6 +46,19 @@ export const usePokerStore = create((set, get) => ({
       playerJokers: [],
     });
   },
+
+  toggleSelectCards: (card) =>
+    set((state) => {
+      const exists = state.selectedCards.find((c) => c.id === card.id);
+      if (!exists && state.selectedCards.length >= 5) {
+        return {};
+      }
+      return {
+        selectedCards: exists
+          ? state.selectedCards.filter((c) => c.id !== card.id)
+          : [...state.selectedCards, card],
+      };
+    }),
 
   // 나중에 필요한 카드 선택, 버리기, 플레이 함수 등 추가 가능
 }));
