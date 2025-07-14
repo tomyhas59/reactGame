@@ -130,7 +130,6 @@ const Container = styled.div`
   padding: 20px;
   max-width: 400px;
   margin: 0 auto;
-  height: 100vh;
 `;
 
 const Content = styled.div`

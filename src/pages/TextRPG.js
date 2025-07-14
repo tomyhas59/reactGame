@@ -227,7 +227,6 @@ const TextRPG = () => {
 
 export default TextRPG;
 
-// ===== Stats 컴포넌트
 const Stats = ({ hero }) => (
   <>
     <StyledInfo>레벨: {hero.lev}</StyledInfo>
@@ -241,7 +240,6 @@ const Stats = ({ hero }) => (
   </>
 );
 
-// ===== Styled Components
 const Container = styled.div`
   text-align: center;
   margin-top: 20px;

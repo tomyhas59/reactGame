@@ -79,7 +79,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  min-height: 100vh;
 `;
 
 const Screen = styled.div`

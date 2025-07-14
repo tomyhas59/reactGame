@@ -169,7 +169,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
   @media (max-width: 950px) {
     margin-top: -150px;
     transform: scale(0.5);

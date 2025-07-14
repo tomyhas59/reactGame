@@ -39,7 +39,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 40px;
-  height: 100vh;
+  height: 100%;
   background: linear-gradient(135deg, #f3ec78, #af4261);
   animation: ${gradientShift} 5s ease infinite;
 `;

@@ -69,7 +69,7 @@ const AppLayout = ({ children }) => {
           ☰
         </MenuToggle>
       </Header>
-      <ContentContainer>
+      <ContentWrapper>
         <List $isOpen={isMenuOpen} ref={menuRef}>
           {links.map((link) => (
             <StyledLink
@@ -88,14 +88,16 @@ const AppLayout = ({ children }) => {
           ))}
         </List>
         <Content>{children}</Content>
-      </ContentContainer>
+      </ContentWrapper>
     </Container>
   );
 };
 
 export default AppLayout;
 
-const Container = styled.div``;
+const Container = styled.div`
+  height: 100vh;
+`;
 
 const Header = styled.header`
   display: flex;
@@ -105,9 +107,7 @@ const Header = styled.header`
   background: #333;
   color: #fff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  height: 8vh;
 `;
 
 const TitleWrapper = styled.div`
@@ -142,8 +142,9 @@ const MenuToggle = styled.button`
   }
 `;
 
-const ContentContainer = styled.div`
+const ContentWrapper = styled.div`
   display: flex;
+  height: 92vh;
 `;
 
 const List = styled.ul`

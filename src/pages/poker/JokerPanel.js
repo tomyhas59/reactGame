@@ -1,33 +1,128 @@
-export const JOKER_CARDS = [
-  {
-    id: "1",
-    name: "스트레이트 x2",
-    description: "스트레이트 족보일 때 점수 2배",
-    effect: "straight-x2",
-  },
-  {
-    id: "2",
-    name: "이지 플러시",
-    description:
-      "다이아, 하트를 같은 문양 취급, 클로버, 스페이드를 같은 문양 취급",
-    effect: "easy-flush",
-  },
-  {
-    id: "3",
-    name: "짝수 +5",
-    description: "2,4,6,8,10 카드마다 +5",
-    effect: "even+5",
-  },
-  {
-    id: "4",
-    name: "그림",
-    description: "J, Q, K 카드마다 +10",
-    effect: "face+10",
-  },
-  {
-    id: "5",
-    name: "올그림",
-    description: "모든 카드를 그림 카드 취급",
-    effect: "all-face",
-  },
-];
+import styled from "styled-components";
+import { usePokerStore } from "../../stores/pokerStore";
+
+const JokerPanel = () => {
+  const { playerJokers } = usePokerStore();
+
+  return (
+    <JokerPanelContainer>
+      <Board>
+        {[0, 1, 2, 3, 4].map((index) => (
+          <Slot key={index}>
+            {playerJokers[index] ? (
+              <JokerCard>
+                <h3>{playerJokers[index].name}</h3>
+                <p>{playerJokers[index].desc}</p>
+              </JokerCard>
+            ) : (
+              <EmptySlot />
+            )}
+          </Slot>
+        ))}
+      </Board>
+    </JokerPanelContainer>
+  );
+};
+
+export default JokerPanel;
+
+const JokerPanelContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 12px;
+
+  @media (max-width: 600px) {
+    gap: 8px;
+  }
+`;
+
+const Board = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px;
+  background-color: #f8f8f8;
+  border: 2px solid #ccc;
+  border-radius: 16px;
+  flex-wrap: wrap;
+  max-width: 800px;
+  margin: 0 auto;
+
+  @media (max-width: 600px) {
+    gap: 12px;
+  }
+`;
+
+const Slot = styled.div`
+  width: 120px;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 600px) {
+    width: 50px;
+    height: 80px;
+  }
+`;
+
+const JokerCard = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  h3 {
+    margin: 8px 0;
+    font-size: 18px;
+    color: #333;
+
+    @media (max-width: 600px) {
+      font-size: 16px;
+    }
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+
+    @media (max-width: 600px) {
+      font-size: 12px;
+    }
+  }
+`;
+
+const EmptySlot = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 2px dashed #bbb;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 14px;
+  text-align: center;
+  padding: 8px;
+
+  @media (max-width: 600px) {
+    font-size: 12px;
+  }
+`;
