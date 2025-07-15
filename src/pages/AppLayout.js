@@ -10,7 +10,6 @@ const AppLayout = ({ children }) => {
 
   const links = [
     { to: "baseball", label: "숫자 야구 게임" },
-    { to: "calculator", label: "계산기" },
     { to: "catchMole", label: "두더지 잡기" },
     { to: "concentration", label: "카드 뒤집기" },
     { to: "findMine", label: "지뢰찾기" },
@@ -19,8 +18,6 @@ const AppLayout = ({ children }) => {
     { to: "responseCheck", label: "반응속도체크" },
     { to: "RSP", label: "가위바위보" },
     { to: "textRPG", label: "텍스트RPG" },
-    { to: "wordGame", label: "끝말잇기" },
-    { to: "gugudan", label: "구구단" },
     { to: "onet", label: "그림 짝 맞추기" },
     { to: "poker", label: "점수포커" },
   ];

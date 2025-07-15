@@ -1,5 +1,11 @@
 import { styled } from "styled-components";
-import { generateDeck, shuffle, usePokerStore } from "../../stores/pokerStore";
+import {
+  DISCARD_CHANCES,
+  generateDeck,
+  REMAINING_TURNS,
+  shuffle,
+  usePokerStore,
+} from "../../stores/pokerStore";
 import { useCallback, useEffect, useState } from "react";
 import Hand from "./Hand";
 import DetailScore from "./DetailScore";
@@ -21,6 +27,7 @@ export const Poker = () => {
     setDeck,
     setHand,
     setScoreDetail,
+    setDiscardChances,
   } = usePokerStore();
 
   const [isStart, setIsStart] = useState(false);
@@ -34,12 +41,11 @@ export const Poker = () => {
   const handleJokerSelect = useCallback(
     (joker) => {
       addPlayerJoker(joker);
-      setStage(stage + 1000);
-      setRemainingTurns(3);
+      setStage(stage * 2);
+      setRemainingTurns(REMAINING_TURNS);
       setIsJokerChoiceOpen(false);
-
+      setDiscardChances(DISCARD_CHANCES);
       const newDeck = shuffle(generateDeck());
-
       setHand(newDeck.slice(0, 8));
       setDeck(newDeck.slice(8));
       setScoreDetail(null);
@@ -51,22 +57,33 @@ export const Poker = () => {
       setRemainingTurns,
       stage,
       setDeck,
+      setDiscardChances,
       setHand,
     ]
   );
 
   // 스테이지 성공 시 조커 선택 모달 띄우기
+
+  useEffect(() => {
+    if (stage <= scoreDetail?.total) {
+      setTimeout(() => {
+        alert("성공");
+        setIsJokerChoiceOpen(true);
+      }, 5000);
+    }
+  }, [stage, scoreDetail]);
+
   useEffect(() => {
     if (remainingTurns === 0 && scoreDetail?.total != null) {
-      if (stage > scoreDetail.total) {
-        alert("실패");
-        startNewGame();
-        setIsStart(false);
-      } else {
-        setTimeout(() => {
+      setTimeout(() => {
+        if (stage > scoreDetail.total) {
+          alert("실패");
+          startNewGame();
+          setIsStart(false);
+        } else {
           setIsJokerChoiceOpen(true);
-        }, 5000);
-      }
+        }
+      }, 5000);
     }
   }, [remainingTurns, stage, scoreDetail, startNewGame]);
 

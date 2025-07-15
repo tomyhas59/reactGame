@@ -105,7 +105,7 @@ const Card = styled.div`
   transition: all 0.2s ease-in-out;
 
   transform: ${({ selected }) =>
-    selected ? "translateY(-30px)" : "translateY(0)"};
+    selected ? "translateY(-10px)" : "translateY(0)"};
 
   &:hover {
     background-color: silver;

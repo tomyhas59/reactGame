@@ -41,8 +41,8 @@ const DetailScore = () => {
         <Value>{scoreDetail?.bonus}</Value>
       </Row>
       <Row>
-        <Label>조커 배수</Label>
-        <Value>x{scoreDetail?.multiplier}</Value>
+        <Label>족보 배수</Label>
+        <Value>x{scoreDetail?.newMultiplier}</Value>
       </Row>
       <Row>
         <Label>이번 턴 점수</Label>

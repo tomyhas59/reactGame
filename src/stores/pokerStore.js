@@ -1,13 +1,17 @@
 import { create } from "zustand";
 
+export const STAGE_SCORE = 500;
+export const REMAINING_TURNS = 3;
+export const DISCARD_CHANCES = 3;
+
 export const usePokerStore = create((set, get) => ({
   deck: [],
   hand: [],
   selectedCards: [],
   scoreDetail: null,
   stage: null,
-  remainingTurns: 3,
-  discardChances: 3,
+  remainingTurns: null,
+  discardChances: null,
   playerJokers: [],
 
   setDeck: (deck) => set({ deck }),
@@ -56,9 +60,9 @@ export const usePokerStore = create((set, get) => ({
       selectedForPlay: [],
       selectedForDiscard: [],
       totalScore: 0,
-      stage: 1000,
-      remainingTurns: 3,
-      discardChances: 3,
+      stage: STAGE_SCORE,
+      remainingTurns: REMAINING_TURNS,
+      discardChances: DISCARD_CHANCES,
       playerJokers: [],
     });
   },
@@ -137,12 +141,14 @@ const judgePoker = (cards) => {
         pokerName: "스트레이트 플러시",
         pokerScore: 100,
         pokerCards: straightCards,
+        multiplier: 20,
       };
     }
     return {
       pokerName: "스트레이트",
       pokerScore: 40,
       pokerCards: straightCards,
+      multiplier: 4,
     };
   }
 
@@ -154,6 +160,7 @@ const judgePoker = (cards) => {
       pokerName: "포카드",
       pokerScore: 80,
       pokerCards,
+      multiplier: 10,
     };
   }
 
@@ -166,6 +173,7 @@ const judgePoker = (cards) => {
       pokerName: "풀하우스",
       pokerScore: 60,
       pokerCards,
+      multiplier: 6,
     };
   }
 
@@ -175,6 +183,7 @@ const judgePoker = (cards) => {
       pokerName: "플러시",
       pokerScore: 50,
       pokerCards: cardNumbers,
+      multiplier: 5,
     };
   }
 
@@ -187,6 +196,7 @@ const judgePoker = (cards) => {
       pokerName: "트리플",
       pokerScore: 30,
       pokerCards,
+      multiplier: 3,
     };
   }
 
@@ -202,6 +212,7 @@ const judgePoker = (cards) => {
       pokerName: "투페어",
       pokerScore: 20,
       pokerCards,
+      multiplier: 2,
     };
   }
 
@@ -213,6 +224,7 @@ const judgePoker = (cards) => {
       pokerName: "원페어",
       pokerScore: 10,
       pokerCards,
+      multiplier: 1,
     };
   }
 
@@ -222,18 +234,18 @@ const judgePoker = (cards) => {
     pokerName: "하이카드",
     pokerScore: 5,
     pokerCards: [highest],
+    multiplier: 1,
   };
 };
 
 export const calculateFinalScore = (cards, jokers) => {
-  const { pokerName, pokerScore, pokerCards } = judgePoker(cards);
+  const { pokerName, pokerScore, pokerCards, multiplier } = judgePoker(cards);
 
   const cardSum = pokerCards.reduce((sum, cardNum) => {
     return sum + Number(cardNum);
   }, 0);
 
   // 보너스 점수 계산
-
   let bonus = 0;
   jokers.forEach((joker) => {
     if (joker.effect === "all-face") {
@@ -252,24 +264,24 @@ export const calculateFinalScore = (cards, jokers) => {
   });
 
   //  multiplier 계산
-  let multiplier = 1;
+  let newMultiplier = multiplier;
   jokers.forEach((joker) => {
-    if (joker.effect === "straight-x2") {
+    if (joker.effect === "straight-x4") {
       if (pokerName.includes("스트레이트")) {
-        multiplier *= 2;
+        newMultiplier += 4;
       }
     }
   });
 
   // 최종 점수
   const baseScore = pokerScore + cardSum + bonus;
-  const finalScore = baseScore * multiplier;
+  const finalScore = baseScore * newMultiplier;
   return {
     pokerName,
     pokerScore,
     cardSum,
     bonus,
-    multiplier,
+    newMultiplier,
     finalScore,
     pokerCards,
   };

@@ -4,9 +4,9 @@ import { usePokerStore } from "../../stores/pokerStore";
 export const JOKER_CARDS = [
   {
     id: "1",
-    name: "스트레이트 x2",
-    description: "스트레이트 족보일 때 점수 2배",
-    effect: "straight-x2",
+    name: "스트레이트 x4",
+    description: "스트레이트 족보일 때 배수 +4",
+    effect: "straight-x4",
   },
   {
     id: "2",
