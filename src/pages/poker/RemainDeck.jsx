@@ -3,6 +3,7 @@ import { usePokerStore } from "../../stores/pokerStore";
 
 const RemainDeck = () => {
   const { deck } = usePokerStore();
+
   return (
     <RemainDeckContainer>
       {deck.map((_, idx) => (
@@ -18,9 +19,9 @@ export default RemainDeck;
 
 const RemainDeckContainer = styled.div`
   position: relative;
-  width: 120px;
-  height: 150px;
   display: flex;
+  width: 120px;
+  top: -24px;
   align-items: center;
   justify-content: center;
 `;

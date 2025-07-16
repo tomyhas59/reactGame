@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { cardPattern, usePokerStore } from "../../stores/pokerStore";
 
-const getSuitColor = (suit) =>
+export const getSuitColor = (suit) =>
   suit === "♥️" || suit === "♦️" ? "red" : "black";
 
 export const getCardLabel = (num) => {
@@ -17,47 +17,45 @@ const Hand = () => {
 
   return (
     <HandContainer>
-      <CardWrapper>
-        {hand.map((card) => (
-          <Card
-            onClick={() => toggleSelectCards(card)}
-            key={card.id}
-            selected={selectedCards.some((c) => c.id === card.id)}
-          >
-            <TopRight $suitColor={getSuitColor(card.suit)}>
-              {getCardLabel(card.number)}
-              <span>{card.suit}</span>
-            </TopRight>
-            {card.number >= 11 ? (
-              <JQKArt>
-                <Crown>👑</Crown>
-              </JQKArt>
-            ) : (
-              <SuitGrid>
-                {Array.from({ length: 5 }).map((_, row) =>
-                  Array.from({ length: 3 }).map((_, col) => {
-                    const match = cardPattern[card.number]?.some(
-                      ([r, c]) => r === row && c === col
-                    );
-                    return (
-                      <Pip
-                        key={`${row}-${col}`}
-                        $suitColor={getSuitColor(card.suit)}
-                      >
-                        {match ? card.suit : ""}
-                      </Pip>
-                    );
-                  })
-                )}
-              </SuitGrid>
-            )}
-            <BottomLeft $suitColor={getSuitColor(card.suit)}>
-              {getCardLabel(card.number)}
-              <span style={{ fontSize: "8px" }}>{card.suit}</span>
-            </BottomLeft>
-          </Card>
-        ))}
-      </CardWrapper>
+      {hand.map((card) => (
+        <Card
+          onClick={() => toggleSelectCards(card)}
+          key={card.id}
+          selected={selectedCards.some((c) => c.id === card.id)}
+        >
+          <TopRight $suitColor={getSuitColor(card.suit)}>
+            {getCardLabel(card.number)}
+            <span>{card.suit}</span>
+          </TopRight>
+          {card.number >= 11 ? (
+            <JQKArt>
+              <Crown>👑</Crown>
+            </JQKArt>
+          ) : (
+            <SuitGrid>
+              {Array.from({ length: 5 }).map((_, row) =>
+                Array.from({ length: 3 }).map((_, col) => {
+                  const match = cardPattern[card.number]?.some(
+                    ([r, c]) => r === row && c === col
+                  );
+                  return (
+                    <Pip
+                      key={`${row}-${col}`}
+                      $suitColor={getSuitColor(card.suit)}
+                    >
+                      {match ? card.suit : ""}
+                    </Pip>
+                  );
+                })
+              )}
+            </SuitGrid>
+          )}
+          <BottomLeft $suitColor={getSuitColor(card.suit)}>
+            {getCardLabel(card.number)}
+            <span style={{ fontSize: "8px" }}>{card.suit}</span>
+          </BottomLeft>
+        </Card>
+      ))}
     </HandContainer>
   );
 };
@@ -65,27 +63,16 @@ const Hand = () => {
 export default Hand;
 
 const HandContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  @media (max-width: 600px) {
-    padding: 8px;
-  }
-`;
-
-const CardWrapper = styled.div`
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(8, 120px);
   gap: 4px;
 
   @media (max-width: 1200px) {
-    flex-wrap: wrap;
+    grid-template-columns: repeat(8, 80px);
   }
-
-  @media (max-width: 600px) {
-    width: 300px;
-    flex-wrap: wrap;
+  @media (max-width: 800px) {
+    grid-template-columns: repeat(4, 80px);
+    grid-template-rows: repeat(2, 110px);
   }
 `;
 
@@ -115,12 +102,6 @@ const Card = styled.div`
   @media (max-width: 1200px) {
     width: 80px;
     height: 110px;
-  }
-
-  @media (max-width: 600px) {
-    width: 70px;
-    height: 90px;
-    padding: 2px;
   }
 `;
 

@@ -123,14 +123,8 @@ export default Poker;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 8px;
-
-  @media (max-width: 600px) {
-    gap: 6px;
-    padding: 8px;
-  }
 `;
 
 const Middle = styled.div`
@@ -147,7 +141,6 @@ const Middle = styled.div`
 
 const Bottom = styled.div`
   display: flex;
-  justify-content: center;
 `;
 
 const HandSection = styled.div`

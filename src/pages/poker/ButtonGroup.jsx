@@ -17,24 +17,33 @@ const ButtonGroup = () => {
 
   const drawAndUpdateCard = () => {
     const selectedCount = selectedCards.length;
-
-    //선택된 카드 hand에서 제거
     const newHand = hand.filter(
       (card) => !selectedCards.find((c) => c.id === card.id)
     );
 
     setHand(newHand);
 
+    // 현재 deck 배열에서 뽑을 카드들
     const drawnCards = deck.slice(0, selectedCount);
-    const remainingDeck = deck.slice(selectedCount);
-    const updatedHand = [...newHand, ...drawnCards];
+    // 남은 덱
+    let remainingDeck = deck.slice(selectedCount);
+    // 누적되는 핸드 복사본
+    let currentHand = [...newHand];
+
+    drawnCards.forEach((card, i) => {
+      setTimeout(() => {
+        currentHand = [...currentHand, card];
+        setHand(currentHand);
+
+        // 덱에서 카드 하나씩 빼기
+        remainingDeck = remainingDeck.slice(1);
+        setDeck(remainingDeck);
+      }, (i + 1) * 300);
+    });
 
     setTimeout(() => {
-      setHand(updatedHand);
-    }, 1000);
-    setDeck(remainingDeck);
-
-    setSelectedCards([]);
+      setSelectedCards([]);
+    }, selectedCount * 500 + 500);
   };
 
   //플레이
