@@ -62,6 +62,11 @@ const Slot = styled.div`
   align-items: center;
   justify-content: center;
 
+  @media (max-width: 1200px) {
+    width: 70px;
+    height: 110px;
+  }
+
   @media (max-width: 600px) {
     width: 50px;
     height: 80px;

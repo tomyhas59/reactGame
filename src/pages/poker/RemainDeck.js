@@ -23,14 +23,6 @@ const RemainDeckContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  @media (max-width: 600px) {
-    position: absolute;
-    bottom: 5%;
-    right: 1%;
-    width: 90px;
-    height: 110px;
-  }
 `;
 
 const RemainCard = styled.div`
@@ -74,10 +66,9 @@ const RemainCard = styled.div`
     pointer-events: none;
   }
 
-  @media (max-width: 600px) {
-    width: 50px;
-    height: 70px;
-    font-size: 14px;
-    line-height: 62px;
+  @media (max-width: 1200px) {
+    width: 70px;
+    height: 90px;
+    line-height: 90px;
   }
 `;

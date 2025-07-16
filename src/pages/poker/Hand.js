@@ -26,7 +26,7 @@ const Hand = () => {
           >
             <TopRight $suitColor={getSuitColor(card.suit)}>
               {getCardLabel(card.number)}
-              <span style={{ fontSize: "8px" }}>{card.suit}</span>
+              <span>{card.suit}</span>
             </TopRight>
             {card.number >= 11 ? (
               <JQKArt>
@@ -68,7 +68,6 @@ const HandContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
 
   @media (max-width: 600px) {
     padding: 8px;
@@ -78,12 +77,14 @@ const HandContainer = styled.div`
 const CardWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
-  gap: 8px;
-  width: 1024px;
+  gap: 4px;
+
+  @media (max-width: 1200px) {
+    flex-wrap: wrap;
+  }
 
   @media (max-width: 600px) {
     width: 300px;
-
     flex-wrap: wrap;
   }
 `;
@@ -111,39 +112,40 @@ const Card = styled.div`
     background-color: silver;
   }
 
+  @media (max-width: 1200px) {
+    width: 80px;
+    height: 110px;
+  }
+
   @media (max-width: 600px) {
-    width: 60px;
-    height: 80px;
-    padding: 6px;
+    width: 70px;
+    height: 90px;
+    padding: 2px;
   }
 `;
 
 const TopRight = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color: ${({ $suitColor }) => $suitColor};
   text-align: right;
-
-  @media (max-width: 600px) {
-    font-size: 8px;
+  span {
+    font-size: 10px;
+  }
+  @media (max-width: 1200px) {
+    font-size: 7px;
   }
 `;
 
-const BottomLeft = styled.div`
-  font-size: 14px;
-  color: ${({ $suitColor }) => $suitColor};
+const BottomLeft = styled(TopRight)`
   text-align: left;
-
-  @media (max-width: 600px) {
-    font-size: 8px;
-  }
 `;
 
 const SuitGrid = styled.div`
   display: grid;
   position: absolute;
-  top: 10px;
-  left: 15px;
+  top: 15%;
+  left: 20%;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(5, 1fr);
   flex-grow: 1;
@@ -159,11 +161,11 @@ const SuitGrid = styled.div`
 `;
 
 const Pip = styled.span`
-  font-size: 20px;
+  font-size: 15px;
   color: ${({ $suitColor }) => $suitColor};
 
-  @media (max-width: 600px) {
-    font-size: 7px;
+  @media (max-width: 1200px) {
+    font-size: 9px;
   }
 `;
 
@@ -178,7 +180,7 @@ const JQKArt = styled.div`
 const Crown = styled.div`
   font-size: 60px;
 
-  @media (max-width: 600px) {
-    font-size: 20px;
+  @media (max-width: 1200px) {
+    font-size: 30px;
   }
 `;

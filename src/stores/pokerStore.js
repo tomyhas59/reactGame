@@ -64,6 +64,7 @@ export const usePokerStore = create((set, get) => ({
       remainingTurns: REMAINING_TURNS,
       discardChances: DISCARD_CHANCES,
       playerJokers: [],
+      scoreDetail: null,
     });
   },
 

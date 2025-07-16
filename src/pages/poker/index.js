@@ -78,7 +78,6 @@ export const Poker = () => {
       setTimeout(() => {
         if (stage > scoreDetail.total) {
           alert("실패");
-          startNewGame();
           setIsStart(false);
         } else {
           setIsJokerChoiceOpen(true);
@@ -149,12 +148,6 @@ const Middle = styled.div`
 const Bottom = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-    gap: 12px;
-  }
 `;
 
 const HandSection = styled.div`
@@ -162,10 +155,6 @@ const HandSection = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 5px;
-
-  @media (max-width: 600px) {
-    gap: 4px;
-  }
 `;
 
 const StartButton = styled.button`
