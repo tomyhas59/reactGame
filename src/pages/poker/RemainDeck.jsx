@@ -21,9 +21,19 @@ const RemainDeckContainer = styled.div`
   position: relative;
   display: flex;
   width: 120px;
-  top: -24px;
+  height: 170px;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 1200px) {
+    width: 70px;
+    height: 100px;
+  }
+
+  @media (max-width: 800px) {
+    width: 50px;
+    height: 70px;
+  }
 `;
 
 const RemainCard = styled.div`
@@ -69,7 +79,13 @@ const RemainCard = styled.div`
 
   @media (max-width: 1200px) {
     width: 70px;
-    height: 90px;
-    line-height: 90px;
+    height: 100px;
+    line-height: 100px;
+  }
+
+  @media (max-width: 800px) {
+    width: 50px;
+    height: 70px;
+    line-height: 70px;
   }
 `;

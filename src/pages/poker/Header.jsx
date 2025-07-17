@@ -7,7 +7,6 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <Title>점수 포커 게임</Title>
       <BoardWrapper>
         <Stage $headerColor="#2ecc71" $divColor="#f39c12">
           <h1>스테이지</h1>
@@ -39,22 +38,6 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   align-items: center;
   font-family: sans-serif;
-  padding: 16px;
-
-  @media (max-width: 600px) {
-    padding: 12px 8px;
-  }
-`;
-
-const Title = styled.h2`
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
-
-  @media (max-width: 600px) {
-    font-size: 20px;
-    margin-bottom: 16px;
-  }
 `;
 
 const BoardWrapper = styled.div`

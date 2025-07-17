@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const STAGE_SCORE = 500;
+export const STAGE_SCORE = 100;
 export const REMAINING_TURNS = 3;
 export const DISCARD_CHANCES = 3;
 
@@ -248,19 +248,34 @@ export const calculateFinalScore = (cards, jokers) => {
 
   // 보너스 점수 계산
   let bonus = 0;
+  const FACE_CARDS = [11, 12, 13];
+  const EVEN_NUMBERS = [2, 4, 6, 8, 10];
+
+  const isAllFaceJoker = jokers.some((j) => j.effect === "all-face");
+
   jokers.forEach((joker) => {
-    if (joker.effect === "all-face") {
-      bonus += pokerCards.length * 10;
-    }
-    if (joker.effect === "even+50") {
-      pokerCards.forEach((cardNum) => {
-        if ([2, 4, 6, 8, 10].includes(Number(cardNum))) bonus += 50;
-      });
-    }
-    if (joker.effect === "face+100") {
-      pokerCards.forEach((cardNum) => {
-        if ([11, 12, 13].includes(Number(cardNum))) bonus += 100;
-      });
+    switch (joker.effect) {
+      case "all-face":
+        bonus += pokerCards.length * 10;
+        break;
+
+      case "even+50":
+        pokerCards.forEach((num) => {
+          if (EVEN_NUMBERS.includes(Number(num))) bonus += 50;
+        });
+        break;
+
+      case "face+100":
+        pokerCards.forEach((num) => {
+          const n = Number(num);
+          if (isAllFaceJoker || FACE_CARDS.includes(n)) {
+            bonus += 100;
+          }
+        });
+        break;
+      default:
+        console.warn(`Unhandled joker effect: ${joker.effect}`);
+        break;
     }
   });
 

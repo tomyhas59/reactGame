@@ -68,11 +68,11 @@ const HandContainer = styled.div`
   gap: 4px;
 
   @media (max-width: 1200px) {
-    grid-template-columns: repeat(8, 80px);
+    grid-template-columns: repeat(8, 90px);
   }
   @media (max-width: 800px) {
-    grid-template-columns: repeat(4, 80px);
-    grid-template-rows: repeat(2, 110px);
+    grid-template-columns: repeat(4, 70px);
+    grid-template-rows: repeat(2, 100px);
   }
 `;
 
@@ -100,8 +100,13 @@ const Card = styled.div`
   }
 
   @media (max-width: 1200px) {
-    width: 80px;
-    height: 110px;
+    width: 90px;
+    height: 120px;
+  }
+
+  @media (max-width: 800px) {
+    width: 70px;
+    height: 100px;
   }
 `;
 
@@ -112,6 +117,9 @@ const TopRight = styled.div`
   text-align: right;
   span {
     font-size: 10px;
+    @media (max-width: 800px) {
+      font-size: 7px;
+    }
   }
   @media (max-width: 1200px) {
     font-size: 7px;
@@ -125,20 +133,13 @@ const BottomLeft = styled(TopRight)`
 const SuitGrid = styled.div`
   display: grid;
   position: absolute;
-  top: 15%;
-  left: 20%;
+  top: 20%;
+  left: 25%;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(5, 1fr);
   flex-grow: 1;
-  padding: 4px;
   align-items: center;
   justify-items: center;
-
-  @media (max-width: 600px) {
-    top: 8px;
-    left: 12px;
-    padding: 2px;
-  }
 `;
 
 const Pip = styled.span`
@@ -146,7 +147,11 @@ const Pip = styled.span`
   color: ${({ $suitColor }) => $suitColor};
 
   @media (max-width: 1200px) {
-    font-size: 9px;
+    font-size: 10px;
+  }
+
+  @media (max-width: 800px) {
+    font-size: 8px;
   }
 `;
 
@@ -154,8 +159,6 @@ const JQKArt = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 48px;
 `;
 
 const Crown = styled.div`

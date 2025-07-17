@@ -63,11 +63,9 @@ const ButtonGroup = () => {
 
   // 버리기
   const onDiscard = () => {
-    if (selectedCards.length === 0) return alert("버릴 카드를 선택하세요.");
-
     const discardChances = usePokerStore.getState().discardChances;
-
     if (discardChances <= 0) return;
+    if (selectedCards.length === 0) return alert("버릴 카드를 선택하세요.");
 
     drawAndUpdateCard();
     setDiscardChances((prev) => prev - 1);

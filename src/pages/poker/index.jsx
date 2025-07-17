@@ -101,12 +101,12 @@ export const Poker = () => {
         <DetailScore />
         <JokerPanel />
       </Middle>
+      <RemainDeck />
       <Bottom>
         <HandSection>
           <Hand />
           <ButtonGroup />
         </HandSection>
-        <RemainDeck />
       </Bottom>
       {isJokerChoiceOpen && (
         <JokerChoiceModal
@@ -124,7 +124,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
+  padding: 5px;
 `;
 
 const Middle = styled.div`
@@ -135,13 +136,10 @@ const Middle = styled.div`
 
   @media (max-width: 600px) {
     flex-direction: column;
-    gap: 12px;
   }
 `;
 
-const Bottom = styled.div`
-  display: flex;
-`;
+const Bottom = styled.div``;
 
 const HandSection = styled.div`
   display: flex;

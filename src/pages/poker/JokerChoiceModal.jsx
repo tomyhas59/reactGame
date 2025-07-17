@@ -118,7 +118,8 @@ const CardList = styled.div`
 `;
 
 const Card = styled.div`
-  flex: 1 1 150px;
+  flex: 1 150px;
+
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
