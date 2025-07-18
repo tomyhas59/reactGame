@@ -12,50 +12,60 @@ export const getCardLabel = (num) => {
   return num;
 };
 
-const Hand = () => {
+const Hand = ({ addSlotRef }) => {
   const { hand, selectedCards, toggleSelectCards } = usePokerStore();
 
   return (
     <HandContainer>
-      {hand.map((card) => (
-        <Card
-          onClick={() => toggleSelectCards(card)}
-          key={card.id}
-          selected={selectedCards.some((c) => c.id === card.id)}
-        >
-          <TopRight $suitColor={getSuitColor(card.suit)}>
-            {getCardLabel(card.number)}
-            <span>{card.suit}</span>
-          </TopRight>
-          {card.number >= 11 ? (
-            <JQKArt>
-              <Crown>👑</Crown>
-            </JQKArt>
-          ) : (
-            <SuitGrid>
-              {Array.from({ length: 5 }).map((_, row) =>
-                Array.from({ length: 3 }).map((_, col) => {
-                  const match = cardPattern[card.number]?.some(
-                    ([r, c]) => r === row && c === col
-                  );
-                  return (
-                    <Pip
-                      key={`${row}-${col}`}
-                      $suitColor={getSuitColor(card.suit)}
-                    >
-                      {match ? card.suit : ""}
-                    </Pip>
-                  );
-                })
-              )}
-            </SuitGrid>
-          )}
-          <BottomLeft $suitColor={getSuitColor(card.suit)}>
-            {getCardLabel(card.number)}
-            <span style={{ fontSize: "8px" }}>{card.suit}</span>
-          </BottomLeft>
-        </Card>
-      ))}
+      {Array.from({ length: 8 }).map((_, idx) => {
+        const card = hand[idx];
+        const isSelected = card && selectedCards.some((c) => c.id === card.id);
+
+        return (
+          <Card
+            key={idx}
+            selected={isSelected}
+            onClick={() => card && toggleSelectCards(card)}
+            ref={(el) => addSlotRef(el)}
+          >
+            {card && (
+              <>
+                <TopRight $suitColor={getSuitColor(card.suit)}>
+                  {getCardLabel(card.number)}
+                  <span>{card.suit}</span>
+                </TopRight>
+                {card.number >= 11 ? (
+                  <JQKArt>
+                    <Crown>👑</Crown>
+                  </JQKArt>
+                ) : (
+                  <SuitGrid>
+                    {Array.from({ length: 5 }).map((_, row) =>
+                      Array.from({ length: 3 }).map((_, col) => {
+                        const match = cardPattern[card.number]?.some(
+                          ([r, c]) => r === row && c === col
+                        );
+                        return (
+                          <Pip
+                            key={`${row}-${col}`}
+                            $suitColor={getSuitColor(card.suit)}
+                          >
+                            {match ? card.suit : ""}
+                          </Pip>
+                        );
+                      })
+                    )}
+                  </SuitGrid>
+                )}
+                <BottomLeft $suitColor={getSuitColor(card.suit)}>
+                  {getCardLabel(card.number)}
+                  <span style={{ fontSize: "8px" }}>{card.suit}</span>
+                </BottomLeft>
+              </>
+            )}
+          </Card>
+        );
+      })}
     </HandContainer>
   );
 };

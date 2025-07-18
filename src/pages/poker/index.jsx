@@ -6,7 +6,7 @@ import {
   shuffle,
   usePokerStore,
 } from "../../stores/pokerStore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Hand from "./Hand";
 import DetailScore from "./DetailScore";
 import ButtonGroup from "./ButtonGroup";
@@ -14,6 +14,7 @@ import RemainDeck from "./RemainDeck";
 import Header from "./Header";
 import JokerPanel from "./JokerPanel";
 import JokerChoiceModal from "./JokerChoiceModal";
+import gsap from "gsap";
 
 export const Poker = () => {
   const {
@@ -32,6 +33,16 @@ export const Poker = () => {
 
   const [isStart, setIsStart] = useState(false);
   const [isJokerChoiceOpen, setIsJokerChoiceOpen] = useState(false);
+  const [animCard, setAnimCard] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const deckRef = useRef(null);
+  const slotsRef = useRef([]);
+  slotsRef.current = [];
+
+  const addSlotRef = (el) => {
+    if (el && !slotsRef.current.includes(el)) slotsRef.current.push(el);
+  };
 
   const startButton = useCallback(() => {
     setIsStart(true);
@@ -86,6 +97,44 @@ export const Poker = () => {
     }
   }, [remainingTurns, stage, scoreDetail, startNewGame]);
 
+  const animateDrawCard = (card, targetIndex) => {
+    return new Promise((resolve) => {
+      if (!deckRef.current || !slotsRef.current[targetIndex]) {
+        resolve();
+        return;
+      }
+      const deckRect = deckRef.current.getBoundingClientRect();
+      const slotRect = slotsRef.current[targetIndex].getBoundingClientRect();
+
+      setAnimCard({
+        card,
+        startX: deckRect.left,
+        startY: deckRect.top,
+        endX: slotRect.left,
+        endY: slotRect.top,
+        key: card.id,
+      });
+
+      requestAnimationFrame(() => {
+        const animEl = document.getElementById(`anim-card-${card.id}`);
+        if (!animEl) {
+          resolve();
+          return;
+        }
+        gsap.set(animEl, { x: 0, y: 0, opacity: 1 });
+        gsap.to(animEl, {
+          duration: 0.1,
+          x: slotRect.left - deckRect.left,
+          y: slotRect.top - deckRect.top,
+          ease: "power2.out",
+          onComplete: () => {
+            resolve();
+          },
+        });
+      });
+    });
+  };
+
   if (!isStart) {
     return (
       <Container>
@@ -101,11 +150,16 @@ export const Poker = () => {
         <DetailScore />
         <JokerPanel />
       </Middle>
-      <RemainDeck />
+      <RemainDeck deckRef={deckRef} />
       <Bottom>
         <HandSection>
-          <Hand />
-          <ButtonGroup />
+          <Hand addSlotRef={addSlotRef} />
+          <ButtonGroup
+            animateDrawCard={animateDrawCard}
+            setAnimCard={setAnimCard}
+            setIsAnimating={setIsAnimating}
+            isAnimating={isAnimating}
+          />
         </HandSection>
       </Bottom>
       {isJokerChoiceOpen && (
@@ -113,6 +167,18 @@ export const Poker = () => {
           onSelect={handleJokerSelect}
           onClose={() => setIsJokerChoiceOpen(false)}
         />
+      )}
+      {animCard && (
+        <AnimCard
+          id={`anim-card-${animCard.key}`}
+          style={{
+            position: "fixed",
+            left: animCard.startX,
+            top: animCard.startY,
+          }}
+        >
+          {animCard.card.label}
+        </AnimCard>
       )}
     </Container>
   );
@@ -175,4 +241,20 @@ const StartButton = styled.button`
     font-size: 16px;
     padding: 12px 20px;
   }
+`;
+
+const AnimCard = styled.div`
+  width: clamp(60px, 12vw, 80px);
+  height: calc(clamp(60px, 12vw, 80px) * 1.5);
+  position: fixed;
+  border-radius: 10px;
+  background-color: #1565c0;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  user-select: none;
+  z-index: 9999;
 `;

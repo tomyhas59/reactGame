@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
 
-const RemainDeck = () => {
+const RemainDeck = ({ deckRef }) => {
   const { deck } = usePokerStore();
 
   return (
-    <RemainDeckContainer>
+    <RemainDeckContainer ref={deckRef}>
       {deck.map((_, idx) => (
         <RemainCard key={idx} $index={idx}>
           {deck.length}

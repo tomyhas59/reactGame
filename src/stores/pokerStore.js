@@ -15,7 +15,13 @@ export const usePokerStore = create((set, get) => ({
   playerJokers: [],
 
   setDeck: (deck) => set({ deck }),
-  setHand: (hand) => set({ hand }),
+
+  //setHand((prev)=> [...prev, addHand]) 가능케 하는 함수
+  setHand: (updater) =>
+    set((state) => ({
+      hand: typeof updater === "function" ? updater(state.hand) : updater,
+    })),
+
   setSelectedCards: (cards) => set({ selectedCards: cards }),
   setScoreDetail: (newScore) =>
     set((state) => {

@@ -1,7 +1,12 @@
 import styled from "styled-components";
 import { calculateFinalScore, usePokerStore } from "../../stores/pokerStore";
 
-const ButtonGroup = () => {
+const ButtonGroup = ({
+  isAnimating,
+  animateDrawCard,
+  setAnimCard,
+  setIsAnimating,
+}) => {
   const {
     deck,
     hand,
@@ -15,35 +20,40 @@ const ButtonGroup = () => {
     setDiscardChances,
   } = usePokerStore();
 
-  const drawAndUpdateCard = () => {
-    const selectedCount = selectedCards.length;
-    const newHand = hand.filter(
-      (card) => !selectedCards.find((c) => c.id === card.id)
-    );
+  const drawAndUpdateCard = async () => {
+    if (isAnimating) return;
+    if (selectedCards.length === 0) {
+      alert("카드를 선택하세요");
+      return;
+    }
+    if (deck.length < selectedCards.length) {
+      alert("덱에 카드가 부족합니다");
+      return;
+    }
 
+    setIsAnimating(true);
+
+    // 우선 선택된 카드는 핸드에서 제거
+    let newHand = hand.filter((card) => !selectedCards.includes(card));
     setHand(newHand);
+    setSelectedCards([]);
 
-    // 현재 deck 배열에서 뽑을 카드들
-    const drawnCards = deck.slice(0, selectedCount);
-    // 남은 덱
-    let remainingDeck = deck.slice(selectedCount);
-    // 누적되는 핸드 복사본
-    let currentHand = [...newHand];
+    const cardsToDraw = deck.slice(0, selectedCards.length);
+    let currentDeck = deck.slice(selectedCards.length);
 
-    drawnCards.forEach((card, i) => {
-      setTimeout(() => {
-        currentHand = [...currentHand, card];
-        setHand(currentHand);
+    for (let i = 0; i < cardsToDraw.length; i++) {
+      await animateDrawCard(cardsToDraw[i], newHand.length + i);
+      // functional update로 상태 반영: 이전 상태값에 카드 추가
+      setHand((prevHand) => [...prevHand, cardsToDraw[i]]);
 
-        // 덱에서 카드 하나씩 빼기
-        remainingDeck = remainingDeck.slice(1);
-        setDeck(remainingDeck);
-      }, (i + 1) * 300);
-    });
+      currentDeck = currentDeck.slice(1);
+      setDeck(currentDeck);
 
-    setTimeout(() => {
-      setSelectedCards([]);
-    }, selectedCount * 500 + 500);
+      await new Promise((r) => setTimeout(r, 100));
+    }
+
+    setAnimCard(null);
+    setIsAnimating(false);
   };
 
   //플레이
