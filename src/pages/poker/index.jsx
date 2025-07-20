@@ -15,6 +15,7 @@ import Header from "./Header";
 import JokerPanel from "./JokerPanel";
 import JokerChoiceModal from "./JokerChoiceModal";
 import gsap from "gsap";
+import Card from "./Card";
 
 export const Poker = () => {
   const {
@@ -123,7 +124,7 @@ export const Poker = () => {
         }
         gsap.set(animEl, { x: 0, y: 0, opacity: 1 });
         gsap.to(animEl, {
-          duration: 0.1,
+          duration: 0.3,
           x: slotRect.left - deckRect.left,
           y: slotRect.top - deckRect.top,
           ease: "power2.out",
@@ -177,7 +178,7 @@ export const Poker = () => {
             top: animCard.startY,
           }}
         >
-          {animCard.card.label}
+          <Card card={animCard.card} idx={animCard.card.id} />
         </AnimCard>
       )}
     </Container>
@@ -244,8 +245,8 @@ const StartButton = styled.button`
 `;
 
 const AnimCard = styled.div`
-  width: clamp(60px, 12vw, 80px);
-  height: calc(clamp(60px, 12vw, 80px) * 1.5);
+  width: 120px;
+  height: 170px;
   position: fixed;
   border-radius: 10px;
   background-color: #1565c0;
@@ -257,4 +258,13 @@ const AnimCard = styled.div`
   pointer-events: none;
   user-select: none;
   z-index: 9999;
+  @media (max-width: 1200px) {
+    width: 90px;
+    height: 120px;
+  }
+
+  @media (max-width: 800px) {
+    width: 70px;
+    height: 100px;
+  }
 `;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
-import { getCardLabel } from "./Hand";
+import { getCardLabel } from "./Card";
 
 const DetailScore = () => {
   const { scoreDetail, playerJokers } = usePokerStore();
