@@ -199,14 +199,14 @@ const Middle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-
   @media (max-width: 600px) {
     flex-direction: column;
   }
 `;
 
-const Bottom = styled.div``;
+const Bottom = styled.div`
+  margin-top: 10px;
+`;
 
 const HandSection = styled.div`
   display: flex;

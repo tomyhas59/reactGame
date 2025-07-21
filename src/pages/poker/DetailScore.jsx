@@ -61,6 +61,7 @@ export default DetailScore;
 const DetailScoreContainer = styled.div`
   padding: 16px;
   width: 350px;
+  height: 280px;
   background-color: #f8fff8;
   border-radius: 16px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
@@ -69,8 +70,11 @@ const DetailScoreContainer = styled.div`
   flex-direction: column;
   transition: all 0.3s ease;
 
+  @media (max-width: 1200px) {
+    width: 250px;
+  }
+
   @media (max-width: 600px) {
-    width: 90%;
     padding: 16px 20px;
   }
 `;
@@ -90,25 +94,27 @@ const Title = styled.h3`
 `;
 
 const Row = styled.p`
-  font-size: 16px;
   color: #333;
   display: flex;
   justify-content: space-between;
   width: 100%;
   border-bottom: 1px dotted #4caf50;
-  @media (max-width: 600px) {
-    font-size: 15px;
-  }
 `;
 
 const Label = styled.span`
   font-weight: 500;
   color: #2e7d32;
+  @media (max-width: 1200px) {
+    font-size: 14px;
+  }
 `;
 
 const Value = styled.span`
   font-weight: 600;
   color: #1b5e20;
+  @media (max-width: 1200px) {
+    font-size: 14px;
+  }
 `;
 
 const StrongValue = styled.strong`

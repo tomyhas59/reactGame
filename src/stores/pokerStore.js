@@ -246,7 +246,19 @@ const judgePoker = (cards) => {
 };
 
 export const calculateFinalScore = (cards, jokers) => {
-  const { pokerName, pokerScore, pokerCards, multiplier } = judgePoker(cards);
+  const hasEasyFlush = jokers.some((j) => j.effect === "easy-flush");
+
+  const adjustedCards = hasEasyFlush
+    ? cards.map((card) => {
+        let newSuit = card.suit;
+        if (card.suit === "♠️" || card.suit === "♣️") newSuit = "black";
+        else if (card.suit === "♥️" || card.suit === "♦️") newSuit = "red";
+        return { ...card, suit: newSuit };
+      })
+    : cards;
+
+  const { pokerName, pokerScore, pokerCards, multiplier } =
+    judgePoker(adjustedCards);
 
   const cardSum = pokerCards.reduce((sum, cardNum) => {
     return sum + Number(cardNum);
@@ -278,6 +290,9 @@ export const calculateFinalScore = (cards, jokers) => {
             bonus += 100;
           }
         });
+        break;
+      case "easy-flush":
+        /** 위에 있음 */
         break;
       default:
         console.warn(`Unhandled joker effect: ${joker.effect}`);
