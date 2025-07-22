@@ -21,7 +21,7 @@ const ButtonGroup = ({
     setShowYaku,
   } = usePokerStore();
 
-  const drawAndUpdateCard = async () => {
+  const drawAndUpdateCard = async (count) => {
     if (isAnimating) return;
     if (selectedCards.length === 0) {
       alert("카드를 선택하세요");
@@ -57,7 +57,7 @@ const ButtonGroup = ({
 
     setTimeout(() => {
       setSelectedCards([]);
-    }, 3000);
+    }, count);
   };
 
   //플레이
@@ -69,7 +69,7 @@ const ButtonGroup = ({
     if (remainingTurns <= 0) return;
 
     setShowYaku(true);
-    drawAndUpdateCard();
+    drawAndUpdateCard(3000);
     const resultScore = calculateFinalScore(selectedCards, playerJokers);
     setScoreDetail(resultScore);
     setRemainingTurns((prev) => prev - 1);
@@ -85,7 +85,7 @@ const ButtonGroup = ({
     if (discardChances <= 0) return;
     if (selectedCards.length === 0) return alert("버릴 카드를 선택하세요.");
 
-    drawAndUpdateCard();
+    drawAndUpdateCard(0);
     setDiscardChances((prev) => prev - 1);
   };
 

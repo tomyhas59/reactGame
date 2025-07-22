@@ -307,7 +307,30 @@ const ShowYakuWrapper = styled.div`
 const CardWrapper = styled.div`
   display: flex;
 `;
-
 const YakuName = styled.h3`
-  color: #fff;
+  font-size: 32px;
+  font-weight: bold;
+  color: #ffeb3b;
+  text-shadow: 0 0 10px rgba(255, 235, 59, 0.8),
+    0 0 20px rgba(255, 235, 59, 0.6);
+  animation: pulse 1.5s infinite;
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: 24px;
+  }
 `;

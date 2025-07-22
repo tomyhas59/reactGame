@@ -13,13 +13,13 @@ export const getCardLabel = (num) => {
 };
 
 const Card = ({ card, addSlotRef, isSelected = false, idx }) => {
-  const { toggleSelectCards } = usePokerStore();
+  const { toggleSelectCards, showYaku } = usePokerStore();
 
   return (
     <CardContainer
       key={idx}
       selected={isSelected}
-      onClick={() => card && toggleSelectCards(card)}
+      onClick={() => card && !showYaku && toggleSelectCards(card)}
       ref={(el) => addSlotRef?.(el)}
     >
       {card && (

@@ -33,6 +33,18 @@ export const JOKER_CARDS = [
     description: "모든 카드를 그림 카드 취급",
     effect: "all-face",
   },
+  {
+    id: "6",
+    name: "스몰카드",
+    description: "3장 이하의 카드 시 배수+3",
+    effect: "small-card",
+  },
+  {
+    id: "7",
+    name: "피보나치",
+    description: "1, 2, 3, 5, 8 카드마다 +50",
+    effect: "Fibonacci",
+  },
 ];
 
 const JokerChoiceModal = ({ onSelect, onClose }) => {
@@ -40,6 +52,16 @@ const JokerChoiceModal = ({ onSelect, onClose }) => {
 
   const remainJokers = JOKER_CARDS.filter(
     (joker) => !playerJokers.some((pj) => pj.id === joker.id)
+  );
+
+  const getRandomJokerCards = (cards, count) => {
+    const shuffled = [...cards].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+  };
+
+  const shownJokers = getRandomJokerCards(
+    remainJokers,
+    Math.min(5, remainJokers.length)
   );
 
   return (
@@ -50,7 +72,7 @@ const JokerChoiceModal = ({ onSelect, onClose }) => {
           <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
         <CardList>
-          {remainJokers.map((card) => (
+          {shownJokers.map((card) => (
             <Card key={card.id} onClick={() => onSelect(card)}>
               <h3>{card.name}</h3>
               <p>{card.description}</p>
@@ -137,6 +159,7 @@ const Card = styled.div`
   p {
     font-size: 14px;
     color: #555;
+    word-break: keep-all;
   }
 
   &:hover {
