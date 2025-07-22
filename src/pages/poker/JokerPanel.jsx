@@ -113,6 +113,9 @@ const CardFront = styled(CardFace)`
   background: linear-gradient(135deg, #fff8e1, #ffe0b2);
   border: 1px solid #ddd;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  &:hover {
+    background: linear-gradient(135deg, #cdbd89, #ffc56d);
+  }
 `;
 
 const CardBack = styled(CardFace)`
@@ -120,6 +123,10 @@ const CardBack = styled(CardFace)`
   transform: rotateY(180deg);
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    background: #dbd0d0;
+  }
 `;
 
 const JokerName = styled.h3`

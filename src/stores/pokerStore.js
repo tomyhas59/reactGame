@@ -8,11 +8,18 @@ export const usePokerStore = create((set, get) => ({
   deck: [],
   hand: [],
   selectedCards: [],
-  scoreDetail: null,
+  scoreDetail: {
+    pokerCards: [],
+    pokerName: "",
+    pokerScore: null,
+    multiplier: null,
+  },
   stage: null,
   remainingTurns: null,
   discardChances: null,
   playerJokers: [],
+
+  showYaku: false,
 
   setDeck: (deck) => set({ deck }),
 
@@ -22,6 +29,7 @@ export const usePokerStore = create((set, get) => ({
       hand: typeof updater === "function" ? updater(state.hand) : updater,
     })),
 
+  setShowYaku: (value) => set({ showYaku: value }),
   setSelectedCards: (cards) => set({ selectedCards: cards }),
   setScoreDetail: (newScore) =>
     set((state) => {

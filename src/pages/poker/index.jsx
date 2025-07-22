@@ -20,6 +20,7 @@ import Card from "./Card";
 export const Poker = () => {
   const {
     startNewGame,
+    selectedCards,
     stage,
     remainingTurns,
     scoreDetail,
@@ -30,6 +31,7 @@ export const Poker = () => {
     setHand,
     setScoreDetail,
     setDiscardChances,
+    showYaku,
   } = usePokerStore();
 
   const [isStart, setIsStart] = useState(false);
@@ -40,6 +42,9 @@ export const Poker = () => {
   const deckRef = useRef(null);
   const slotsRef = useRef([]);
   slotsRef.current = [];
+
+  const pokerCards = scoreDetail?.pokerCards ?? [];
+  const pokerName = scoreDetail?.pokerName ?? "";
 
   const addSlotRef = (el) => {
     if (el && !slotsRef.current.includes(el)) slotsRef.current.push(el);
@@ -98,7 +103,7 @@ export const Poker = () => {
     }
   }, [remainingTurns, stage, scoreDetail, startNewGame]);
 
-  const animateDrawCard = (card, targetIndex) => {
+  const animateDrawCard = useCallback((card, targetIndex) => {
     return new Promise((resolve) => {
       if (!deckRef.current || !slotsRef.current[targetIndex]) {
         resolve();
@@ -134,7 +139,7 @@ export const Poker = () => {
         });
       });
     });
-  };
+  }, []);
 
   if (!isStart) {
     return (
@@ -151,6 +156,16 @@ export const Poker = () => {
         <DetailScore />
         <JokerPanel />
       </Middle>
+      {showYaku && (
+        <ShowYakuWrapper>
+          <CardWrapper>
+            {selectedCards.map((card) => (
+              <Card key={card.id} card={card} />
+            ))}
+          </CardWrapper>
+          <YakuName>{pokerName}</YakuName>
+        </ShowYakuWrapper>
+      )}
       <RemainDeck deckRef={deckRef} />
       <Bottom>
         <HandSection>
@@ -188,6 +203,7 @@ export const Poker = () => {
 export default Poker;
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -267,4 +283,31 @@ const AnimCard = styled.div`
     width: 70px;
     height: 100px;
   }
+`;
+
+const ShowYakuWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 30px;
+  gap: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 24px;
+  background: rgba(41, 42, 119, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 9999;
+`;
+
+const CardWrapper = styled.div`
+  display: flex;
+`;
+
+const YakuName = styled.h3`
+  color: #fff;
 `;

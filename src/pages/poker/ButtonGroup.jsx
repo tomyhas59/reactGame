@@ -18,6 +18,7 @@ const ButtonGroup = ({
     playerJokers,
     setRemainingTurns,
     setDiscardChances,
+    setShowYaku,
   } = usePokerStore();
 
   const drawAndUpdateCard = async () => {
@@ -36,7 +37,6 @@ const ButtonGroup = ({
     // 우선 선택된 카드는 핸드에서 제거
     let newHand = hand.filter((card) => !selectedCards.includes(card));
     setHand(newHand);
-    setSelectedCards([]);
 
     const cardsToDraw = deck.slice(0, selectedCards.length);
     let currentDeck = deck.slice(selectedCards.length);
@@ -54,6 +54,10 @@ const ButtonGroup = ({
 
     setAnimCard(null);
     setIsAnimating(false);
+
+    setTimeout(() => {
+      setSelectedCards([]);
+    }, 3000);
   };
 
   //플레이
@@ -64,11 +68,15 @@ const ButtonGroup = ({
 
     if (remainingTurns <= 0) return;
 
+    setShowYaku(true);
     drawAndUpdateCard();
     const resultScore = calculateFinalScore(selectedCards, playerJokers);
     setScoreDetail(resultScore);
-
     setRemainingTurns((prev) => prev - 1);
+
+    setTimeout(() => {
+      setShowYaku(false);
+    }, 3000);
   };
 
   // 버리기
