@@ -6,7 +6,7 @@ import {
   shuffle,
   usePokerStore,
 } from "../../stores/pokerStore";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Hand from "./Hand";
 import DetailScore from "./DetailScore";
 import ButtonGroup from "./ButtonGroup";
@@ -21,21 +21,22 @@ export const Poker = () => {
   const {
     startNewGame,
     selectedCards,
-    stage,
-    remainingTurns,
+    stageScore,
     scoreDetail,
     addPlayerJoker,
-    setStage,
+    setStageScore,
     setRemainingTurns,
     setDeck,
     setHand,
     setScoreDetail,
     setDiscardChances,
     showYaku,
+    isJokerChoiceOpen,
+    setIsJokerChoiceOpen,
+    isStart,
+    setIsStart,
   } = usePokerStore();
 
-  const [isStart, setIsStart] = useState(false);
-  const [isJokerChoiceOpen, setIsJokerChoiceOpen] = useState(false);
   const [animCard, setAnimCard] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -43,8 +44,8 @@ export const Poker = () => {
   const slotsRef = useRef([]);
   slotsRef.current = [];
 
-  const pokerCards = scoreDetail?.pokerCards ?? [];
   const pokerName = scoreDetail?.pokerName ?? "";
+  const sortedSelectedCards = selectedCards.sort((a, b) => b.number - a.number);
 
   const addSlotRef = (el) => {
     if (el && !slotsRef.current.includes(el)) slotsRef.current.push(el);
@@ -53,12 +54,12 @@ export const Poker = () => {
   const startButton = useCallback(() => {
     setIsStart(true);
     startNewGame();
-  }, [startNewGame]);
+  }, [setIsStart, startNewGame]);
 
   const handleJokerSelect = useCallback(
     (joker) => {
       addPlayerJoker(joker);
-      setStage(stage * 2);
+      setStageScore(stageScore * 2);
       setRemainingTurns(REMAINING_TURNS);
       setIsJokerChoiceOpen(false);
       setDiscardChances(DISCARD_CHANCES);
@@ -70,38 +71,15 @@ export const Poker = () => {
     [
       setScoreDetail,
       addPlayerJoker,
-      setStage,
+      setStageScore,
       setRemainingTurns,
-      stage,
+      stageScore,
       setDeck,
       setDiscardChances,
       setHand,
+      setIsJokerChoiceOpen,
     ]
   );
-
-  // 스테이지 성공 시 조커 선택 모달 띄우기
-
-  useEffect(() => {
-    if (stage <= scoreDetail?.total) {
-      setTimeout(() => {
-        alert("성공");
-        setIsJokerChoiceOpen(true);
-      }, 5000);
-    }
-  }, [stage, scoreDetail]);
-
-  useEffect(() => {
-    if (remainingTurns === 0 && scoreDetail?.total != null) {
-      setTimeout(() => {
-        if (stage > scoreDetail.total) {
-          alert("실패");
-          setIsStart(false);
-        } else {
-          setIsJokerChoiceOpen(true);
-        }
-      }, 5000);
-    }
-  }, [remainingTurns, stage, scoreDetail, startNewGame]);
 
   const animateDrawCard = useCallback((card, targetIndex) => {
     return new Promise((resolve) => {
@@ -159,7 +137,7 @@ export const Poker = () => {
       {showYaku && (
         <ShowYakuWrapper>
           <CardWrapper>
-            {selectedCards.map((card) => (
+            {sortedSelectedCards.map((card) => (
               <Card key={card.id} card={card} />
             ))}
           </CardWrapper>
@@ -178,12 +156,7 @@ export const Poker = () => {
           />
         </HandSection>
       </Bottom>
-      {isJokerChoiceOpen && (
-        <JokerChoiceModal
-          onSelect={handleJokerSelect}
-          onClose={() => setIsJokerChoiceOpen(false)}
-        />
-      )}
+      {isJokerChoiceOpen && <JokerChoiceModal onSelect={handleJokerSelect} />}
       {animCard && (
         <AnimCard
           id={`anim-card-${animCard.key}`}
@@ -297,7 +270,7 @@ const ShowYakuWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 24px;
-  background: rgba(41, 42, 119, 0.9);
+  background: rgba(41, 42, 119, 0.5);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { calculateFinalScore, usePokerStore } from "../../stores/pokerStore";
+import { useState } from "react";
 
 const ButtonGroup = ({
   isAnimating,
@@ -19,80 +20,107 @@ const ButtonGroup = ({
     setRemainingTurns,
     setDiscardChances,
     setShowYaku,
+    stageScore,
+    setIsStart,
+    setIsJokerChoiceOpen,
   } = usePokerStore();
 
-  const drawAndUpdateCard = async (count) => {
-    if (isAnimating) return;
-    if (selectedCards.length === 0) {
-      alert("카드를 선택하세요");
-      return;
-    }
-    if (deck.length < selectedCards.length) {
-      alert("덱에 카드가 부족합니다");
+  const [totalScore, setTotalScore] = useState(0);
+
+  const isCardSelected = selectedCards.length > 0;
+  const hasEnoughDeck = deck.length >= selectedCards.length;
+
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  //선택된 카드를 버리고 새로 뽑는 애니메이션
+  const drawAndUpdateCard = async () => {
+    if (isAnimating || !isCardSelected || !hasEnoughDeck) {
+      alert(
+        !isCardSelected
+          ? "카드를 선택하세요"
+          : !hasEnoughDeck
+          ? "덱에 카드가 부족합니다"
+          : ""
+      );
       return;
     }
 
     setIsAnimating(true);
 
-    // 우선 선택된 카드는 핸드에서 제거
-    let newHand = hand.filter((card) => !selectedCards.includes(card));
+    const cardsToDraw = deck.slice(0, selectedCards.length);
+    const newHand = hand.filter((card) => !selectedCards.includes(card));
     setHand(newHand);
 
-    const cardsToDraw = deck.slice(0, selectedCards.length);
-    let currentDeck = deck.slice(selectedCards.length);
+    let remainingDeck = deck.slice(selectedCards.length);
 
+    // 카드 한 장씩 뽑고 애니메이션 적용
     for (let i = 0; i < cardsToDraw.length; i++) {
       await animateDrawCard(cardsToDraw[i], newHand.length + i);
-      // functional update로 상태 반영: 이전 상태값에 카드 추가
-      setHand((prevHand) => [...prevHand, cardsToDraw[i]]);
-
-      currentDeck = currentDeck.slice(1);
-      setDeck(currentDeck);
-
-      await new Promise((r) => setTimeout(r, 100));
+      setHand((prev) => [...prev, cardsToDraw[i]]);
+      remainingDeck = remainingDeck.slice(1);
+      setDeck(remainingDeck);
+      await delay(100);
     }
 
     setAnimCard(null);
     setIsAnimating(false);
-
-    setTimeout(() => {
-      setSelectedCards([]);
-    }, count);
+    setSelectedCards([]);
+    setShowYaku(false);
   };
 
-  //플레이
-  const onPlay = () => {
-    if (selectedCards.length === 0) return alert("플레이할 카드를 선택하세요.");
+  const handlePlay = () => {
+    if (!isCardSelected) return alert("플레이할 카드를 선택하세요.");
 
     const remainingTurns = usePokerStore.getState().remainingTurns;
-
     if (remainingTurns <= 0) return;
 
+    const result = calculateFinalScore(selectedCards, playerJokers);
+    setScoreDetail(result);
     setShowYaku(true);
-    drawAndUpdateCard(3000);
-    const resultScore = calculateFinalScore(selectedCards, playerJokers);
-    setScoreDetail(resultScore);
+
+    const nextScore = totalScore + result.finalScore;
+    setTotalScore(nextScore);
     setRemainingTurns((prev) => prev - 1);
 
+    // 성공/실패 판정 후 카드 리플레이
     setTimeout(() => {
-      setShowYaku(false);
+      const isLastTurn = remainingTurns === 1;
+      const isClear = nextScore >= stageScore;
+
+      if (isClear) {
+        alert("성공");
+        setIsJokerChoiceOpen(true);
+        setShowYaku(false);
+        setSelectedCards([]);
+        return;
+      }
+
+      if (isLastTurn && !isClear) {
+        alert("실패");
+        setIsStart(false);
+        setShowYaku(false);
+        setSelectedCards([]);
+        return;
+      }
+
+      drawAndUpdateCard();
     }, 3000);
   };
 
-  // 버리기
-  const onDiscard = () => {
+  const handleDiscard = () => {
+    if (!isCardSelected) return alert("버릴 카드를 선택하세요.");
+
     const discardChances = usePokerStore.getState().discardChances;
     if (discardChances <= 0) return;
-    if (selectedCards.length === 0) return alert("버릴 카드를 선택하세요.");
 
-    drawAndUpdateCard(0);
     setDiscardChances((prev) => prev - 1);
+    drawAndUpdateCard();
   };
 
   return (
     <ButtonGroupContainer>
-      <button onClick={onPlay}>플레이</button>
-      <button onClick={onDiscard}>버리기</button>
+      <button onClick={handlePlay}>플레이</button>
+      <button onClick={handleDiscard}>버리기</button>
     </ButtonGroupContainer>
   );
 };

@@ -47,7 +47,7 @@ export const JOKER_CARDS = [
   },
 ];
 
-const JokerChoiceModal = ({ onSelect, onClose }) => {
+const JokerChoiceModal = ({ onSelect }) => {
   const { playerJokers } = usePokerStore();
 
   const remainJokers = JOKER_CARDS.filter(
@@ -69,7 +69,6 @@ const JokerChoiceModal = ({ onSelect, onClose }) => {
       <Modal>
         <Header>
           <h2>조커 선택</h2>
-          <CloseButton onClick={onClose}>×</CloseButton>
         </Header>
         <CardList>
           {shownJokers.map((card) => (
@@ -116,18 +115,6 @@ const Header = styled.div`
   h2 {
     margin: 0;
     font-size: 20px;
-    color: #333;
-  }
-`;
-
-const CloseButton = styled.button`
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #777;
-
-  &:hover {
     color: #333;
   }
 `;

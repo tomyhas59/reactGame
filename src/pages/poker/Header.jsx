@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
 
 const Header = () => {
-  const { remainingTurns, stage, discardChances, scoreDetail } =
+  const { remainingTurns, stageScore, discardChances, scoreDetail } =
     usePokerStore();
 
   return (
@@ -10,7 +10,7 @@ const Header = () => {
       <BoardWrapper>
         <Stage $headerColor="#2ecc71" $divColor="#f39c12">
           <h1>스테이지</h1>
-          <div>{stage}</div>
+          <div>{stageScore}</div>
         </Stage>
 
         <TotalScore $headerColor="#8e44ad" $divColor="#f1c40f">

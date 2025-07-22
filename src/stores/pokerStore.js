@@ -5,22 +5,22 @@ export const REMAINING_TURNS = 3;
 export const DISCARD_CHANCES = 3;
 
 export const usePokerStore = create((set, get) => ({
+  isStart: false,
+
   deck: [],
   hand: [],
   selectedCards: [],
-  scoreDetail: {
-    pokerCards: [],
-    pokerName: "",
-    pokerScore: null,
-    multiplier: null,
-  },
-  stage: null,
+  scoreDetail: null,
+  stageScore: null,
   remainingTurns: null,
   discardChances: null,
+
+  isJokerChoiceOpen: false,
   playerJokers: [],
 
   showYaku: false,
 
+  setIsStart: (value) => set({ isStart: value }),
   setDeck: (deck) => set({ deck }),
 
   //setHand((prev)=> [...prev, addHand]) 가능케 하는 함수
@@ -31,25 +31,8 @@ export const usePokerStore = create((set, get) => ({
 
   setShowYaku: (value) => set({ showYaku: value }),
   setSelectedCards: (cards) => set({ selectedCards: cards }),
-  setScoreDetail: (newScore) =>
-    set((state) => {
-      if (newScore === null) {
-        // 초기화
-        return { scoreDetail: null };
-      }
-
-      const currentTotal = state.scoreDetail?.total || 0;
-      const updatedTotal = currentTotal + newScore.finalScore;
-
-      return {
-        scoreDetail: {
-          ...newScore,
-          total: updatedTotal,
-        },
-      };
-    }),
-
-  setStage: (stage) => set({ stage }),
+  setScoreDetail: (scoreDetail) => set({ scoreDetail }),
+  setStageScore: (stageScore) => set({ stageScore }),
   setRemainingTurns: (updater) =>
     set((state) => ({
       remainingTurns:
@@ -60,6 +43,8 @@ export const usePokerStore = create((set, get) => ({
       discardChances:
         typeof updater === "function" ? updater(state.discardChances) : updater,
     })),
+
+  setIsJokerChoiceOpen: (value) => set({ isJokerChoiceOpen: value }),
   addPlayerJoker: (joker) =>
     set((state) => ({
       playerJokers: [...state.playerJokers, joker],
@@ -74,7 +59,7 @@ export const usePokerStore = create((set, get) => ({
       selectedForPlay: [],
       selectedForDiscard: [],
       totalScore: 0,
-      stage: STAGE_SCORE,
+      stageScore: STAGE_SCORE,
       remainingTurns: REMAINING_TURNS,
       discardChances: DISCARD_CHANCES,
       playerJokers: [],
@@ -321,6 +306,7 @@ export const calculateFinalScore = (cards, jokers) => {
   // 최종 점수
   const baseScore = pokerScore + cardSum + bonus;
   const finalScore = baseScore * newMultiplier;
+
   return {
     pokerName,
     pokerScore,

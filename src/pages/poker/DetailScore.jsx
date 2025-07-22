@@ -1,11 +1,18 @@
 import styled from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
 import { getCardLabel } from "./Card";
+import { useEffect, useState } from "react";
 
 const DetailScore = () => {
   const { scoreDetail, playerJokers } = usePokerStore();
+  const [totalScore, setTotalScore] = useState(0);
 
   const hasAllFace = playerJokers.some((j) => j.effect === "all-face");
+
+  useEffect(() => {
+    if (!scoreDetail) return;
+    setTotalScore((prev) => prev + scoreDetail.finalScore);
+  }, [scoreDetail]);
 
   return (
     <DetailScoreContainer>
@@ -50,7 +57,7 @@ const DetailScore = () => {
       </Row>
       <Row>
         <Label style={{ color: "#d32f2f" }}>총 누적 점수</Label>
-        <StrongValue>{scoreDetail?.total}</StrongValue>
+        <StrongValue>{totalScore}</StrongValue>
       </Row>
     </DetailScoreContainer>
   );

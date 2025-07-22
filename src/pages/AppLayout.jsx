@@ -9,17 +9,17 @@ const AppLayout = ({ children }) => {
   const menuToggleRef = useRef(null);
 
   const links = [
-    { to: "baseball", label: "숫자 야구 게임" },
+    { to: "poker", label: "점수포커" },
+    { to: "onet", label: "그림 짝 맞추기" },
     { to: "catchMole", label: "두더지 잡기" },
     { to: "concentration", label: "카드 뒤집기" },
     { to: "findMine", label: "지뢰찾기" },
-    { to: "lotto", label: "로또" },
     { to: "make2048", label: "2048게임" },
     { to: "responseCheck", label: "반응속도체크" },
     { to: "RSP", label: "가위바위보" },
     { to: "textRPG", label: "텍스트RPG" },
-    { to: "onet", label: "그림 짝 맞추기" },
-    { to: "poker", label: "점수포커" },
+    { to: "baseball", label: "숫자 야구 게임" },
+    { to: "lotto", label: "로또" },
   ];
 
   const handleLinkClick = () => {

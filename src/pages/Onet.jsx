@@ -187,9 +187,9 @@ function App() {
 
   return (
     <Container>
-      <Title>🧩 ONET GAME</Title>
+      <Title>ONET GAME</Title>
       <ButtonGroup>
-        <Button onClick={startNewGame}>새 게임 ▶️</Button>
+        <Button onClick={startNewGame}>새 게임</Button>
       </ButtonGroup>
       <StatusBar>⏱️ 경과 시간: {elapsedTime}초</StatusBar>
       <GameBoard size={BOARD_SIZE}>
