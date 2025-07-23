@@ -92,6 +92,7 @@ const ButtonGroup = ({
         setIsJokerChoiceOpen(true);
         setShowYaku(false);
         setSelectedCards([]);
+        setTotalScore(0);
         return;
       }
 
@@ -100,6 +101,7 @@ const ButtonGroup = ({
         setIsStart(false);
         setShowYaku(false);
         setSelectedCards([]);
+        setTotalScore(0);
         return;
       }
 

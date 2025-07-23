@@ -10,7 +10,10 @@ const DetailScore = () => {
   const hasAllFace = playerJokers.some((j) => j.effect === "all-face");
 
   useEffect(() => {
-    if (!scoreDetail) return;
+    if (!scoreDetail) {
+      setTotalScore(0);
+      return;
+    }
     setTotalScore((prev) => prev + scoreDetail.finalScore);
   }, [scoreDetail]);
 
