@@ -43,7 +43,7 @@ export const JOKER_CARDS = [
     id: "7",
     name: "피보나치",
     description: "1, 2, 3, 5, 8 카드마다 +50",
-    effect: "Fibonacci",
+    effect: "fibonacci",
   },
 ];
 

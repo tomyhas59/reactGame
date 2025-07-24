@@ -261,6 +261,7 @@ export const calculateFinalScore = (cards, jokers) => {
   let bonus = 0;
   const FACE_CARDS = [11, 12, 13];
   const EVEN_NUMBERS = [2, 4, 6, 8, 10];
+  const FIBONACCI_NUMBERS = [2, 4, 6, 8, 10];
 
   const isAllFaceJoker = jokers.some((j) => j.effect === "all-face");
 
@@ -287,6 +288,12 @@ export const calculateFinalScore = (cards, jokers) => {
       case "easy-flush":
         /** 위에 있음 */
         break;
+      case "fibonacci":
+        pokerCards.forEach((num) => {
+          if (FIBONACCI_NUMBERS.includes(Number(num))) bonus += 50;
+        });
+        break;
+
       default:
         console.warn(`Unhandled joker effect: ${joker.effect}`);
         break;
@@ -296,10 +303,20 @@ export const calculateFinalScore = (cards, jokers) => {
   //  multiplier 계산
   let newMultiplier = multiplier;
   jokers.forEach((joker) => {
-    if (joker.effect === "straight-x4") {
-      if (pokerName.includes("스트레이트")) {
-        newMultiplier += 4;
-      }
+    switch (joker.effect) {
+      case "straight-x4":
+        if (pokerName.includes("스트레이트")) {
+          newMultiplier += 4;
+        }
+        break;
+      case "small-card":
+        if (cards.length <= 3) {
+          newMultiplier += 3;
+        }
+        break;
+      default:
+        console.warn(`Unhandled joker effect: ${joker.effect}`);
+        break;
     }
   });
 
