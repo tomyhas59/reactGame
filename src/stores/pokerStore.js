@@ -18,18 +18,21 @@ export const usePokerStore = create((set, get) => ({
   isJokerChoiceOpen: false,
   playerJokers: [],
 
-  showYaku: false,
+  showPlayCards: false,
 
   setIsStart: (value) => set({ isStart: value }),
-  setDeck: (deck) => set({ deck }),
 
-  //setHand((prev)=> [...prev, addHand]) 가능케 하는 함수
+  //setHand((prev)=> [...prev, addHand]) 가능케 하는 함수 ↓
+  setDeck: (updater) =>
+    set((state) => ({
+      deck: typeof updater === "function" ? updater(state.deck) : updater,
+    })),
   setHand: (updater) =>
     set((state) => ({
       hand: typeof updater === "function" ? updater(state.hand) : updater,
     })),
 
-  setShowYaku: (value) => set({ showYaku: value }),
+  setShowPlayCards: (value) => set({ showPlayCards: value }),
   setSelectedCards: (cards) => set({ selectedCards: cards }),
   setScoreDetail: (scoreDetail) => set({ scoreDetail }),
   setStageScore: (stageScore) => set({ stageScore }),
@@ -133,19 +136,29 @@ const judgePoker = (cards) => {
 
   const isFlush = suits.length === 5 && suits.every((s) => s === suits[0]);
 
+  const numberToJQK = (number) => {
+    if (number === 11) return "J";
+    else if (number === 12) return "Q";
+    else if (number === 13) return "K";
+    else return number;
+  };
+
   // 스트레이트 계열
   if (isStraight || isLowAceStraight) {
     const straightCards = isLowAceStraight ? [1, 10, 11, 12, 13] : cardNumbers;
+    const highest = Math.max(cardNumbers);
     if (isFlush) {
       return {
-        pokerName: "스트레이트 플러시",
+        pokerName: `${suits[0]}${numberToJQK(
+          Number(highest)
+        )} 스트레이트 플러시`,
         pokerScore: 100,
         pokerCards: straightCards,
         multiplier: 20,
       };
     }
     return {
-      pokerName: "스트레이트",
+      pokerName: `${Number(Math.max(cardNumbers))} 스트레이트`,
       pokerScore: 40,
       pokerCards: straightCards,
       multiplier: 4,
@@ -157,7 +170,7 @@ const judgePoker = (cards) => {
     const quad = Object.keys(numCounts).find((k) => numCounts[k] === 4);
     const pokerCards = [quad, quad, quad, quad];
     return {
-      pokerName: "포카드",
+      pokerName: `${numberToJQK(Number(quad))} 포카드`,
       pokerScore: 80,
       pokerCards,
       multiplier: 10,
@@ -170,7 +183,9 @@ const judgePoker = (cards) => {
     const pair = Object.keys(numCounts).find((k) => numCounts[k] === 2);
     const pokerCards = [triple, triple, triple, pair, pair];
     return {
-      pokerName: "풀하우스",
+      pokerName: `${numberToJQK(Number(triple))}, ${numberToJQK(
+        Number(pair)
+      )} 풀하우스`,
       pokerScore: 60,
       pokerCards,
       multiplier: 6,
@@ -180,7 +195,7 @@ const judgePoker = (cards) => {
   // 플러시
   if (isFlush) {
     return {
-      pokerName: "플러시",
+      pokerName: `${suits[0]} 플러시`,
       pokerScore: 50,
       pokerCards: cardNumbers,
       multiplier: 5,
@@ -193,7 +208,7 @@ const judgePoker = (cards) => {
     const pokerCards = [triple, triple, triple];
 
     return {
-      pokerName: "트리플",
+      pokerName: `${numberToJQK(Number(triple))} 트리플`,
       pokerScore: 30,
       pokerCards,
       multiplier: 3,
@@ -209,7 +224,9 @@ const judgePoker = (cards) => {
 
     const pokerCards = [...pairs.flatMap((p) => [p, p])];
     return {
-      pokerName: "투페어",
+      pokerName: `${numberToJQK(Number(pairs[0]))}, ${numberToJQK(
+        Number(pairs[1])
+      )} 투페어`,
       pokerScore: 20,
       pokerCards,
       multiplier: 2,
@@ -221,7 +238,7 @@ const judgePoker = (cards) => {
     const pair = Object.keys(numCounts).find((k) => numCounts[k] === 2);
     const pokerCards = [pair, pair];
     return {
-      pokerName: "원페어",
+      pokerName: `${numberToJQK(Number(pair))} 원페어`,
       pokerScore: 10,
       pokerCards,
       multiplier: 1,
@@ -230,8 +247,9 @@ const judgePoker = (cards) => {
 
   // 하이카드
   const highest = Math.max(...cardNumbers);
+
   return {
-    pokerName: "하이카드",
+    pokerName: `${numberToJQK(highest)} 하이카드`,
     pokerScore: 5,
     pokerCards: [highest],
     multiplier: 1,

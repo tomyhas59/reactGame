@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
-
+import back from "../../img/back.png";
 const RemainDeck = ({ deckRef }) => {
   const { deck } = usePokerStore();
 
@@ -40,52 +40,38 @@ const RemainCard = styled.div`
   position: absolute;
   width: 120px;
   height: 170px;
-  font-size: 18px;
-  font-weight: bold;
   border-radius: 12px;
-  background: linear-gradient(135deg, #1565c0, #1e88e5);
-  border: 1px solid #0d47a1;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  background-image: url(${back});
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #ffffff55;
+
   transform: ${({ $index }) =>
-    `translate(${$index * 0.5}px, ${$index * -0.5}px)`};
+    `translate(${$index * 0.4}px, ${$index * -0.4}px)`};
   z-index: ${({ $index }) => $index};
   transition: transform 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: bold;
   color: #fff;
-  text-align: center;
-  line-height: 170px;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.1) 0,
-      rgba(255, 255, 255, 0.1) 8px,
-      transparent 8px,
-      transparent 16px
-    );
-    pointer-events: none;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 6px;
-    border-radius: 8px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    pointer-events: none;
-  }
+  text-shadow: -1px -1px 0 black, -1px 1px 0 black, 1px -1px 0 black,
+    1px 1px 0 black;
 
   @media (max-width: 1200px) {
     width: 70px;
     height: 100px;
-    line-height: 100px;
+    font-size: 24px;
   }
 
   @media (max-width: 800px) {
     width: 50px;
     height: 70px;
-    line-height: 70px;
+    font-size: 18px;
+    transform: ${({ $index }) =>
+      `translate(${$index * 0.2}px, ${$index * -0.2}px)`};
+    z-index: ${({ $index }) => $index};
   }
 `;

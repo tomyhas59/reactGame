@@ -19,7 +19,7 @@ const ButtonGroup = ({
     playerJokers,
     setRemainingTurns,
     setDiscardChances,
-    setShowYaku,
+    setShowPlayCards,
     stageScore,
     setIsStart,
     setIsJokerChoiceOpen,
@@ -51,21 +51,17 @@ const ButtonGroup = ({
     const newHand = hand.filter((card) => !selectedCards.includes(card));
     setHand(newHand);
 
-    let remainingDeck = deck.slice(selectedCards.length);
-
     // 카드 한 장씩 뽑고 애니메이션 적용
     for (let i = 0; i < cardsToDraw.length; i++) {
       await animateDrawCard(cardsToDraw[i], newHand.length + i);
       setHand((prev) => [...prev, cardsToDraw[i]]);
-      remainingDeck = remainingDeck.slice(1);
-      setDeck(remainingDeck);
+      setDeck((prev) => prev.slice(1));
       await delay(100);
     }
 
     setAnimCard(null);
     setIsAnimating(false);
     setSelectedCards([]);
-    setShowYaku(false);
   };
 
   const handlePlay = () => {
@@ -76,7 +72,7 @@ const ButtonGroup = ({
 
     const result = calculateFinalScore(selectedCards, playerJokers);
     setScoreDetail(result);
-    setShowYaku(true);
+    setShowPlayCards(true);
 
     const nextScore = totalScore + result.finalScore;
     setTotalScore(nextScore);
@@ -90,7 +86,7 @@ const ButtonGroup = ({
       if (isClear) {
         alert("성공");
         setIsJokerChoiceOpen(true);
-        setShowYaku(false);
+        setShowPlayCards(false);
         setSelectedCards([]);
         setTotalScore(0);
         return;
@@ -99,12 +95,12 @@ const ButtonGroup = ({
       if (isLastTurn && !isClear) {
         alert("실패");
         setIsStart(false);
-        setShowYaku(false);
+        setShowPlayCards(false);
         setSelectedCards([]);
         setTotalScore(0);
         return;
       }
-
+      setShowPlayCards(false);
       drawAndUpdateCard();
     }, 3000);
   };

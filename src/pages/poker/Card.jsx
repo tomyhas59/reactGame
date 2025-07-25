@@ -1,5 +1,8 @@
 import styled from "styled-components";
 import { cardPattern, usePokerStore } from "../../stores/pokerStore";
+import JCard from "../../img/JCard.png";
+import QCard from "../../img/QCard.png";
+import KCard from "../../img/KCard.png";
 
 export const getSuitColor = (suit) =>
   suit === "♥️" || suit === "♦️" ? "red" : "black";
@@ -12,14 +15,21 @@ export const getCardLabel = (num) => {
   return num;
 };
 
+const JQKImage = (number) => {
+  if (number === 11) return JCard;
+  else if (number === 12) return QCard;
+  else if (number === 13) return KCard;
+  return null;
+};
+
 const Card = ({ card, addSlotRef, isSelected = false, idx }) => {
-  const { toggleSelectCards, showYaku } = usePokerStore();
+  const { toggleSelectCards, showPlayCards } = usePokerStore();
 
   return (
     <CardContainer
       key={idx}
       selected={isSelected}
-      onClick={() => card && !showYaku && toggleSelectCards(card)}
+      onClick={() => card && !showPlayCards && toggleSelectCards(card)}
       ref={(el) => addSlotRef?.(el)}
     >
       {card && (
@@ -29,9 +39,7 @@ const Card = ({ card, addSlotRef, isSelected = false, idx }) => {
             <span>{card.suit}</span>
           </TopRight>
           {card.number >= 11 ? (
-            <JQKArt>
-              <Crown>👑</Crown>
-            </JQKArt>
+            <JQKArt $number={card.number} />
           ) : (
             <SuitGrid>
               {Array.from({ length: 5 }).map((_, row) =>
@@ -143,15 +151,16 @@ const Pip = styled.span`
 `;
 
 const JQKArt = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Crown = styled.div`
-  font-size: 60px;
-
-  @media (max-width: 1200px) {
-    font-size: 30px;
-  }
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background-image: url(${({ $number }) => JQKImage($number)});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
 `;

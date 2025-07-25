@@ -30,7 +30,7 @@ export const Poker = () => {
     setHand,
     setScoreDetail,
     setDiscardChances,
-    showYaku,
+    showPlayCards,
     isJokerChoiceOpen,
     setIsJokerChoiceOpen,
     isStart,
@@ -134,15 +134,15 @@ export const Poker = () => {
         <DetailScore />
         <JokerPanel />
       </Middle>
-      {showYaku && (
-        <ShowYakuWrapper>
+      {showPlayCards && (
+        <ShowPlayCardsWrapper>
           <CardWrapper>
             {sortedSelectedCards.map((card) => (
               <Card key={card.id} card={card} />
             ))}
           </CardWrapper>
-          <YakuName>{pokerName}</YakuName>
-        </ShowYakuWrapper>
+          <PlayCardsName>{pokerName}</PlayCardsName>
+        </ShowPlayCardsWrapper>
       )}
       <RemainDeck deckRef={deckRef} />
       <Bottom>
@@ -258,7 +258,7 @@ const AnimCard = styled.div`
   }
 `;
 
-const ShowYakuWrapper = styled.div`
+const ShowPlayCardsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -270,7 +270,7 @@ const ShowYakuWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 24px;
-  background: rgba(41, 42, 119, 0.5);
+  background: rgba(255, 251, 251, 0.5);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -280,13 +280,15 @@ const ShowYakuWrapper = styled.div`
 const CardWrapper = styled.div`
   display: flex;
 `;
-const YakuName = styled.h3`
+const PlayCardsName = styled.h3`
   font-size: 32px;
   font-weight: bold;
   color: #ffeb3b;
   text-shadow: 0 0 10px rgba(255, 235, 59, 0.8),
     0 0 20px rgba(255, 235, 59, 0.6);
   animation: pulse 1.5s infinite;
+  text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+    1px 1px 0 black;
 
   @keyframes pulse {
     0% {
