@@ -63,8 +63,8 @@ const Board = styled.div`
 `;
 
 const Slot = styled.div`
-  width: 120px;
-  height: 170px;
+  width: 110px;
+  height: 160px;
   perspective: 1000px;
   cursor: pointer;
 

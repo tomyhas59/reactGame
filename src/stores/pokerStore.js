@@ -143,6 +143,8 @@ const judgePoker = (cards) => {
     else return number;
   };
 
+  console.log(cardNumbers, Math.max(...cardNumbers));
+
   // 스트레이트 계열
   if (isStraight || isLowAceStraight) {
     const straightCards = isLowAceStraight ? [1, 10, 11, 12, 13] : cardNumbers;
@@ -158,7 +160,7 @@ const judgePoker = (cards) => {
       };
     }
     return {
-      pokerName: `${Number(Math.max(cardNumbers))} 스트레이트`,
+      pokerName: `${numberToJQK(Number(Math.max(...cardNumbers)))} 스트레이트`,
       pokerScore: 40,
       pokerCards: straightCards,
       multiplier: 4,
