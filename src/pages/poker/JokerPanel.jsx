@@ -63,8 +63,8 @@ const Board = styled.div`
 `;
 
 const Slot = styled.div`
-  width: 110px;
-  height: 160px;
+  width: 120px;
+  height: 170px;
   perspective: 1000px;
   cursor: pointer;
 
@@ -73,8 +73,8 @@ const Slot = styled.div`
     height: 120px;
   }
   @media (max-width: 800px) {
-    width: 70px;
-    height: 100px;
+    width: 60px;
+    height: 90px;
   }
 `;
 
