@@ -24,7 +24,6 @@ const RemainDeckContainer = styled.div`
   height: 170px;
   align-items: center;
   justify-content: center;
-
   @media (max-width: 1200px) {
     width: 70px;
     height: 100px;
@@ -40,17 +39,15 @@ const RemainCard = styled.div`
   position: absolute;
   width: 120px;
   height: 170px;
-  border-radius: 12px;
+  border-radius: 8px;
   background-image: url(${back});
   background-size: cover;
   background-position: center;
   border: 2px solid #ffffff55;
-
   transform: ${({ $index }) =>
     `translate(${$index * 0.4}px, ${$index * -0.4}px)`};
   z-index: ${({ $index }) => $index};
   transition: transform 0.2s ease;
-
   display: flex;
   align-items: center;
   justify-content: center;

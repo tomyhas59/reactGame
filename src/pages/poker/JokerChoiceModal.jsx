@@ -71,10 +71,10 @@ const JokerChoiceModal = ({ onSelect }) => {
           <h2>조커 선택</h2>
         </Header>
         <CardList>
-          {shownJokers.map((card) => (
-            <Card key={card.id} onClick={() => onSelect(card)}>
-              <h3>{card.name}</h3>
-              <p>{card.description}</p>
+          {shownJokers.map((joker) => (
+            <Card key={joker.id} onClick={() => onSelect(joker)}>
+              <h3>{joker.name}</h3>
+              <p>{joker.description}</p>
             </Card>
           ))}
         </CardList>

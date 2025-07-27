@@ -76,7 +76,7 @@ const CardContainer = styled.div`
   width: 120px;
   height: 170px;
   background: white;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
