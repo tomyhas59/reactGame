@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const STAGE_SCORE = 100;
+export const STAGE_SCORE = 10;
 export const REMAINING_TURNS = 3;
 export const DISCARD_CHANCES = 3;
 
@@ -48,9 +48,11 @@ export const usePokerStore = create((set, get) => ({
     })),
 
   setIsJokerChoiceOpen: (value) => set({ isJokerChoiceOpen: value }),
-  addPlayerJoker: (joker) =>
+
+  setPlayerJokers: (updater) =>
     set((state) => ({
-      playerJokers: [...state.playerJokers, joker],
+      playerJokers:
+        typeof updater === "function" ? updater(state.playerJokers) : updater,
     })),
 
   // 게임 시작 시 덱 생성, 셔플, 8장 뽑기
@@ -142,8 +144,6 @@ const judgePoker = (cards) => {
     else if (number === 13) return "K";
     else return number;
   };
-
-  console.log(cardNumbers, Math.max(...cardNumbers));
 
   // 스트레이트 계열
   if (isStraight || isLowAceStraight) {

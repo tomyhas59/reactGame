@@ -1,11 +1,5 @@
 import { styled } from "styled-components";
-import {
-  DISCARD_CHANCES,
-  generateDeck,
-  REMAINING_TURNS,
-  shuffle,
-  usePokerStore,
-} from "../../stores/pokerStore";
+import { usePokerStore } from "../../stores/pokerStore";
 import { useCallback, useRef, useState } from "react";
 import Hand from "./Hand";
 import DetailScore from "./DetailScore";
@@ -21,18 +15,9 @@ export const Poker = () => {
   const {
     startNewGame,
     selectedCards,
-    stageScore,
     scoreDetail,
-    addPlayerJoker,
-    setStageScore,
-    setRemainingTurns,
-    setDeck,
-    setHand,
-    setScoreDetail,
-    setDiscardChances,
     showPlayCards,
     isJokerChoiceOpen,
-    setIsJokerChoiceOpen,
     isStart,
     setIsStart,
   } = usePokerStore();
@@ -55,31 +40,6 @@ export const Poker = () => {
     setIsStart(true);
     startNewGame();
   }, [setIsStart, startNewGame]);
-
-  const handleJokerSelect = useCallback(
-    (joker) => {
-      addPlayerJoker(joker);
-      setStageScore(stageScore * 2);
-      setRemainingTurns(REMAINING_TURNS);
-      setIsJokerChoiceOpen(false);
-      setDiscardChances(DISCARD_CHANCES);
-      const newDeck = shuffle(generateDeck());
-      setHand(newDeck.slice(0, 8));
-      setDeck(newDeck.slice(8));
-      setScoreDetail(null);
-    },
-    [
-      setScoreDetail,
-      addPlayerJoker,
-      setStageScore,
-      setRemainingTurns,
-      stageScore,
-      setDeck,
-      setDiscardChances,
-      setHand,
-      setIsJokerChoiceOpen,
-    ]
-  );
 
   const animateDrawCard = useCallback((card, targetIndex) => {
     return new Promise((resolve) => {
@@ -156,7 +116,7 @@ export const Poker = () => {
           />
         </HandSection>
       </Bottom>
-      {isJokerChoiceOpen && <JokerChoiceModal onSelect={handleJokerSelect} />}
+      {isJokerChoiceOpen && <JokerChoiceModal />}
       {animCard && (
         <AnimCard
           id={`anim-card-${animCard.key}`}

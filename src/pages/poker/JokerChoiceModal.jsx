@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import { usePokerStore } from "../../stores/pokerStore";
+import {
+  usePokerStore,
+  DISCARD_CHANCES,
+  generateDeck,
+  REMAINING_TURNS,
+  shuffle,
+} from "../../stores/pokerStore";
+import { useState } from "react";
 
 export const JOKER_CARDS = [
   {
@@ -48,7 +55,19 @@ export const JOKER_CARDS = [
 ];
 
 const JokerChoiceModal = ({ onSelect }) => {
-  const { playerJokers } = usePokerStore();
+  const {
+    playerJokers,
+    setPlayerJokers,
+    setStageScore,
+    setRemainingTurns,
+    setDeck,
+    setHand,
+    setScoreDetail,
+    setDiscardChances,
+    stageScore,
+    setIsJokerChoiceOpen,
+  } = usePokerStore();
+  const [selectedJokerToReplace, setSelectedJokerToReplace] = useState(null);
 
   const remainJokers = JOKER_CARDS.filter(
     (joker) => !playerJokers.some((pj) => pj.id === joker.id)
@@ -59,20 +78,81 @@ const JokerChoiceModal = ({ onSelect }) => {
     return shuffled.slice(0, count);
   };
 
-  const shownJokers = getRandomJokerCards(
-    remainJokers,
-    Math.min(5, remainJokers.length)
-  );
+  let shownJokers = [
+    ...getRandomJokerCards(remainJokers, Math.min(5, remainJokers.length)),
+  ];
+
+  if (playerJokers.length >= 5)
+    shownJokers = [
+      ...shownJokers,
+      {
+        id: "skip",
+        name: "선택 안 함",
+        description: "이번 턴에는 조커를 바꾸지 않습니다.",
+        effect: "none",
+      },
+    ];
+
+  const handleNewJokerSelect = (newJoker) => {
+    const resetGameState = () => {
+      setStageScore(stageScore * 2);
+      setRemainingTurns(REMAINING_TURNS);
+      setDiscardChances(DISCARD_CHANCES);
+      setIsJokerChoiceOpen(false);
+
+      const newDeck = shuffle(generateDeck());
+      setHand(newDeck.slice(0, 8));
+      setDeck(newDeck.slice(8));
+      setScoreDetail(null);
+    };
+    if (newJoker.id === "skip") {
+      resetGameState();
+      return;
+    }
+
+    if (playerJokers.length < 5) {
+      setPlayerJokers([...playerJokers, newJoker]);
+    } else {
+      const newJokers = playerJokers.map((joker) =>
+        joker.id === selectedJokerToReplace.id ? newJoker : joker
+      );
+      setPlayerJokers(newJokers);
+    }
+    resetGameState();
+  };
 
   return (
     <Overlay>
+      {playerJokers.length >= 5 && (
+        <Modal>
+          <Header>
+            <h2>버릴 조커 선택</h2>
+          </Header>
+          <PlayerJokersWrapper>
+            {playerJokers.map((joker) => (
+              <PlayerJokerSlot
+                key={joker.id}
+                onClick={() => setSelectedJokerToReplace(joker)}
+              >
+                <PlayerJokerCard
+                  className={
+                    selectedJokerToReplace?.id === joker.id ? "selected" : ""
+                  }
+                >
+                  <PlayerJokerName>{joker.name}</PlayerJokerName>
+                </PlayerJokerCard>
+              </PlayerJokerSlot>
+            ))}
+          </PlayerJokersWrapper>
+        </Modal>
+      )}
       <Modal>
         <Header>
           <h2>조커 선택</h2>
         </Header>
         <CardList>
           {shownJokers.map((joker) => (
-            <Card key={joker.id} onClick={() => onSelect(joker)}>
+            <Card key={joker.id} onClick={() => handleNewJokerSelect(joker)}>
               <h3>{joker.name}</h3>
               <p>{joker.description}</p>
             </Card>
@@ -90,9 +170,11 @@ const Overlay = styled.div`
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 999;
+  gap: 5px;
 `;
 
 const Modal = styled.div`
@@ -152,5 +234,71 @@ const Card = styled.div`
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const PlayerJokersWrapper = styled.div`
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.1rem;
+`;
+
+const PlayerJokerSlot = styled.div`
+  width: 120px;
+  height: 170px;
+  perspective: 1000px;
+  cursor: pointer;
+
+  @media (max-width: 1200px) {
+    width: 90px;
+    height: 120px;
+  }
+  @media (max-width: 800px) {
+    width: 60px;
+    height: 90px;
+  }
+`;
+
+const PlayerJokerCard = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: ${({ className }) =>
+    className?.includes("selected")
+      ? "linear-gradient(135deg, #ffe57f, #ffca28)"
+      : "linear-gradient(135deg, #fff8e1, #ffe0b2)"};
+
+  border: 2px solid
+    ${({ className }) => (className?.includes("selected") ? "#f57f17" : "#ddd")};
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    background: linear-gradient(135deg, #cdbd89, #ffc56d);
+  }
+`;
+
+const PlayerJokerName = styled.h3`
+  color: #333;
+  margin: 0;
+  font-size: 1rem;
+  word-break: keep-all;
+  text-align: center;
+
+  @media (max-width: 1200px) {
+    font-size: 0.6rem;
+  }
+  @media (max-width: 1200px) {
+    font-size: 0.4em;
   }
 `;

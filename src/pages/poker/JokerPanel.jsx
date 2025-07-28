@@ -103,7 +103,7 @@ const CardFace = styled.div`
   height: 100%;
   backface-visibility: hidden;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -133,10 +133,14 @@ const JokerName = styled.h3`
   color: #333;
   margin: 0;
   font-size: 1rem;
+  word-break: keep-all;
   text-align: center;
 
   @media (max-width: 1200px) {
-    font-size: 14px;
+    font-size: 0.6rem;
+  }
+  @media (max-width: 1200px) {
+    font-size: 0.4em;
   }
 `;
 
@@ -149,6 +153,10 @@ const JokerDesc = styled.p`
 
   @media (max-width: 1200px) {
     font-size: 0.6rem;
+  }
+
+  @media (max-width: 800px) {
+    font-size: 0.5rem;
   }
 `;
 
