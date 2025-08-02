@@ -26,16 +26,14 @@ const JokerPanel = () => {
         {[0, 1, 2, 3, 4].map((index) => (
           <Slot key={index} onClick={() => handleFlip(index)}>
             {playerJokers[index] ? (
-              <JokerCard>
-                <CardInner className={flippedStates[index] ? "flipped" : ""}>
-                  <CardFront>
-                    <JokerName>{playerJokers[index].name}</JokerName>
-                  </CardFront>
-                  <CardBack>
-                    <JokerDesc>{playerJokers[index].description}</JokerDesc>
-                  </CardBack>
-                </CardInner>
-              </JokerCard>
+              <JokerCardInner className={flippedStates[index] ? "flipped" : ""}>
+                <CardFront>
+                  <JokerName>{playerJokers[index].name}</JokerName>
+                </CardFront>
+                <CardBack>
+                  <JokerDesc>{playerJokers[index].description}</JokerDesc>
+                </CardBack>
+              </JokerCardInner>
             ) : (
               <EmptySlot />
             )}
@@ -78,13 +76,7 @@ const Slot = styled.div`
   }
 `;
 
-const JokerCard = styled.div`
-  width: 100%;
-  height: 100%;
-  position: relative;
-`;
-
-const CardInner = styled.div`
+const JokerCardInner = styled.div`
   width: 100%;
   height: 100%;
   transition: transform 0.6s;
@@ -123,7 +115,7 @@ const CardBack = styled(CardFace)`
   transform: rotateY(180deg);
   border: 1px solid #ccc;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
+  word-break: keep-all;
   &:hover {
     background: #dbd0d0;
   }

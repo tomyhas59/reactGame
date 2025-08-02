@@ -101,7 +101,9 @@ export const Poker = () => {
               <Card key={card.id} card={card} />
             ))}
           </CardWrapper>
-          <PlayCardsName>{pokerName}</PlayCardsName>
+          <PlayCardsName>
+            {pokerName} ➕ <span>{scoreDetail.finalScore}</span>
+          </PlayCardsName>
         </ShowPlayCardsWrapper>
       )}
       <RemainDeck deckRef={deckRef} />
@@ -249,6 +251,10 @@ const PlayCardsName = styled.h3`
   animation: pulse 1.5s infinite;
   text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
     1px 1px 0 black;
+
+  span {
+    color: crimson;
+  }
 
   @keyframes pulse {
     0% {

@@ -6,7 +6,7 @@ import {
   REMAINING_TURNS,
   shuffle,
 } from "../../stores/pokerStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const JOKER_CARDS = [
   {
@@ -54,7 +54,7 @@ export const JOKER_CARDS = [
   },
 ];
 
-const JokerChoiceModal = ({ onSelect }) => {
+const JokerChoiceModal = () => {
   const {
     playerJokers,
     setPlayerJokers,
@@ -68,30 +68,30 @@ const JokerChoiceModal = ({ onSelect }) => {
     setIsJokerChoiceOpen,
   } = usePokerStore();
   const [selectedJokerToReplace, setSelectedJokerToReplace] = useState(null);
+  const [shownJokers, setShownJokers] = useState([]);
 
   const remainJokers = JOKER_CARDS.filter(
     (joker) => !playerJokers.some((pj) => pj.id === joker.id)
   );
 
-  const getRandomJokerCards = (cards, count) => {
+  const getRandomJokerCards = (cards) => {
     const shuffled = [...cards].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+    return shuffled.slice(0, Math.min(5, cards.length));
   };
 
-  let shownJokers = [
-    ...getRandomJokerCards(remainJokers, Math.min(5, remainJokers.length)),
-  ];
+  useEffect(() => {
+    const randomJokerCards = getRandomJokerCards(remainJokers);
 
-  if (playerJokers.length >= 5)
-    shownJokers = [
-      ...shownJokers,
-      {
+    if (playerJokers.length >= 5)
+      randomJokerCards.push({
         id: "skip",
         name: "선택 안 함",
         description: "이번 턴에는 조커를 바꾸지 않습니다.",
         effect: "none",
-      },
-    ];
+      });
+
+    setShownJokers(randomJokerCards);
+  }, []);
 
   const handleNewJokerSelect = (newJoker) => {
     const resetGameState = () => {
@@ -110,6 +110,11 @@ const JokerChoiceModal = ({ onSelect }) => {
       return;
     }
 
+    if (selectedJokerToReplace)
+      alert(
+        `${selectedJokerToReplace?.name}를/(을) ${newJoker?.name}로/(으로) 바꿨습니다.`
+      );
+
     if (playerJokers.length < 5) {
       setPlayerJokers([...playerJokers, newJoker]);
     } else {
@@ -126,21 +131,25 @@ const JokerChoiceModal = ({ onSelect }) => {
       {playerJokers.length >= 5 && (
         <Modal>
           <Header>
+            <p>※조커는 5장까지 소지할 수 있습니다.</p>
             <h2>버릴 조커 선택</h2>
           </Header>
           <PlayerJokersWrapper>
-            {playerJokers.map((joker) => (
+            {playerJokers.map((joker, i) => (
               <PlayerJokerSlot
                 key={joker.id}
+                index={i}
+                $isSelected={selectedJokerToReplace?.id === joker.id}
                 onClick={() => setSelectedJokerToReplace(joker)}
               >
-                <PlayerJokerCard
+                <PlayerJokerCardInner
                   className={
                     selectedJokerToReplace?.id === joker.id ? "selected" : ""
                   }
                 >
-                  <PlayerJokerName>{joker.name}</PlayerJokerName>
-                </PlayerJokerCard>
+                  <PlayerJokerCardFront>{joker.name}</PlayerJokerCardFront>
+                  <PlayerJokerCardBack>{joker.description}</PlayerJokerCardBack>
+                </PlayerJokerCardInner>
               </PlayerJokerSlot>
             ))}
           </PlayerJokersWrapper>
@@ -189,11 +198,12 @@ const Modal = styled.div`
 `;
 
 const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
-
+  p {
+    color: crimson;
+    font-size: 12px;
+  }
   h2 {
     margin: 0;
     font-size: 20px;
@@ -236,69 +246,89 @@ const Card = styled.div`
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 `;
-
 const PlayerJokersWrapper = styled.div`
   position: relative;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.1rem;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 5 / 1.8;
+  margin: 0 auto;
 `;
 
 const PlayerJokerSlot = styled.div`
-  width: 120px;
-  height: 170px;
-  perspective: 1000px;
+  position: absolute;
+  top: 0;
+  width: calc(100% * 1.4 / 5);
+  height: auto;
+  aspect-ratio: 0.7 / 1; /* 카드 비율 유지 */
+  left: ${({ index }) => `calc((100% / 5) * ${index} * 0.9)`};
+  z-index: ${({ index, $isSelected }) => ($isSelected ? 100 : index)};
   cursor: pointer;
+  transition: transform 0.2s ease, z-index 0.2s ease;
 
-  @media (max-width: 1200px) {
-    width: 90px;
-    height: 120px;
-  }
-  @media (max-width: 800px) {
-    width: 60px;
-    height: 90px;
+  &:hover {
+    z-index: 999;
+    transform: translateY(-10px);
   }
 `;
 
-const PlayerJokerCard = styled.div`
-  position: absolute;
+const PlayerJokerCardInner = styled.div`
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
   border-radius: 12px;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: ${({ className }) =>
-    className?.includes("selected")
-      ? "linear-gradient(135deg, #ffe57f, #ffca28)"
-      : "linear-gradient(135deg, #fff8e1, #ffe0b2)"};
-
-  border: 2px solid
-    ${({ className }) => (className?.includes("selected") ? "#f57f17" : "#ddd")};
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
   cursor: pointer;
+  border: 2px solid #ddd;
+  &.selected {
+    background: linear-gradient(135deg, #ffe57f, #ffca28);
+    border-color: #f57f17;
+    transform: rotateY(180deg);
+  }
 
   &:hover {
     background: linear-gradient(135deg, #cdbd89, #ffc56d);
   }
 `;
 
-const PlayerJokerName = styled.h3`
+const PlayerCardFace = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #333;
-  margin: 0;
   font-size: 1rem;
   word-break: keep-all;
   text-align: center;
-
-  @media (max-width: 1200px) {
-    font-size: 0.6rem;
-  }
-  @media (max-width: 1200px) {
+  font-weight: bold;
+  @media (max-width: 800px) {
     font-size: 0.4em;
+  }
+`;
+
+const PlayerJokerCardFront = styled(PlayerCardFace)`
+  background: linear-gradient(135deg, #fff8e1, #ffe0b2);
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  &:hover {
+    background: linear-gradient(135deg, #cdbd89, #ffc56d);
+  }
+`;
+
+const PlayerJokerCardBack = styled(PlayerCardFace)`
+  background: #fff;
+  text-align: center;
+  transform: rotateY(180deg);
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  word-break: keep-all;
+
+  &:hover {
+    background: #dbd0d0;
   }
 `;

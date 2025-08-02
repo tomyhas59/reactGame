@@ -4,10 +4,8 @@ import { getCardLabel } from "./Card";
 import { useEffect, useState } from "react";
 
 const DetailScore = () => {
-  const { scoreDetail, playerJokers } = usePokerStore();
+  const { scoreDetail } = usePokerStore();
   const [totalScore, setTotalScore] = useState(0);
-
-  const hasAllFace = playerJokers.some((j) => j.effect === "all-face");
 
   useEffect(() => {
     if (!scoreDetail) {
@@ -42,12 +40,7 @@ const DetailScore = () => {
         </Value>
       </Row>
       <Row>
-        <Label>
-          조커 보너스
-          {hasAllFace && (
-            <span style={{ color: "red", fontSize: "12px" }}>(all-face)</span>
-          )}
-        </Label>
+        <Label>조커 보너스</Label>
         <Value>{scoreDetail?.bonus}</Value>
       </Row>
       <Row>
