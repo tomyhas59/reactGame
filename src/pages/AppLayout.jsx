@@ -67,25 +67,25 @@ const AppLayout = ({ children }) => {
         </MenuToggle>
       </Header>
       <ContentWrapper>
-        <List $isOpen={isMenuOpen} ref={menuRef}>
-          {links.map((link) => (
-            <StyledLink
-              to={`/${link.to}`}
-              key={link.to}
-              onClick={handleLinkClick}
-            >
-              <LinkItem
-                className={
-                  location.pathname.startsWith(`/${link.to}`) ? "active" : ""
-                }
-              >
-                {link.label}
-              </LinkItem>
-            </StyledLink>
-          ))}
-        </List>
         <Content>{children}</Content>
       </ContentWrapper>
+      <List $isOpen={isMenuOpen} ref={menuRef}>
+        {links.map((link) => (
+          <StyledLink
+            to={`/${link.to}`}
+            key={link.to}
+            onClick={handleLinkClick}
+          >
+            <LinkItem
+              className={
+                location.pathname.startsWith(`/${link.to}`) ? "active" : ""
+              }
+            >
+              {link.label}
+            </LinkItem>
+          </StyledLink>
+        ))}
+      </List>
     </Container>
   );
 };
@@ -159,7 +159,7 @@ const List = styled.ul`
     top: 70px;
     right: 0;
     z-index: 1000;
-    width: 150px;
+    width: 120px;
     height: 100%;
     transform: ${(props) =>
       props.$isOpen ? "translateX(0)" : "translateX(100%)"};
