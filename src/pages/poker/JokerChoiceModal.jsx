@@ -6,7 +6,7 @@ import {
   REMAINING_TURNS,
   shuffle,
 } from "../../stores/pokerStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const JOKER_CARDS = [
   {
@@ -79,7 +79,13 @@ const JokerChoiceModal = () => {
     return shuffled.slice(0, Math.min(5, cards.length));
   };
 
+  const initializedRef = useRef(false);
+
   useEffect(() => {
+    if (initializedRef.current) return;
+
+    initializedRef.current = true;
+
     const randomJokerCards = getRandomJokerCards(remainJokers);
 
     if (playerJokers.length >= 5)
@@ -91,7 +97,7 @@ const JokerChoiceModal = () => {
       });
 
     setShownJokers(randomJokerCards);
-  }, []);
+  }, [remainJokers, playerJokers]);
 
   const handleNewJokerSelect = (newJoker) => {
     const resetGameState = () => {
