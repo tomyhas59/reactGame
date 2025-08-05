@@ -146,10 +146,13 @@ const ContentWrapper = styled.div`
 
 const List = styled.ul`
   background-color: #1f1f1f;
+  position: absolute;
+  top: 8vh;
   display: flex;
   flex-direction: column;
   color: #eee;
   width: 170px;
+  height: 92vh;
   padding: 10px;
   transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 1;
