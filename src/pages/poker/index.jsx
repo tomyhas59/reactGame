@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { usePokerStore } from "../../stores/pokerStore";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Hand from "./Hand";
 import DetailScore from "./DetailScore";
 import ButtonGroup from "./ButtonGroup";
@@ -35,6 +35,12 @@ export const Poker = () => {
   const addSlotRef = (el) => {
     if (el && !slotsRef.current.includes(el)) slotsRef.current.push(el);
   };
+
+  useEffect(() => {
+    return () => {
+      setIsStart(false);
+    };
+  }, [setIsStart]);
 
   const startButton = useCallback(() => {
     setIsStart(true);
@@ -228,8 +234,8 @@ const ShowPlayCardsWrapper = styled.div`
   padding: 20px 30px;
   gap: 12px;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 30%;
+  left: 60%;
   transform: translate(-50%, -50%);
   border-radius: 24px;
   background: rgba(255, 251, 251, 0.5);

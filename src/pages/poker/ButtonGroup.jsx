@@ -109,7 +109,7 @@ const ButtonGroup = ({
     if (!isCardSelected) return alert("버릴 카드를 선택하세요.");
 
     const discardChances = usePokerStore.getState().discardChances;
-    if (discardChances <= 0) return;
+    if (discardChances <= 0) return alert("남은 버리기 횟수가 없습니다.");
 
     setDiscardChances((prev) => prev - 1);
     drawAndUpdateCard();

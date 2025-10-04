@@ -54,11 +54,6 @@ const AppLayout = ({ children }) => {
   return (
     <Container>
       <Header>
-        <TitleWrapper>
-          <Link to="/" onClick={handleLinkClick}>
-            <Title>심심풀이</Title>
-          </Link>
-        </TitleWrapper>
         <MenuToggle
           ref={menuToggleRef}
           onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -70,6 +65,9 @@ const AppLayout = ({ children }) => {
         <Content>{children}</Content>
       </ContentWrapper>
       <List $isOpen={isMenuOpen} ref={menuRef}>
+        <Link to="/" onClick={handleLinkClick}>
+          <Title>심심풀이</Title>
+        </Link>
         {links.map((link) => (
           <StyledLink
             to={`/${link.to}`}
@@ -107,14 +105,6 @@ const Header = styled.header`
   height: 8vh;
 `;
 
-const TitleWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  > a {
-    text-decoration: none;
-  }
-`;
-
 const Title = styled.div`
   font-size: 2rem;
   font-weight: bold;
@@ -146,16 +136,19 @@ const ContentWrapper = styled.div`
 
 const List = styled.ul`
   background-color: #1f1f1f;
-  position: absolute;
-  top: 8vh;
+  position: fixed;
+  top: 0;
   display: flex;
   flex-direction: column;
-  color: #eee;
   width: 170px;
-  height: 92vh;
+  height: 100%;
   padding: 10px;
   transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 1;
+
+  > :nth-child(1) {
+    margin: 15px;
+  }
 
   @media (max-width: 768px) {
     position: fixed;

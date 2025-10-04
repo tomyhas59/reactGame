@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export const STAGE_SCORE = 10;
+export const STAGE_SCORE = 100;
 export const REMAINING_TURNS = 3;
 export const DISCARD_CHANCES = 3;
 
